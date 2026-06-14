@@ -1,7 +1,9 @@
 title: Intelligent Robotics
 name: Intelligent Robotics Lab
 description: Research lab in robotics and AI
-url: https://briandeegan82.github.io/intelligent_robotics.github.io/
+
+url: https://briandeegan82.github.io
+baseurl: /intelligent_robotics.github.io
 
 remote_theme: academicpages/academicpages.github.io
 
@@ -15,7 +17,7 @@ collections:
   pages:
     output: true
     permalink: /:path/
-    
+
 header_pages:
   - _pages/about.md
   - _pages/people.md
