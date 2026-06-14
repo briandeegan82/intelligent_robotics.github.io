@@ -1,2 +1,23 @@
 title: Intelligent Robotics
-theme: minima
+name: Intelligent Robotics Lab
+description: Research lab in robotics and AI
+url: https://briandeegan82.github.io/intelligent_robotics.github.io/
+
+remote_theme: academicpages/academicpages.github.io
+
+plugins:
+  - jekyll-include-cache
+
+include:
+  - _pages
+
+collections:
+  pages:
+    output: true
+    permalink: /:path/
+    
+header_pages:
+  - _pages/about.md
+  - _pages/people.md
+  - _pages/publications.md
+  - _pages/projects.md

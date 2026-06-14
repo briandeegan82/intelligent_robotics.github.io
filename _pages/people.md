@@ -1,3 +1,19 @@
-## me
+---
+layout: archive
+title: "People"
+permalink: /people/
+author_profile: true
+---
 
-## you
+## Principal Investigator
+
+Your Name
+
+## PhD Students
+
+- Student A
+- Student B
+
+## MSc Students
+
+- Student C
