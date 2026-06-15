@@ -24,3 +24,10 @@ header_pages:
   - _pages/people.md
   - _pages/publications.md
   - _pages/projects.md
+
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: single

@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: "ROS 1 vs ROS 2 Middleware: Overview, Selection, and Optimization"
 date: 2025-06-09
 categories: robotics ros

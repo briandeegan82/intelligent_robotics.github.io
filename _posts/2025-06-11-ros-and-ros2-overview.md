@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: "ROS and ROS 2: History, Concepts, and the Transition"
 date: 2025-06-11
 categories: robotics ros

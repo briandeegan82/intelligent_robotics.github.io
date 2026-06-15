@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: "Raspberry Pi Camera Pipeline Optimization"
 date: 2025-06-06
 categories: robotics hardware

@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: "WiFi Network Setup for ROS 2 with TP-Link AC750"
 date: 2025-06-15
 categories: robotics networking

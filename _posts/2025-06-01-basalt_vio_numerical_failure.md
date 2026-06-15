@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: "Basalt VIO: Numerical Failure in Backsubstitution"
 date: 2025-06-01
 categories: robotics vio

@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: "Nix Flakes for Robotics and Embedded Development: A Practical Guide"
 date: 2025-06-05
 categories: embedded development

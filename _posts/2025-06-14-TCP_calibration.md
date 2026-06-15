@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: "Industrial-Style TCP Calibration & Validation"
 date: 2025-06-14
 categories: robotics calibration

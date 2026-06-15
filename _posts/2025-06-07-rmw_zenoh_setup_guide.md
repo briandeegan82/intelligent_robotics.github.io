@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: "Setting Up rmw_zenoh for ROS 2"
 date: 2025-06-07
 categories: robotics ros

@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: "LeRobot + SO-101 Pick-and-Place Setup & Training Guide"
 date: 2025-06-03
 categories: robotics hardware

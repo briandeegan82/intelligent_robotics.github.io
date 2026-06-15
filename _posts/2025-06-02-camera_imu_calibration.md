@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: "Camera–IMU Calibration with Kalibr and ROS Bags"
 date: 2025-06-02
 categories: robotics calibration

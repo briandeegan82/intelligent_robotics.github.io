@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: "Step-by-Step Guide: Setting Up a Network for Teaching ROS 2 in a Classroom"
 date: 2025-06-12
 categories: robotics ros networking

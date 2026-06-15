@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: "Modern Microcontrollers: A Comparative Overview of Popular Platforms"
 date: 2025-06-04
 categories: embedded hardware
