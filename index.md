@@ -30,3 +30,11 @@ This site shares course activities, student work, and technical resources connec
 - Sensing and perception for autonomous systems
 - Control and navigation for robotics platforms
 - Digital twins and simulation-to-real workflows
+
+## Recent Posts
+
+{% for post in site.posts limit:5 %}
+- [{{ post.title }}]({{ post.url | prepend: site.baseurl }}) — <small>{{ post.date | date: "%B %-d, %Y" }}</small>
+{% endfor %}
+
+[View all posts &rarr;]({{ site.baseurl }}/year-archive/)
