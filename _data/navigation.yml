@@ -1,0 +1,52 @@
+# Main navigation menu (top of page)
+main:
+  - title: "Home"
+    url: /intelligent_robotics.github.io/
+  - title: "About"
+    url: /intelligent_robotics.github.io/about/
+  - title: "People"
+    url: /intelligent_robotics.github.io/people/
+  - title: "Projects"
+    url: /intelligent_robotics.github.io/projects/
+  - title: "Publications"
+    url: /intelligent_robotics.github.io/publications/
+  - title: "Blog"
+    url: /intelligent_robotics.github.io/year-archive/
+
+# Sidebar navigation (for pages)
+sidebar:
+  - title: "Professional Links"
+    children:
+      - title: "LinkedIn"
+        url: https://www.linkedin.com/in/brian-deegan-54928b60/
+        icon: "fab fa-linkedin"
+      - title: "GitHub"
+        url: https://github.com/briandeegan82
+        icon: "fab fa-github"
+
+  - title: "Programme"
+    children:
+      - title: "MSc Intelligent Robotics"
+        url: https://www.universityofgalway.ie/courses/taught-postgraduate-courses/intelligent-robotics.html
+        icon: "fas fa-graduation-cap"
+
+  - title: "Course Repositories"
+    children:
+      - title: "EE5109: Control, Locomotion, Navigation"
+        url: https://github.com/EE5109-Control-Locomotion-Navigation
+        icon: "fab fa-github"
+      - title: "EE5108: Digital Twins"
+        url: https://github.com/EE5108-DigitalTwins
+        icon: "fab fa-github"
+      - title: "EE5110: Sensing & Perception"
+        url: https://github.com/EE5110-Sensing-Perception
+        icon: "fab fa-github"
+
+  - title: "Resources"
+    children:
+      - title: "Blog Posts"
+        url: /intelligent_robotics.github.io/year-archive/
+      - title: "ROS 2 Setup"
+        url: /intelligent_robotics.github.io/robotics-ros/
+      - title: "Calibration Guides"
+        url: /intelligent_robotics.github.io/robotics-calibration/
