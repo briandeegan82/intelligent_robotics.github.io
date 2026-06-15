@@ -1,17 +1,17 @@
 # Main navigation menu (top of page)
 main:
   - title: "Home"
-    url: /intelligent_robotics.github.io/
+    url: /
   - title: "About"
-    url: /intelligent_robotics.github.io/about/
+    url: /about/
   - title: "People"
-    url: /intelligent_robotics.github.io/people/
+    url: /people/
   - title: "Projects"
-    url: /intelligent_robotics.github.io/projects/
+    url: /projects/
   - title: "Publications"
-    url: /intelligent_robotics.github.io/publications/
+    url: /publications/
   - title: "Blog"
-    url: /intelligent_robotics.github.io/year-archive/
+    url: /year-archive/
 
 # Sidebar navigation (for pages)
 sidebar:
@@ -45,8 +45,8 @@ sidebar:
   - title: "Resources"
     children:
       - title: "Blog Posts"
-        url: /intelligent_robotics.github.io/year-archive/
+        url: /year-archive/
       - title: "ROS 2 Setup"
-        url: /intelligent_robotics.github.io/robotics-ros/
+        url: /robotics-ros/
       - title: "Calibration Guides"
-        url: /intelligent_robotics.github.io/robotics-calibration/
+        url: /robotics-calibration/

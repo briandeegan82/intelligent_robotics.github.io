@@ -5,7 +5,7 @@ sidebar:
   nav: "sidebar"
 ---
 
-![University of Galway Logo](_images/University_Of_Galway_Logo__Positive_Landscape.png){: .align-center style="max-width: 600px;"}
+![University of Galway Logo]({{ site.baseurl }}/_images/University_Of_Galway_Logo__Positive_Landscape.png){: .align-center style="max-width: 600px;"}
 
 Welcome to the Intelligent Robotics website.
 
