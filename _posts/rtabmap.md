@@ -1,3 +1,11 @@
+---
+layout: post
+title: "RTAB-Map Setup on RB3"
+date: 2025-06-13
+categories: robotics perception
+tags: [rtab-map, slam, rb3, mapping, localization]
+---
+
 # Host Requirements
 
 On the RB3 host install:

@@ -1,3 +1,11 @@
+---
+layout: post
+title: "Step-by-Step Guide: Setting Up a Network for Teaching ROS 2 in a Classroom"
+date: 2025-06-12
+categories: robotics ros networking
+tags: [ros2, networking, classroom, education, configuration]
+---
+
 Here's a **step-by-step guide** for setting up a network for teaching **ROS 2** in a classroom. This guide covers both **wired and wireless** setups, network configuration, and testing.
 
 ---

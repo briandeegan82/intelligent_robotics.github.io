@@ -1,3 +1,10 @@
+---
+layout: post
+title: "Industrial-Style TCP Calibration & Validation"
+date: 2025-06-14
+categories: robotics calibration
+tags: [tcp-calibration, robot-arm, wlkata-mirobot, commissioning, kinematics]
+---
 Here’s a Level 2 version of your lab that moves much closer to how TCP calibration is actually performed during industrial robot commissioning—while still being achievable with the WLKATA Mirobot 6-DOF robotic arm.
 
 Lab Assignment (Level 2): Industrial-Style TCP Calibration & Validation

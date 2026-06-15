@@ -1,3 +1,11 @@
+---
+layout: post
+title: "Setting Up Ubuntu for ROS 2 & Unity Development"
+date: 2025-06-10
+categories: robotics ros
+tags: [ubuntu, ros2, unity, setup, nvidia]
+---
+
 # 🚀 Setting Up Ubuntu for ROS 2 & Unity Development
 
 ## **1️⃣ System Update**

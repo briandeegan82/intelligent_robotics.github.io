@@ -1,3 +1,11 @@
+---
+layout: post
+title: "Modern Microcontrollers: A Comparative Overview of Popular Platforms"
+date: 2025-06-04
+categories: embedded hardware
+tags: [microcontroller, arduino, arm, embedded-systems, comparison]
+---
+
 # Modern Microcontrollers
 ### A Comparative Overview of Popular Platforms
 

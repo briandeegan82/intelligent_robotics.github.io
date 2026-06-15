@@ -1,3 +1,11 @@
+---
+layout: post
+title: "Nix Flakes for Robotics and Embedded Development: A Practical Guide"
+date: 2025-06-05
+categories: embedded development
+tags: [nix, flakes, reproducible-builds, environment-management, rb3]
+---
+
 # Nix Flakes for Robotics and Embedded Development: A Practical Guide
 
 *A survey of reproducible environment management for teams working on autonomous systems, edge AI, and embedded Linux targets like the Qualcomm RB3 Gen 2.*

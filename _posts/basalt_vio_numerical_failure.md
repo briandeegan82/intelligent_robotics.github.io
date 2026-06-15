@@ -1,3 +1,11 @@
+---
+layout: post
+title: "Basalt VIO: Numerical Failure in Backsubstitution"
+date: 2025-06-01
+categories: robotics vio
+tags: [visual-inertial-odometry, basalt, debugging, sensor-fusion]
+---
+
 # Basalt VIO: `Numerical failure in backsubstitution`
 
 ## What the error means

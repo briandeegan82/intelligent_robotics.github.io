@@ -1,3 +1,11 @@
+---
+layout: post
+title: "WiFi Network Setup for ROS 2 with TP-Link AC750"
+date: 2025-06-15
+categories: robotics networking
+tags: [wifi, tp-link, ros2, portable-setup, rb5, network-config]
+---
+
 Setting up a small ROS 2 network using your **TP-Link AC750 WiFi Travel Adapter** (likely the **TL-WR902AC**) is a great solution for a portable robotics setup. Here's how to configure it for your **Ubuntu MATE laptop (ROS2 base station)** and **Qualcomm RB5 (robot)**:
 
 ---
