@@ -12,6 +12,8 @@ main:
     url: /publications/
   - title: "Blog"
     url: /year-archive/
+  - title: "Jobs"
+    url: /robotics-jobs/
 
 # Sidebar navigation (for pages)
 sidebar:
