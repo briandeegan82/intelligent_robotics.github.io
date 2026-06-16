@@ -544,6 +544,11 @@ permalink: /robotics-jobs/
     </div>
   </div>
 
+  <!-- Manual career links section -->
+  <div class="section-head">other careers pages</div>
+  <div class="jobs-grid" id="manual-careers-container">
+  </div>
+
 </main>
 
 <footer>
@@ -566,16 +571,25 @@ const HAS_KEY = ADZUNA_APP_ID.length > 0 && ADZUNA_APP_KEY.length > 0;
 // ─────────────────────────────────────────────
 const ATS_FEEDS = [
   // Greenhouse feeds
-  { name: 'Boston Dynamics',     platform: 'greenhouse', slug: 'bostondynamics' },
   { name: 'Waymo',               platform: 'greenhouse', slug: 'waymo' },
-  { name: 'Zoox',                platform: 'greenhouse', slug: 'zoox' },
-  { name: 'Clearpath Robotics',  platform: 'greenhouse', slug: 'clearpathrobotics' },
-  { name: 'Mobileye',            platform: 'greenhouse', slug: 'mobileye' },
-  { name: 'Osaro',               platform: 'greenhouse', slug: 'osaro' },
+  { name: 'Anduril Industries',  platform: 'greenhouse', slug: 'andurilindustries' },
+  { name: 'Stack AV',            platform: 'greenhouse', slug: 'stackav' },
+  { name: 'Apptronik',           platform: 'greenhouse', slug: 'apptronik' },
+  { name: 'Figure',              platform: 'greenhouse', slug: 'figureai' },
   // Lever feeds
-  { name: 'Agility Robotics',    platform: 'lever',      slug: 'agilityrobotics' },
-  { name: 'Skydio',              platform: 'lever',      slug: 'skydio' },
-  { name: 'Nuro',                platform: 'lever',      slug: 'nuro' },
+  { name: 'Waabi',               platform: 'lever',      slug: 'waabi' },
+];
+
+// ─────────────────────────────────────────────
+//  Manual career links
+//  Static links to company careers pages
+// ─────────────────────────────────────────────
+const MANUAL_CAREERS = [
+  { name: 'Valeo',               url: 'https://www.valeo.com/en/careers' },
+  { name: 'Analog Devices',      url: 'https://www.analog.com/en/about-adi/careers.html' },
+  { name: 'Qualcomm',            url: 'https://www.qualcomm.com/careers' },
+  { name: 'NVIDIA',              url: 'https://www.nvidia.com/en-us/about-nvidia/careers/' },
+  { name: 'Trane Technologies',  url: 'https://careers.tranetechnologies.com/' },
 ];
 
 // ─────────────────────────────────────────────
@@ -691,6 +705,18 @@ function renderCard(job) {
     </a>`;
 }
 
+function renderManualCareerCard(company) {
+  return `
+    <a class="job-card" href="${sanitise(company.url)}" target="_blank" rel="noopener">
+      <div class="job-title">${sanitise(company.name)}</div>
+      <div class="job-company">careers portal</div>
+      <div class="job-meta">
+        <span class="tag tag-type">Open Roles</span>
+      </div>
+      <p class="job-desc">Visit the company careers page to explore current opportunities.</p>
+    </a>`;
+}
+
 function applyFilters() {
   const q = searchQuery.toLowerCase();
   filteredJobs = allJobs.filter(job => {
@@ -768,7 +794,10 @@ async function fetchATS() {
     if (!url) continue;
     try {
       const res = await fetch(url);
-      if (!res.ok) continue;
+      if (!res.ok) {
+        console.warn(`ATS feed unavailable (${res.status}): ${feed.name} [${feed.platform}:${feed.slug}]`);
+        continue;
+      }
       const data = await res.json();
 
       const listings = feed.platform === 'greenhouse'
@@ -856,6 +885,10 @@ async function loadJobs() {
   } else {
     atsContainer.innerHTML = atsJobs.map(renderCard).join('');
   }
+
+  // Render manual careers section
+  const manualContainer = document.getElementById('manual-careers-container');
+  manualContainer.innerHTML = MANUAL_CAREERS.map(renderManualCareerCard).join('');
 
   const now = new Date();
   document.getElementById('stat-updated').textContent =
