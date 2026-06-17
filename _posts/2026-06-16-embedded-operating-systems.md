@@ -2,7 +2,10 @@
 layout: single
 title: "The Silent Engine: A Comprehensive Guide to Embedded Operating Systems"
 date: 2026-06-16
-categories: embedded development
+permalink: /embedded/development/2026/06/16/embedded-operating-systems/
+categories:
+  - tutorials
+  - embedded
 tags: [embedded-systems, rtos, embedded-linux, iot]
 ---
 

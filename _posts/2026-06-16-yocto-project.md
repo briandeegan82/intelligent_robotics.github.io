@@ -2,7 +2,10 @@
 layout: single
 title: "The Yocto Project: The Toolmaker's Framework for Custom Linux"
 date: 2026-06-16
-categories: embedded development
+permalink: /embedded/development/2026/06/16/yocto-project/
+categories:
+  - tutorials
+  - embedded
 tags: [yocto, embedded-linux, bitbake, build-systems]
 ---
 

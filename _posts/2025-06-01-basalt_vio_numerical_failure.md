@@ -2,7 +2,10 @@
 layout: single
 title: "Basalt VIO: Numerical Failure in Backsubstitution"
 date: 2025-06-01
-categories: robotics vio
+permalink: /robotics/vio/2025/06/01/basalt_vio_numerical_failure/
+categories:
+  - tutorials
+  - perception
 tags: [visual-inertial-odometry, basalt, debugging, sensor-fusion]
 ---
 

@@ -1,0 +1,7 @@
+{% assign tutorial_posts = site.posts | where_exp: "post", "post.categories contains include.category" %}
+{% if include.sort == "tutorial_order" %}
+  {% assign tutorial_posts = tutorial_posts | sort: "tutorial_order" %}
+{% endif %}
+{% for post in tutorial_posts %}
+  {% include archive-single.html %}
+{% endfor %}

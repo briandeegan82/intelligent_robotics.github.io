@@ -2,7 +2,10 @@
 layout: single
 title: "Nix Flakes for Robotics and Embedded Development: A Practical Guide"
 date: 2025-06-05
-categories: embedded development
+permalink: /embedded/development/2025/06/05/nix-flakes-robotics-embedded/
+categories:
+  - tutorials
+  - embedded
 tags: [nix, flakes, reproducible-builds, environment-management, rb3]
 ---
 

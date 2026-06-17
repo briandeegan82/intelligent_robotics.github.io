@@ -31,10 +31,17 @@ This site shares course activities, student work, and technical resources connec
 - Control and navigation for robotics platforms
 - Digital twins and simulation-to-real workflows
 
-## Recent Posts
+## Tutorials
 
-{% for post in site.posts limit:5 %}
-- [{{ post.title }}]({{ post.url | prepend: site.baseurl }}) — <small>{{ post.date | date: "%B %-d, %Y" }}</small>
+Step-by-step guides organized by topic. Browse the full library or jump into a category:
+
+{% assign sorted_categories = site.data.tutorials.categories | sort: "order" %}
+{% for cat in sorted_categories %}
+{% assign cat_posts = site.posts | where_exp: "post", "post.categories contains cat.slug" %}
+- **[{{ cat.title }}]({{ site.baseurl }}/tutorials/{{ cat.slug }}/)** — {{ cat.description }}
+  {% for post in cat_posts limit:2 %}
+  - [{{ post.title }}]({{ post.url | prepend: site.baseurl }})
+  {% endfor %}
 {% endfor %}
 
-[View all posts &rarr;]({{ site.baseurl }}/year-archive/)
+[View all tutorials &rarr;]({{ site.baseurl }}/tutorials/)

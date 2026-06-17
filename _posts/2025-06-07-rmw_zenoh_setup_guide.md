@@ -2,7 +2,10 @@
 layout: single
 title: "Setting Up rmw_zenoh for ROS 2"
 date: 2025-06-07
-categories: robotics ros
+permalink: /robotics/ros/2025/06/07/rmw_zenoh_setup_guide/
+categories:
+  - tutorials
+  - ros
 tags: [ros2, rmw_zenoh, middleware, networking, distributed-systems]
 ---
 

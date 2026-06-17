@@ -2,7 +2,10 @@
 layout: single
 title: "LeRobot + SO-101 Pick-and-Place Setup & Training Guide"
 date: 2025-06-03
-categories: robotics hardware
+permalink: /robotics/hardware/2025/06/03/lerobot_so_101_pick_place_setup_training_guide/
+categories:
+  - tutorials
+  - hardware
 tags: [lerobot, so-101, robot-arm, pick-and-place, training]
 ---
 

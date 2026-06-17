@@ -9,6 +9,7 @@ remote_theme: academicpages/academicpages.github.io
 
 plugins:
   - jekyll-include-cache
+  - jekyll-redirect-from
 
 include:
   - _pages

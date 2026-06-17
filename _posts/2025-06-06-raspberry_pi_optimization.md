@@ -2,7 +2,10 @@
 layout: single
 title: "Raspberry Pi Camera Pipeline Optimization"
 date: 2025-06-06
-categories: robotics hardware
+permalink: /robotics/hardware/2025/06/06/raspberry_pi_optimization/
+categories:
+  - tutorials
+  - hardware
 tags: [raspberry-pi, camera, libcamera, optimization, vision]
 ---
 

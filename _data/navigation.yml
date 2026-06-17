@@ -10,8 +10,8 @@ main:
     url: /projects/
   - title: "Publications"
     url: /publications/
-  - title: "Blog"
-    url: /year-archive/
+  - title: "Tutorials"
+    url: /tutorials/
   - title: "Jobs"
     url: /robotics-jobs/
 
@@ -46,9 +46,13 @@ sidebar:
 
   - title: "Resources"
     children:
-      - title: "Blog Posts"
-        url: /year-archive/
-      - title: "ROS 2 Setup"
-        url: /robotics-ros/
+      - title: "Tutorials"
+        url: /tutorials/
+      - title: "ROS & ROS 2"
+        url: /tutorials/ros/
+      - title: "Embedded & Microcontrollers"
+        url: /tutorials/embedded/
+      - title: "3D Printing & CAD"
+        url: /tutorials/cad/
       - title: "Calibration Guides"
-        url: /robotics-calibration/
+        url: /tutorials/calibration/

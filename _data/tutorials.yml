@@ -1,0 +1,29 @@
+categories:
+  - slug: ros
+    title: "ROS & ROS 2"
+    description: "Middleware, setup, and networking for ROS 2 classrooms and projects."
+    order: 1
+  - slug: embedded
+    title: "Embedded & Microcontrollers"
+    description: "Microcontrollers, RTOS, embedded Linux, and reproducible development environments."
+    order: 2
+  - slug: cad
+    title: "3D Printing & CAD"
+    description: "Onshape design, COTS parts libraries, and export workflows for 3D printing."
+    order: 3
+  - slug: calibration
+    title: "Calibration"
+    description: "Sensor extrinsics, TCP calibration, and commissioning guides."
+    order: 4
+  - slug: perception
+    title: "Perception & SLAM"
+    description: "Visual-inertial odometry, mapping, and localization tutorials."
+    order: 5
+  - slug: simulation
+    title: "Simulation"
+    description: "Physics engines and simulation environments for robotics development."
+    order: 6
+  - slug: hardware
+    title: "Hardware Platforms"
+    description: "Robot arms, camera pipelines, and platform-specific setup guides."
+    order: 7
