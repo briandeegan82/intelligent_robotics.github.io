@@ -622,7 +622,6 @@ function adzunaUrl(q) {
     app_key: ADZUNA_APP_KEY,
     results_per_page: q.results_per_page,
     what: q.what,
-    content_type: 'application/json',
   });
   return `${base}?${params}`;
 }
@@ -767,7 +766,11 @@ async function fetchAdzuna() {
   for (const q of SEARCH_QUERIES) {
     try {
       const res = await fetch(adzunaUrl(q));
-      if (!res.ok) continue;
+      if (!res.ok) {
+        const body = await res.text();
+        console.warn(`Adzuna request failed (${res.status}) for query: ${q.what}`, body.slice(0, 180));
+        continue;
+      }
       const data = await res.json();
       for (const j of (data.results || [])) {
         j._role   = inferRole(j.title, j.description);
