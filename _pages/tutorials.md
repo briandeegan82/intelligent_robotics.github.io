@@ -9,15 +9,42 @@ redirect_from:
 
 A curated library of step-by-step guides for robotics and embedded systems development, organized by topic.
 
+{% include tutorial-styles.html %}
+
+<div class="tutorial-toolbar">
+  <strong>Find tutorials quickly</strong>
+  <div class="tutorial-chip-list">
+    {% assign sorted_categories = site.data.tutorials.categories | sort: "order" %}
+    {% for cat in sorted_categories %}
+      <a class="tutorial-chip" href="#{{ cat.slug }}">{{ cat.title }}</a>
+    {% endfor %}
+    <a class="tutorial-chip" href="#latest">Latest updates</a>
+  </div>
+</div>
+
 {% assign sorted_categories = site.data.tutorials.categories | sort: "order" %}
+<div class="tutorial-category-grid">
 {% for cat in sorted_categories %}
   {% assign cat_posts = site.posts | where_exp: "post", "post.categories contains cat.slug" %}
-  <section class="tutorial-category">
-    <h2 id="{{ cat.slug }}"><a href="{{ site.baseurl }}/tutorials/{{ cat.slug }}/">{{ cat.title }}</a></h2>
+  <section id="{{ cat.slug }}" class="tutorial-category-card">
+    <h3><a href="{{ site.baseurl }}/tutorials/{{ cat.slug }}/">{{ cat.title }}</a></h3>
+    <p class="tutorial-count">{{ cat_posts.size }} tutorial{% if cat_posts.size != 1 %}s{% endif %}</p>
     <p>{{ cat.description }}</p>
-    <p><em>{{ cat_posts.size }} tutorial{% if cat_posts.size != 1 %}s{% endif %}</em> — <a href="{{ site.baseurl }}/tutorials/{{ cat.slug }}/">View all &rarr;</a></p>
-    {% for post in cat_posts limit:3 %}
-      {% include archive-single.html %}
-    {% endfor %}
+    <p><a href="{{ site.baseurl }}/tutorials/{{ cat.slug }}/">Open track &rarr;</a></p>
   </section>
 {% endfor %}
+</div>
+
+<h2 id="latest">Latest Tutorial Updates</h2>
+<p class="tutorial-intro">New and refreshed guides across all tracks.</p>
+<div class="tutorial-list">
+  {% assign all_tutorials = site.posts | where_exp: "post", "post.categories contains 'tutorials'" %}
+  {% for post in all_tutorials limit:8 %}
+    {% assign preview = post.excerpt | strip_html | strip_newlines | truncate: 150 %}
+    <article class="tutorial-card">
+      <h3><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a></h3>
+      <p class="tutorial-meta">{{ post.date | date: "%d %b %Y" }}</p>
+      <p>{{ preview }}</p>
+    </article>
+  {% endfor %}
+</div>

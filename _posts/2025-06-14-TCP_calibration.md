@@ -2,7 +2,7 @@
 layout: single
 title: "Industrial-Style TCP Calibration & Validation"
 date: 2025-06-14
-permalink: /robotics/calibration/2025/06/14/TCP_calibration/
+permalink: /tutorials/calibration/2025/06/14/tcp-calibration/
 categories:
   - tutorials
   - calibration

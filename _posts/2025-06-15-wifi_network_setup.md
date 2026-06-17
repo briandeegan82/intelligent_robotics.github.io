@@ -2,7 +2,7 @@
 layout: single
 title: "WiFi Network Setup for ROS 2 with TP-Link AC750"
 date: 2025-06-15
-permalink: /robotics/networking/2025/06/15/wifi_network_setup/
+permalink: /tutorials/ros/2025/06/15/wifi-network-setup/
 categories:
   - tutorials
   - ros

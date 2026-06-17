@@ -2,7 +2,7 @@
 layout: single
 title: "Step-by-Step Guide: Setting Up a Network for Teaching ROS 2 in a Classroom"
 date: 2025-06-12
-permalink: /robotics/ros/networking/2025/06/12/ros_network_config/
+permalink: /tutorials/ros/2025/06/12/ros-network-config/
 categories:
   - tutorials
   - ros

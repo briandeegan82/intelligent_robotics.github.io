@@ -2,7 +2,7 @@
 layout: single
 title: "ROS 1 vs ROS 2 Middleware: Overview, Selection, and Optimization"
 date: 2025-06-09
-permalink: /robotics/ros/2025/06/09/ros1_vs_ros2_middleware_overview/
+permalink: /tutorials/ros/2025/06/09/ros1-vs-ros2-middleware-overview/
 categories:
   - tutorials
   - ros

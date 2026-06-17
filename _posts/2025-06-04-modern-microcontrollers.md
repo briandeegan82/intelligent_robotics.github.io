@@ -2,7 +2,7 @@
 layout: single
 title: "Modern Microcontrollers: A Comparative Overview of Popular Platforms"
 date: 2025-06-04
-permalink: /embedded/hardware/2025/06/04/modern-microcontrollers/
+permalink: /tutorials/embedded/2025/06/04/modern-microcontrollers/
 categories:
   - tutorials
   - embedded

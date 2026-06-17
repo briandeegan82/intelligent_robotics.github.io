@@ -2,7 +2,7 @@
 layout: single
 title: "ROS and ROS 2: History, Concepts, and the Transition"
 date: 2025-06-11
-permalink: /robotics/ros/2025/06/11/ros-and-ros2-overview/
+permalink: /tutorials/ros/2025/06/11/ros-and-ros2-overview/
 categories:
   - tutorials
   - ros

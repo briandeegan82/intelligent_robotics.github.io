@@ -2,7 +2,7 @@
 layout: single
 title: "Basalt VIO: Numerical Failure in Backsubstitution"
 date: 2025-06-01
-permalink: /robotics/vio/2025/06/01/basalt_vio_numerical_failure/
+permalink: /tutorials/perception/2025/06/01/basalt-vio-numerical-failure/
 categories:
   - tutorials
   - perception

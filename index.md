@@ -33,15 +33,24 @@ This site shares course activities, student work, and technical resources connec
 
 ## Tutorials
 
-Step-by-step guides organized by topic. Browse the full library or jump into a category:
+{% include tutorial-styles.html %}
+
+Step-by-step guides organized by track. Start with a track hub or jump to recent updates.
 
 {% assign sorted_categories = site.data.tutorials.categories | sort: "order" %}
+<div class="tutorial-category-grid">
 {% for cat in sorted_categories %}
 {% assign cat_posts = site.posts | where_exp: "post", "post.categories contains cat.slug" %}
-- **[{{ cat.title }}]({{ site.baseurl }}/tutorials/{{ cat.slug }}/)** — {{ cat.description }}
-  {% for post in cat_posts limit:2 %}
-  - [{{ post.title }}]({{ post.url | prepend: site.baseurl }})
-  {% endfor %}
+  <section class="tutorial-category-card">
+    <h3><a href="{{ site.baseurl }}/tutorials/{{ cat.slug }}/">{{ cat.title }}</a></h3>
+    <p class="tutorial-count">{{ cat_posts.size }} tutorial{% if cat_posts.size != 1 %}s{% endif %}</p>
+    <p>{{ cat.description }}</p>
+    {% assign latest_post = cat_posts | first %}
+    {% if latest_post %}
+      <p><strong>Latest:</strong> <a href="{{ latest_post.url | prepend: site.baseurl }}">{{ latest_post.title }}</a></p>
+    {% endif %}
+  </section>
 {% endfor %}
+</div>
 
 [View all tutorials &rarr;]({{ site.baseurl }}/tutorials/)

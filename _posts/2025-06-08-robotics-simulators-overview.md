@@ -2,7 +2,7 @@
 layout: single
 title: "Simulation Environments for Robotics Development: Gazebo, MuJoCo, Webots, Unity, and Isaac Sim"
 date: 2025-06-08
-permalink: /robotics/simulation/2025/06/08/robotics-simulators-overview/
+permalink: /tutorials/simulation/2025/06/08/robotics-simulators-overview/
 categories:
   - tutorials
   - simulation

@@ -2,7 +2,7 @@
 layout: single
 title: "Camera–IMU Calibration with Kalibr and ROS Bags"
 date: 2025-06-02
-permalink: /robotics/calibration/2025/06/02/camera_imu_calibration/
+permalink: /tutorials/calibration/2025/06/02/camera-imu-calibration/
 categories:
   - tutorials
   - calibration
