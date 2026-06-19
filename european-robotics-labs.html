@@ -1,0 +1,429 @@
+---
+layout: null
+title: "European Robotics Labs"
+permalink: /european-robotics-labs/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>European Robotics Labs — Intelligent Robotics, University of Galway</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0e1117;
+  --ink-soft: #3d4451;
+  --ink-muted: #7a8499;
+  --paper: #f5f6f8;
+  --card: #ffffff;
+  --border: #dde1ea;
+  --accent: #00c2a8;
+  --accent-dim: #e0f9f6;
+  --hero-bg: #0e1117;
+  --hero-line: rgba(0,194,168,0.18);
+  --radius: 6px;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'IBM Plex Sans', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--sans); background: var(--paper); color: var(--ink); font-size: 15px; line-height: 1.6; }
+
+/* Hero */
+.hero { background: var(--hero-bg); padding: 52px 24px 48px; position: relative; overflow: hidden; }
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: linear-gradient(var(--hero-line) 1px, transparent 1px), linear-gradient(90deg, var(--hero-line) 1px, transparent 1px);
+  background-size: 40px 40px; pointer-events: none;
+}
+.hero-inner { max-width: 920px; margin: 0 auto; position: relative; }
+.hero-eyebrow { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 14px; }
+.hero h1 { font-family: var(--sans); font-weight: 300; font-size: clamp(28px,5vw,46px); color: #fff; line-height: 1.15; letter-spacing: -0.02em; }
+.hero h1 strong { font-weight: 600; color: var(--accent); }
+.hero-sub { margin-top: 14px; color: #8fa0b8; font-weight: 300; font-size: 15px; max-width: 560px; }
+.hero-meta { margin-top: 28px; display: flex; gap: 20px; flex-wrap: wrap; }
+.hero-stat { font-family: var(--mono); font-size: 12px; color: #8fa0b8; }
+.hero-stat span { color: var(--accent); font-size: 18px; font-weight: 500; display: block; line-height: 1; margin-bottom: 3px; }
+
+/* Controls bar */
+.controls-bar { background: var(--ink); border-bottom: 2px solid var(--accent); padding: 0 24px; }
+.controls-inner { max-width: 920px; margin: 0 auto; display: flex; align-items: center; gap: 0; flex-wrap: wrap; }
+.ctrl-group { display: flex; align-items: center; gap: 0; border-right: 1px solid #2a2f3a; padding: 12px 20px 12px 0; margin-right: 20px; }
+.ctrl-group:last-child { border-right: none; margin-right: 0; }
+.ctrl-label { font-family: var(--mono); font-size: 10px; color: #5a6478; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 10px; white-space: nowrap; }
+.chip-set { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { font-family: var(--mono); font-size: 11px; padding: 4px 10px; border-radius: 3px; border: 1px solid #2a2f3a; background: transparent; color: #8fa0b8; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+.chip:hover { border-color: var(--accent); color: var(--accent); }
+.chip.active { background: var(--accent); border-color: var(--accent); color: var(--ink); font-weight: 500; }
+
+/* Main */
+.main { max-width: 920px; margin: 0 auto; padding: 36px 24px 64px; }
+
+/* Section header */
+.section-head { font-family: var(--mono); font-size: 11px; color: var(--ink-muted); letter-spacing: 0.1em; text-transform: uppercase; margin: 36px 0 18px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+
+/* Dimension legend */
+.dim-legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; padding: 14px 16px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); }
+.dim-item { display: flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--ink-soft); }
+.dim-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+/* Labs grid */
+.labs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 16px; }
+
+/* Lab card */
+.lab-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; transition: border-color 0.15s, box-shadow 0.15s; }
+.lab-card:hover { border-color: var(--accent); box-shadow: 0 2px 12px rgba(0,194,168,0.1); }
+.lab-card.hidden { display: none; }
+.lab-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+.lab-flag { font-size: 22px; line-height: 1; flex-shrink: 0; padding-top: 2px; }
+.lab-name { font-weight: 600; font-size: 14px; color: var(--ink); line-height: 1.3; }
+.lab-inst { font-size: 12px; color: var(--ink-muted); margin-top: 1px; font-family: var(--mono); }
+.lab-desc { font-size: 12px; color: var(--ink-soft); line-height: 1.55; margin-bottom: 12px; }
+.chart-wrap { position: relative; height: 200px; width: 100%; margin-bottom: 12px; }
+.lab-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.lab-tag { font-family: var(--mono); font-size: 10px; padding: 2px 7px; border-radius: 3px; }
+
+/* Compare section */
+.compare-wrap { position: relative; height: 400px; width: 100%; }
+.toggle-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.toggle-btn { font-family: var(--mono); font-size: 11px; padding: 4px 10px; border-radius: 3px; cursor: pointer; transition: all 0.15s; border-width: 1px; border-style: solid; }
+.toggle-btn.off { opacity: 0.35; }
+
+/* Score table */
+.score-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.score-table th { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-muted); padding: 8px 10px; text-align: left; border-bottom: 2px solid var(--border); }
+.score-table td { padding: 9px 10px; border-bottom: 1px solid var(--border); color: var(--ink-soft); }
+.score-table tr:last-child td { border-bottom: none; }
+.score-table td:first-child { font-weight: 500; color: var(--ink); }
+.score-bar-cell { width: 100px; }
+.score-bar-wrap { background: #eef0f5; border-radius: 2px; height: 6px; }
+.score-bar-fill { height: 6px; border-radius: 2px; }
+.score-num { font-family: var(--mono); font-size: 11px; color: var(--ink-muted); white-space: nowrap; }
+.score-total { font-family: var(--mono); font-weight: 500; color: var(--ink); }
+
+/* back link */
+.back-link { font-family: var(--mono); font-size: 12px; color: var(--accent); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 24px; }
+.back-link:hover { text-decoration: underline; }
+
+footer { border-top: 1px solid var(--border); padding: 20px 24px; text-align: center; font-family: var(--mono); font-size: 11px; color: #b0b8c8; }
+footer a { color: var(--accent); text-decoration: none; }
+
+@media (max-width: 600px) {
+  .labs-grid { grid-template-columns: 1fr; }
+  .controls-inner { flex-direction: column; align-items: flex-start; }
+  .ctrl-group { border-right: none; border-bottom: 1px solid #2a2f3a; padding: 10px 0; margin-right: 0; width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">// CAR Group &middot; University of Galway</div>
+    <h1>Top Robotics Labs<br><strong>in Europe</strong></h1>
+    <p class="hero-sub">Research strength profiles across six key dimensions — perception, manipulation, locomotion, AI&nbsp;&amp;&nbsp;learning, human–robot interaction, and real-world deployment.</p>
+    <div class="hero-meta">
+      <div class="hero-stat"><span>8</span>labs profiled</div>
+      <div class="hero-stat"><span>6</span>countries</div>
+      <div class="hero-stat"><span>6</span>dimensions scored</div>
+      <div class="hero-stat"><span>1–10</span>score scale</div>
+    </div>
+  </div>
+</header>
+
+<nav class="controls-bar" aria-label="Filters">
+  <div class="controls-inner">
+    <div class="ctrl-group">
+      <span class="ctrl-label">Country</span>
+      <div class="chip-set" id="filter-country">
+        <button class="chip active" data-val="all">All</button>
+        <button class="chip" data-val="ch">🇨🇭 Switzerland</button>
+        <button class="chip" data-val="de">🇩🇪 Germany</button>
+        <button class="chip" data-val="gb">🇬🇧 UK</button>
+        <button class="chip" data-val="nl">🇳🇱 Netherlands</button>
+        <button class="chip" data-val="fr">🇫🇷 France</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main class="main">
+  <a href="/intelligent_robotics.github.io/" class="back-link">← Back to site</a>
+
+  <div class="section-head">Dimension key</div>
+  <div class="dim-legend" id="dim-legend"></div>
+
+  <div class="section-head">Individual lab profiles</div>
+  <div class="labs-grid" id="labs-grid"></div>
+
+  <div class="section-head">Comparative overview</div>
+  <p style="font-size:13px; color:var(--ink-muted); margin-bottom:16px;">Toggle labs on/off to compare. Hover data points for scores.</p>
+  <div class="toggle-row" id="compare-toggles"></div>
+  <div class="compare-wrap">
+    <canvas id="compareChart" role="img" aria-label="Comparative radar chart of eight European robotics labs across six research dimensions"></canvas>
+  </div>
+
+  <div class="section-head">Score summary</div>
+  <table class="score-table" id="score-table" aria-label="Lab scores across six dimensions"></table>
+</main>
+
+<footer>
+  CAR Group &middot; University of Galway &nbsp;&middot;&nbsp;
+  <a href="https://www.universityofgalway.ie/courses/taught-postgraduate-courses/intelligent-robotics.html">MSc Intelligent Robotics</a>
+  &nbsp;&middot;&nbsp; Scores reflect research emphasis, not absolute ranking
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const DIMS = ['Perception & vision','Manipulation','Locomotion','AI & learning','Human–robot interaction','Deployment & industry'];
+const DIM_COLORS = ['#378ADD','#1D9E75','#D85A30','#BA7517','#D4537E','#7F77DD'];
+
+const LABS = [
+  { id:'eth', name:'ETH Zurich — RSL / ASL', inst:'ETH Zurich', country:'ch', flag:'🇨🇭', color:'#378ADD',
+    tagBg:'#dbeeff', tagFg:'#185FA5',
+    scores:[8,8,10,9,6,8],
+    desc:'The Robotic Systems Lab and Autonomous Systems Lab are world-synonymous with legged locomotion (ANYmal) and outdoor autonomy. ETH IRIS coordinates 10+ independent labs with strengths in compliant actuation, learning-based control, and space robotics.',
+    tags:['Legged robots','Visual SLAM','Space robotics','Learning control','Outdoor autonomy'] },
+  { id:'epfl', name:'EPFL — BioRob / LIS', inst:'EPFL Lausanne', country:'ch', flag:'🇨🇭', color:'#1D9E75',
+    tagBg:'#d6f5ed', tagFg:'#0F6E56',
+    scores:[7,6,9,8,7,6],
+    desc:'The Biorobotics Lab pioneers bio-inspired locomotion, exoskeletons, and neurorobotics. LIS leads in morphing aerial robots and soft robotics. EPFL hosted RoboSoft 2025 and maintains 12 core + 13 affiliated labs.',
+    tags:['Bio-inspired','Aerial robots','Soft robotics','Exoskeletons','Neurorobotics'] },
+  { id:'dlr', name:'DLR Institute of Robotics & Mechatronics', inst:'German Aerospace Center', country:'de', flag:'🇩🇪', color:'#D85A30',
+    tagBg:'#fde8df', tagFg:'#993C1D',
+    scores:[7,10,7,8,9,9],
+    desc:'World leader in dexterous manipulation, compliant actuators, and humanoids (Rollin\' Justin, TORO, neoDavid). Coordinates the euROBIN EU excellence network. Arms tested on the ISS in 2024 via the Surface Avatar project.',
+    tags:['Humanoids','Dexterous hands','Space robotics','Cobots','Compliant actuation'] },
+  { id:'imperial', name:'Imperial College — Dyson Lab / Hamlyn', inst:'Imperial College London', country:'gb', flag:'🇬🇧', color:'#7F77DD',
+    tagBg:'#eeedfe', tagFg:'#534AB7',
+    scores:[10,7,5,8,8,7],
+    desc:'The Dyson Robotics Lab is a world reference for visual SLAM and real-time 3D perception (ElasticFusion, CodeSLAM, Gaussian Splatting SLAM — Best Demo CVPR 2024). The Hamlyn Centre leads globally in surgical robotics.',
+    tags:['Visual SLAM','3D reconstruction','Surgical robotics','Scene understanding','Gaussian splatting'] },
+  { id:'tum', name:'TU Munich — Chair of Robotics & AI', inst:'Technical University of Munich', country:'de', flag:'🇩🇪', color:'#BA7517',
+    tagBg:'#fef3d6', tagFg:'#854F0B',
+    scores:[9,8,7,9,7,8],
+    desc:'TUM combines computer vision and deep learning for autonomous systems and robot manipulation. Strong automotive ties; collaborates with DLR on learning and soft robotics. Consistent top-ranked European robotics output.',
+    tags:['Deep learning','Autonomous driving','Robot vision','Industrial AI','Manipulation learning'] },
+  { id:'tudelft', name:'TU Delft — Cognitive Robotics', inst:'TU Delft', country:'nl', flag:'🇳🇱', color:'#D4537E',
+    tagBg:'#fce8f0', tagFg:'#993556',
+    scores:[7,7,7,8,8,7],
+    desc:'TU Delft\'s Cognitive Robotics covers multi-robot systems, motion planning, and robot learning. The MAVLab leads in drone technology and swarms. ERC-funded research in autonomous multi-robot coordination.',
+    tags:['Multi-robot systems','Drone swarms','Soft robotics','Motion planning','Reinforcement learning'] },
+  { id:'laas', name:'LAAS-CNRS', inst:'LAAS, Toulouse', country:'fr', flag:'🇫🇷', color:'#3B6D11',
+    tagBg:'#e8f4d9', tagFg:'#3B6D11',
+    scores:[7,8,8,7,9,7],
+    desc:'France\'s flagship robotics lab with deep expertise in geometric motion planning, whole-body control, and HRI. Developers of the HPP planner and the Pinocchio dynamics library, the backbone of European humanoid software.',
+    tags:['Motion planning','Whole-body control','HRI','Pinocchio library','Humanoids'] },
+  { id:'ori', name:'Oxford Robotics Institute', inst:'University of Oxford', country:'gb', flag:'🇬🇧', color:'#888780',
+    tagBg:'#eeede8', tagFg:'#5F5E5A',
+    scores:[10,6,6,8,6,9],
+    desc:'World leader in mobile robot perception and long-term autonomy for outdoor environments. Pioneered radar-based SLAM and lidar perception for autonomous vehicles. Strong industrial and defence sector partnerships.',
+    tags:['Long-term autonomy','Autonomous vehicles','Radar SLAM','Mobile perception','Field robotics'] },
+];
+
+/* ── Dimension legend ── */
+const legend = document.getElementById('dim-legend');
+DIMS.forEach((d,i) => {
+  const el = document.createElement('div');
+  el.className = 'dim-item';
+  el.innerHTML = `<span class="dim-dot" style="background:${DIM_COLORS[i]}"></span>${d}`;
+  legend.appendChild(el);
+});
+
+/* ── Spider canvas draw ── */
+function drawSpider(canvasId, scores, color) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const W = canvas.offsetWidth || 260, H = canvas.offsetHeight || 200;
+  canvas.width = W * (window.devicePixelRatio || 1);
+  canvas.height = H * (window.devicePixelRatio || 1);
+  const ctx = canvas.getContext('2d');
+  ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+  const cx = W / 2, cy = H / 2 + 4;
+  const R = Math.min(W, H) * 0.34;
+  const N = 6;
+  const gridC = 'rgba(0,0,0,0.07)', axisC = 'rgba(0,0,0,0.12)', labelC = 'rgba(50,60,80,0.55)';
+
+  function pt(angle, r) {
+    const a = angle - Math.PI / 2;
+    return [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+  }
+
+  /* rings */
+  [2,4,6,8,10].forEach(ring => {
+    ctx.beginPath();
+    for (let i = 0; i < N; i++) {
+      const [x,y] = pt(2*Math.PI*i/N, R*ring/10);
+      i === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+    }
+    ctx.closePath();
+    ctx.strokeStyle = gridC; ctx.lineWidth = 0.5; ctx.stroke();
+  });
+
+  /* axes */
+  for (let i = 0; i < N; i++) {
+    const [x,y] = pt(2*Math.PI*i/N, R);
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(x,y);
+    ctx.strokeStyle = axisC; ctx.lineWidth = 0.5; ctx.stroke();
+  }
+
+  /* data shape */
+  ctx.beginPath();
+  for (let i = 0; i < N; i++) {
+    const [x,y] = pt(2*Math.PI*i/N, R*scores[i]/10);
+    i === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+  }
+  ctx.closePath();
+  ctx.fillStyle = color + '28'; ctx.fill();
+  ctx.strokeStyle = color; ctx.lineWidth = 1.8; ctx.stroke();
+
+  /* dots */
+  for (let i = 0; i < N; i++) {
+    const [x,y] = pt(2*Math.PI*i/N, R*scores[i]/10);
+    ctx.beginPath(); ctx.arc(x,y,3,0,2*Math.PI);
+    ctx.fillStyle = color; ctx.fill();
+  }
+
+  /* labels */
+  const SHORT = ['Perception','Manipulation','Locomotion','AI & learning','HRI','Deployment'];
+  ctx.font = `10px IBM Plex Mono, monospace`;
+  ctx.fillStyle = labelC; ctx.textAlign = 'center';
+  for (let i = 0; i < N; i++) {
+    const [lx,ly] = pt(2*Math.PI*i/N, R + 22);
+    ctx.fillText(SHORT[i], lx, ly + 4);
+  }
+}
+
+/* ── Build cards ── */
+const grid = document.getElementById('labs-grid');
+LABS.forEach((lab, idx) => {
+  const cid = `spider-${idx}`;
+  const card = document.createElement('div');
+  card.className = 'lab-card';
+  card.dataset.country = lab.country;
+  card.innerHTML = `
+    <div class="lab-header">
+      <div class="lab-flag">${lab.flag}</div>
+      <div>
+        <div class="lab-name">${lab.name}</div>
+        <div class="lab-inst">${lab.inst}</div>
+      </div>
+    </div>
+    <p class="lab-desc">${lab.desc}</p>
+    <div class="chart-wrap"><canvas id="${cid}" style="width:100%;height:100%;"></canvas></div>
+    <div class="lab-tags">${lab.tags.map(t => `<span class="lab-tag" style="background:${lab.tagBg};color:${lab.tagFg};">${t}</span>`).join('')}</div>`;
+  grid.appendChild(card);
+  setTimeout(() => drawSpider(cid, lab.scores, lab.color), 80 + idx * 40);
+});
+
+/* ── Country filter ── */
+function setupChips(groupId, onSelect) {
+  const grp = document.getElementById(groupId);
+  grp.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      grp.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      onSelect(chip.dataset.val);
+    });
+  });
+}
+setupChips('filter-country', val => {
+  document.querySelectorAll('.lab-card').forEach(card => {
+    card.classList.toggle('hidden', val !== 'all' && card.dataset.country !== val);
+  });
+});
+
+/* ── Comparative Chart.js radar ── */
+const activeSet = new Set(LABS.map((_,i) => i));
+const toggleRow = document.getElementById('compare-toggles');
+LABS.forEach((lab, i) => {
+  const btn = document.createElement('button');
+  btn.className = 'toggle-btn';
+  btn.textContent = lab.flag + ' ' + lab.name.split('—')[0].trim().split(' — ')[0];
+  btn.style.borderColor = lab.color;
+  btn.style.color = lab.color;
+  btn.style.background = lab.color + '18';
+  btn.onclick = () => {
+    if (activeSet.has(i)) { activeSet.delete(i); btn.classList.add('off'); }
+    else { activeSet.add(i); btn.classList.remove('off'); }
+    compareChart.data.datasets.forEach((ds, j) => { ds.hidden = !activeSet.has(j); });
+    compareChart.update();
+  };
+  toggleRow.appendChild(btn);
+});
+
+const compareChart = new Chart(document.getElementById('compareChart'), {
+  type: 'radar',
+  data: {
+    labels: DIMS,
+    datasets: LABS.map(lab => ({
+      label: lab.flag + ' ' + lab.name.split('—')[0].trim(),
+      data: lab.scores,
+      borderColor: lab.color,
+      backgroundColor: lab.color + '18',
+      pointBackgroundColor: lab.color,
+      pointRadius: 3,
+      borderWidth: 1.8,
+    }))
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.raw}/10` } }
+    },
+    scales: {
+      r: {
+        min: 0, max: 10,
+        ticks: { stepSize: 2, font: { size: 10, family: 'IBM Plex Mono' }, color: 'rgba(100,110,130,0.7)', backdropColor: 'transparent' },
+        grid: { color: 'rgba(0,0,0,0.07)' },
+        angleLines: { color: 'rgba(0,0,0,0.1)' },
+        pointLabels: { font: { size: 11, family: 'IBM Plex Mono' }, color: 'rgba(50,60,80,0.7)' }
+      }
+    }
+  }
+});
+
+/* ── Score table ── */
+const table = document.getElementById('score-table');
+const shortDims = ['Percep.','Manip.','Locomotion','AI/ML','HRI','Deploy.'];
+table.innerHTML = `<thead><tr>
+  <th>Lab</th>
+  ${shortDims.map((d,i) => `<th style="color:${DIM_COLORS[i]}">${d}</th>`).join('')}
+  <th>Total</th>
+</tr></thead><tbody>` +
+LABS.slice().sort((a,b) => b.scores.reduce((s,x)=>s+x,0) - a.scores.reduce((s,x)=>s+x,0))
+  .map(lab => {
+    const total = lab.scores.reduce((s,x)=>s+x,0);
+    return `<tr>
+      <td>${lab.flag} ${lab.name.split('—')[0].trim()}</td>
+      ${lab.scores.map((s,i) => `
+        <td>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="score-bar-wrap" style="flex:1;">
+              <div class="score-bar-fill" style="width:${s*10}%;background:${DIM_COLORS[i]};"></div>
+            </div>
+            <span class="score-num">${s}</span>
+          </div>
+        </td>`).join('')}
+      <td><span class="score-total">${total}</span></td>
+    </tr>`;
+  }).join('') + '</tbody>';
+
+/* ── Resize spider charts ── */
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    LABS.forEach((lab, idx) => {
+      const c = document.getElementById(`spider-${idx}`);
+      if (c) { c.width = 0; c.height = 0; }
+      setTimeout(() => drawSpider(`spider-${idx}`, lab.scores, lab.color), 50);
+    });
+  }, 200);
+});
+</script>
+</body>
+</html>
