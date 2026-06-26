@@ -17,7 +17,7 @@ This page will track course and cohort projects linked to the MSc Intelligent Ro
 
 ## Build Guides
 
-- [Educational Robotics Project: Build an 8-DOF Quadruped Robot]({{ site.baseurl }}/bugeen32/)
+- [Educational Robotics Project: Build an 8-DOF Quadruped Robot]({{ site.baseurl }}/fitzee/)
 
 ## Related Repositories
 
