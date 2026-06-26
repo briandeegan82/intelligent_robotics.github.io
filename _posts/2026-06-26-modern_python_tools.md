@@ -1,3 +1,14 @@
+---
+layout: single
+title: "Setting Up a Modern Cross-Platform Python Project"
+date: 2026-06-26
+permalink: /tutorials/embedded/2026/06/26/modern-python-tools/
+categories:
+  - tutorials
+  - embedded
+tags: [python, pixi, uv, ruff, pytest, development-environment, tooling]
+---
+
 # Setting Up a Modern Cross-Platform Python Project
 
 Python has evolved significantly over the past few years. While older tutorials often recommend `virtualenv`, `pip`, and `requirements.txt`, modern projects benefit from faster package managers, reproducible lock files, and tools that work consistently across Windows, macOS, and Linux.

@@ -15,6 +15,10 @@ This page will track course and cohort projects linked to the MSc Intelligent Ro
 - Control and autonomous navigation workflows
 - Digital twin implementation for robotics systems
 
+## Build Guides
+
+- [Educational Robotics Project: Build an 8-DOF Quadruped Robot]({{ site.baseurl }}/bugeen32/)
+
 ## Related Repositories
 
 - [EE5109 Control, Locomotion, Navigation](https://github.com/EE5109-Control-Locomotion-Navigation)

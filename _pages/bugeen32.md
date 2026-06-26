@@ -1,5 +1,15 @@
-# Educational Robotics Project: Build an 8-DOF Quadruped Robot
+---
+layout: single
+title: "Educational Robotics Project: Build an 8-DOF Quadruped Robot"
+permalink: /bugeen32/
+author_profile: false
+toc: true
+toc_label: "Contents"
+---
+
 A Comprehensive STEM Curriculum Project for Electronics, Mechanical Assembly, Soldering, and Embedded Programming.
+
+![8-DOF quadruped robot]({{ site.baseurl }}/_images/bugeen32.png){: .align-center style="max-width: 600px;"}
 
 ---
 

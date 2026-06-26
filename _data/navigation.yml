@@ -12,6 +12,8 @@ main:
     url: /publications/
   - title: "Tutorials"
     url: /tutorials/
+  - title: "Labs"
+    url: /european-robotics-labs/
   - title: "Jobs"
     url: /robotics-jobs/
 
@@ -56,3 +58,7 @@ sidebar:
         url: /tutorials/cad/
       - title: "Calibration Guides"
         url: /tutorials/calibration/
+      - title: "Open Robotics Lectures"
+        url: /resources/robotics/2025/07/01/open-robotics-lectures/
+      - title: "8-DOF Quadruped Project"
+        url: /bugeen32/
