@@ -45,3 +45,7 @@ resources:
     description: "Practical guide to intrinsic calibration and distortion models."
     category: "Calibration"
     url: "https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html"
+  - title: "Book ROS 2 (GitHub)"
+    description: "Open-source ROS 2 learning repository with practical examples and guidance."
+    category: "ROS & ROS 2"
+    url: "https://github.com/fmrico/book_ros2"
