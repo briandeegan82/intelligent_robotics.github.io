@@ -20,6 +20,11 @@ This page will track course and cohort projects linked to the MSc Intelligent Ro
 - [Educational Robotics Project: Build an 8-DOF Quadruped Robot]({{ site.baseurl }}/fitzee/)
 - [QB3rt: A High-Performance Open Robotics Platform]({{ site.baseurl }}/qb3rt/)
 
+## Latest Project Posts
+
+{% include tutorial-styles.html %}
+{% include tutorial-posts.html category="projects" %}
+
 ## Related Repositories
 
 - [EE5109 Control, Locomotion, Navigation](https://github.com/EE5109-Control-Locomotion-Navigation)

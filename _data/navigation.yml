@@ -12,6 +12,8 @@ main:
     url: /publications/
   - title: "Tutorials"
     url: /tutorials/
+  - title: "Resources"
+    url: /resources/
   - title: "Labs"
     url: /european-robotics-labs/
   - title: "Jobs"
@@ -58,8 +60,8 @@ sidebar:
         url: /tutorials/cad/
       - title: "Calibration Guides"
         url: /tutorials/calibration/
-      - title: "Open Robotics Lectures"
-        url: /resources/robotics/2025/07/01/open-robotics-lectures/
+      - title: "All Resources"
+        url: /resources/
       - title: "8-DOF Quadruped Project"
         url: /fitzee/
       - title: "QB3rt Project"
