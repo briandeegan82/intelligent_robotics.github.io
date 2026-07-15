@@ -29,7 +29,7 @@ If you are teaching yourself ROS or ROS 2 and prefer video over documentation, [
 
 ## Why it's worth bookmarking
 
-The content is tightly scoped to ROS/ROS 2 and Gazebo rather than robotics in general, which makes it easy to find exactly what you need. It's also actively maintained, so newer videos track current ROS 2 distributions rather than going stale. The channel doubles as marketing for The Construct's paid **Robot Ignite Academy** courses, but the free YouTube material stands on its own and is a solid complement to the [official ROS 2 documentation](https://docs.ros.org/en/rolling/) already listed on our [tutorials page](/tutorials/).
+The content is tightly scoped to ROS/ROS 2 and Gazebo rather than robotics in general, which makes it easy to find exactly what you need. It's also actively maintained, so newer videos track current ROS 2 distributions rather than going stale. The channel doubles as marketing for The Construct's paid **Robot Ignite Academy** courses, but the free YouTube material stands on its own and is a solid complement to the [official ROS 2 documentation](https://docs.ros.org/en/rolling/) already listed on our [tutorials page]({{ site.baseurl }}/tutorials/).
 
 ---
 
