@@ -11,6 +11,8 @@ toc_label: "Contents"
 
 ---
 
+![A fleet of QB3rt robots built on the Qualcomm RB3 Gen 2 platform]({{ site.baseurl }}/_images/QB3rt.jpeg){: .align-center style="max-width: 800px;"}
+
 ## Introduction
 
 The name is deliberate. QB3rt — pronounced *Q-Bert*, after the classic 1982 isometric arcade game — is a wheeled mobile robotics platform built around the Qualcomm RB3 Gen 2 compute board, and the playfulness of the name belies the seriousness of what it can do. Where the original Q\*bert navigated a pyramid of cubes, QB3rt navigates the real world: mapping unknown environments in 3D, localising itself with centimetre-level precision, fusing visual and inertial data into a coherent motion estimate, and reasoning about the scene in front of it with neural inference running entirely on-device. It does this on a platform that costs a fraction of comparable research systems, and it does it within a fully open, reproducible ROS 2 software stack that students can understand, modify, and extend from day one.
@@ -54,6 +56,8 @@ QB3rt runs ROS 2 Humble on Ubuntu 22.04 (ARM64), giving it access to the full RO
 **SLAM Toolbox (2D SLAM and Localisation).** Running in parallel with RTAB-Map, SLAM Toolbox consumes the RPLidar C1 scan data to maintain a 2D occupancy grid. This grid is the primary map representation consumed by Nav2 for path planning and obstacle avoidance. SLAM Toolbox can operate in mapping mode (building a new map), localisation mode (localising against a saved map), or lifelong mapping mode (updating an existing map while navigating). The interplay between 2D LiDAR-based SLAM and 3D visual SLAM gives QB3rt a belt-and-suspenders approach to spatial awareness.
 
 **Nav2 (Autonomous Navigation).** Nav2 is the de facto standard autonomous navigation framework for ROS 2, providing global path planning (via NavFn or Smac planners), local obstacle avoidance (DWB or MPPI controller), behaviour trees for mission management, and a recovery action library. QB3rt's Nav2 configuration accounts for the WaveRover's differential drive kinematics and sensor footprint, and students interact with it through RViz2, setting navigation goals and observing the planner and controller in real time.
+
+![QB3rt running Nav2 in RViz2, showing the occupancy grid map, laser scan, and an active navigation goal]({{ site.baseurl }}/_images/QB3rt_map.png){: .align-center style="max-width: 800px;"}
 
 **Stereo Point Cloud.** Beyond RTAB-Map's internal representation, the OAK-D Lite's depth output is published as a `sensor_msgs/PointCloud2` stream, available to any node subscribing to it. This enables downstream processing: object detection with spatial coordinates, voxel-grid filtering for traversability analysis, and surface normal estimation for terrain characterisation. The point cloud is visualised directly in RViz2 and Foxglove Studio, giving students an immediate and intuitive sense of what the robot perceives.
 
