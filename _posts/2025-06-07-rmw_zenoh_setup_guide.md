@@ -11,6 +11,8 @@ tags: [ros2, rmw_zenoh, middleware, networking, distributed-systems]
 
 # Setting Up `rmw_zenoh` for ROS 2
 
+![Zenoh logo]({{ site.baseurl }}/_images/zenoh-dragon.png){: .align-center style="max-width: 400px;"}
+
 ## 1. What This Is and When to Use It
 
 `rmw_zenoh_cpp` is a ROS 2 RMW (middleware) implementation built on

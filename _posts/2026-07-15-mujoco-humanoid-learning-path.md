@@ -9,6 +9,8 @@ categories:
 tags: [mujoco, humanoid, locomotion, reinforcement-learning, imitation-learning, sim-to-real, unitree, mjlab, isaac-lab, learning-path]
 ---
 
+![MuJoCo banner]({{ site.baseurl }}/_images/mujoco-banner.png){: .align-center style="max-width: 700px;"}
+
 > **Goal:** Go from "I've never opened MuJoCo" to training and deploying humanoid locomotion (and eventually whole-body) policies on real robot platforms — without getting lost in oversized research codebases.
 
 ---

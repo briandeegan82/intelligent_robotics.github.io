@@ -9,6 +9,8 @@ categories:
 tags: [manipulation, imitation-learning, diffusion-policy, act, action-representation, visuomotor-policy, robot-learning]
 ---
 
+![B-Spline Policy method diagram]({{ site.baseurl }}/_images/bspline-method.svg){: .align-center style="max-width: 700px;"}
+
 ## Project
 
 **B-Spline Policy (BSP): a continuous action representation for visuomotor policies**  

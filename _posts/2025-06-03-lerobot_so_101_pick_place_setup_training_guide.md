@@ -11,6 +11,8 @@ tags: [lerobot, so-101, robot-arm, pick-and-place, training]
 
 # LeRobot + SO-101 Pick-and-Place Setup & Training Guide
 
+![LeRobot logo]({{ site.baseurl }}/_images/lerobot-logo.png){: .align-center style="max-width: 400px;"}
+
 This guide walks through:
 
 1. Hardware setup for the SO-101 robot arm

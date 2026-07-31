@@ -9,6 +9,8 @@ categories:
 tags: [llm, claude, ros2, rosa, langchain, gazebo, nav2, natural-language, simulation]
 ---
 
+![LLM robot control infographic]({{ site.baseurl }}/_images/llm-robot-control-infographic.webp){: .align-center style="max-width: 700px;"}
+
 [Controlling Robots using a Large Language Model](https://mikelikesrobots.github.io/blog/llm-robot-control/) by Michael Hart (Mike Likes Robots) is a practical, end-to-end walkthrough of putting a cloud-hosted LLM in the driver's seat of a ROS 2 robot. Rather than staying at the "wouldn't it be cool" level, the post builds a working demo: Claude 3.5 Sonnet commanding a simulated Robotnik Summit mobile robot around a household Gazebo environment using plain English — "go to the kitchen", "move backwards 1.5 metres", "explore the map".
 
 ---

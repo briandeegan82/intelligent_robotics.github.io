@@ -9,6 +9,8 @@ categories:
 tags: [matlab, universal-robots, kinematics, computer-vision, yolo, reinforcement-learning, ros2, education, curriculum]
 ---
 
+![From Code to Robot demo]({{ site.baseurl }}/_images/from-code-to-robot-demo.gif){: .align-center style="max-width: 700px;"}
+
 [From Code to Robot](https://github.com/iocroblab/from_code_to_robot) is an open-source, modular teaching curriculum developed at the Universitat Politècnica de Catalunya (UPC) that aims to bridge the gap between theory and real robotic applications through reproducible, hands-on exercises. Built around MATLAB and Universal Robots manipulators, it was created by Constantin Sul and Prof. Jan Rosell (robotics) together with Noel Nathan Planell and Prof. Isiah Zaplana (computer vision and AI), with support from MathWorks and Universal Robots.
 
 ---
