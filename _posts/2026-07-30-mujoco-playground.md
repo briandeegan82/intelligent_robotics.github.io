@@ -31,12 +31,7 @@ tags: [mujoco, mjx, jax, reinforcement-learning, locomotion, manipulation, sim-t
 
 Before Playground, MuJoCo users who wanted massively parallel GPU training either rolled their own MJX environments or switched ecosystems to Isaac Lab. Playground fills that gap with a curated, tested set of environments and ready-made [Brax](https://github.com/google/brax) PPO/SAC training configs, plus Colab notebooks that go from zero to a trained locomotion policy in a single session. Crucially, it isn't just a benchmark suite: the environments were designed alongside sim-to-real transfer experiments (domain randomization, sensor noise, actuator modelling), and the team demonstrated zero-shot deployment of trained policies on real Go1 and Berkeley Humanoid hardware.
 
-Getting started is a one-liner:
-
-```bash
-pip install playground
-train-jax-ppo --env_name CartpoleBalance
-```
+Getting started is straightforward - follow the instructions on the github repo.
 
 Python 3.10+ and a CUDA-capable GPU with JAX installed are the main requirements; everything is Apache 2.0 licensed. The [website](https://playground.mujoco.org/) collects the notebooks, environment gallery, and the accompanying [technical report](https://arxiv.org/abs/2502.08844).
 
