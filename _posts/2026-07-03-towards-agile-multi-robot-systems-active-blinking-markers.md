@@ -2,10 +2,12 @@
 layout: single
 title: "Paper Spotlight: Fast Onboard Tracking of Active Blinking Markers"
 date: 2026-07-03
-permalink: /tutorials/perception/2026/07/03/active-blinking-markers-relative-localization/
+permalink: /resources/robotics/2026/07/03/active-blinking-markers-relative-localization/
+redirect_from:
+  - /tutorials/perception/2026/07/03/active-blinking-markers-relative-localization/
 categories:
-  - tutorials
-  - perception
+  - resources
+  - robotics
 tags: [multi-robot, localization, uav, tracking, vision]
 ---
 

@@ -2,10 +2,12 @@
 layout: single
 title: "Paper Spotlight: Multinex — Lightweight Low-Light Image Enhancement"
 date: 2026-06-18
-permalink: /tutorials/perception/2026/06/18/multinex-low-light-enhancement/
+permalink: /resources/robotics/2026/06/18/multinex-low-light-enhancement/
+redirect_from:
+  - /tutorials/perception/2026/06/18/multinex-low-light-enhancement/
 categories:
-  - tutorials
-  - perception
+  - resources
+  - robotics
 tags: [low-light-enhancement, retinex, computer-vision, edge-deployment, cvpr]
 ---
 
