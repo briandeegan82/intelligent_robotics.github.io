@@ -32,6 +32,26 @@ Go to the board's page on [armbian.com/boards/rockpi-4cplus](https://armbian.com
 
 As of this writing the board offers a minimal **Debian 13 CLI** image and a ready-made **Ubuntu Xfce desktop** image. If you know you want a desktop environment, grabbing the Xfce variant directly saves you the manual DE install in Step 6 below.
 
+Walking through Armbian Imager:
+
+![Select Radxa as the manufacturer]({{ site.baseurl }}/_images/rock4c/select_manufacturer_radxa.png){: .align-center style="max-width: 600px;"}
+*Choose brand → search for and select **Radxa**.*
+
+![Select the Rockpi 4C+ board]({{ site.baseurl }}/_images/rock4c/select_rockpi_c+.png){: .align-center style="max-width: 600px;"}
+*Choose board → **Rockpi 4C+**.*
+
+![Select the Armbian OS image]({{ site.baseurl }}/_images/rock4c/select_os.png){: .align-center style="max-width: 600px;"}
+*Choose OS → pick the XFCE desktop or Minimal CLI image.*
+
+![Community board warning dialog]({{ site.baseurl }}/_images/rock4c/confirm_to_continue.png){: .align-center style="max-width: 600px;"}
+*The Rockpi 4C+ is a community-maintained board, so Armbian Imager shows this warning — click **Confirm** to proceed.*
+
+![Select the storage device to flash]({{ site.baseurl }}/_images/rock4c/select_storage.png){: .align-center style="max-width: 600px;"}
+*Choose storage → select the SD card or eMMC module. Double-check the device — this step erases it.*
+
+![Confirm selection and erase & flash]({{ site.baseurl }}/_images/rock4c/erase_flash.png){: .align-center style="max-width: 600px;"}
+*Review the summary, then hit **Erase & Flash**.*
+
 ### 2. First boot & command-line setup
 
 Armbian's CLI image has no desktop environment by default. On first login it walks you through:
