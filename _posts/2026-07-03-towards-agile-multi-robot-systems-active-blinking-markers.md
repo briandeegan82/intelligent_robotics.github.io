@@ -9,6 +9,7 @@ categories:
   - resources
   - robotics
 tags: [multi-robot, localization, uav, tracking, vision]
+description: "Towards agile multi-robot systems in the real world: Fast onboard tracking of active blinking markers for relative"
 ---
 
 ## Paper

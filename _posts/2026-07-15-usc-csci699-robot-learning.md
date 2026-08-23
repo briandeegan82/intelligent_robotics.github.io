@@ -7,6 +7,7 @@ categories:
   - resources
   - robotics
 tags: [robot-learning, reinforcement-learning, imitation-learning, sim-to-real, rlhf, meta-learning, multi-agent, computer-vision, education, reading-list]
+description: "CSCI 699 — Robot Learning is a graduate special-topics course taught by Prof. Erdem Bıyık at the University of Southern California. The Fall 2025 offering's course page is fully public: lecture slides, homework PDFs,…"
 ---
 
 [CSCI 699 — Robot Learning](https://liralab.usc.edu/csci699/) is a graduate special-topics course taught by Prof. Erdem Bıyık at the University of Southern California. The Fall 2025 offering's course page is fully public: lecture slides, homework PDFs, and — most usefully — a week-by-week reading list of roughly seventy papers with arXiv links, curated to map the modern robot learning landscape.

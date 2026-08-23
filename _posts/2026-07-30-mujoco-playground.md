@@ -7,6 +7,8 @@ categories:
   - resources
   - robotics
 tags: [mujoco, mjx, jax, reinforcement-learning, locomotion, manipulation, sim-to-real, gpu, deepmind]
+description: "MuJoCo Playground is Google DeepMind's open-source suite of GPU-accelerated environments for robot learning and sim-to-real research. It packages classic control tasks, quadruped and bipedal locomotion, and manipulation…"
+thumbnail: /_images/mujoco-playground-teaser.jpeg
 ---
 
 ![MuJoCo Playground teaser]({{ site.baseurl }}/_images/mujoco-playground-teaser.jpeg){: .align-center style="max-width: 700px;"}

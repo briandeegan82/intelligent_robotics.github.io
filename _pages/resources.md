@@ -5,7 +5,9 @@ permalink: /resources/
 author_profile: false
 ---
 
-Curated links, lectures, and resources for the Intelligent Robotics community.
+Curated links, tools, lectures, and open-source projects for the Intelligent Robotics community.
+
+## Resources
 
 {% include tutorial-styles.html %}
-{% include tutorial-posts.html category="resources" %}
+{% include resource-posts.html %}

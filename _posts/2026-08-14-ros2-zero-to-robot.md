@@ -7,6 +7,8 @@ categories:
   - resources
   - robotics
 tags: [ros2, ros2-jazzy, urdf, gazebo, nav2, moveit2, slam, ros2-control, docker, education, open-source]
+description: "ROS 2: Zero to Robot is a free, open-source book by Pouya Mansournia that takes readers from first ROS 2 concepts through to deploying a complete autonomous mobile robot. It's built around ROS 2 Jazzy and reads as a…"
+thumbnail: /_images/resources/2026-08-14-ros2-zero-to-robot.png
 ---
 
 [ROS 2: Zero to Robot](https://github.com/Pouya-Mansournia/ros2-zero-to-robot) is a free, open-source book by [Pouya Mansournia](https://github.com/Pouya-Mansournia) that takes readers from first ROS 2 concepts through to deploying a complete autonomous mobile robot. It's built around ROS 2 Jazzy and reads as a static site — no build step, just HTML with light/dark modes and built-in navigation.

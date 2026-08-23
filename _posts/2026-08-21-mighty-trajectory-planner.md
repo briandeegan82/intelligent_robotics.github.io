@@ -7,6 +7,8 @@ categories:
   - resources
   - robotics
 tags: [trajectory-planning, uav, multi-agent, ros2, motion-planning, mit-acl, open-source]
+description: "MIGHTY is a real-time trajectory planner from MIT's Aerospace Controls Laboratory (ACL) that computes collision-free paths fast enough to run live, onboard, for both aerial and ground"
+thumbnail: /_images/resources/2026-08-21-mighty-trajectory-planner.png
 ---
 
 [MIGHTY](https://github.com/mit-acl/mighty) is a real-time trajectory planner from MIT's [Aerospace Controls Laboratory (ACL)](http://acl.mit.edu/) that computes collision-free paths fast enough to run live, onboard, for both aerial and ground robots.

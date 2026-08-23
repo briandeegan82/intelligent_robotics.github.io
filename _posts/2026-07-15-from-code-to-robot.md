@@ -7,6 +7,8 @@ categories:
   - resources
   - robotics
 tags: [matlab, universal-robots, kinematics, computer-vision, yolo, reinforcement-learning, ros2, education, curriculum]
+description: "From Code to Robot is an open-source, modular teaching curriculum developed at the Universitat Politècnica de Catalunya (UPC) that aims to bridge the gap between theory and real robotic applications through…"
+thumbnail: /_images/from-code-to-robot-demo.gif
 ---
 
 ![From Code to Robot demo]({{ site.baseurl }}/_images/from-code-to-robot-demo.gif){: .align-center style="max-width: 700px;"}

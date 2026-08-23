@@ -7,6 +7,8 @@ categories:
   - resources
   - robotics
 tags: [awesome-list, open-source, hardware, software, slam, simulation, ros, education, newsletter]
+description: "Awesome Weekly Robotics is a curated, 'awesome list'-style directory of open-source robotics projects, maintained by msadowski as a companion to the Weekly Robotics newsletter. If you want a single page to skim for open…"
+thumbnail: /_images/resources/2026-08-05-awesome-weekly-robotics.png
 ---
 
 [Awesome Weekly Robotics](https://github.com/msadowski/awesome-weekly-robotics) is a curated, "awesome list"-style directory of open-source robotics projects, maintained by [msadowski](https://github.com/msadowski) as a companion to the [Weekly Robotics](https://weeklyrobotics.com/) newsletter. If you want a single page to skim for open hardware and software worth knowing about, this is one of the better ones to bookmark.

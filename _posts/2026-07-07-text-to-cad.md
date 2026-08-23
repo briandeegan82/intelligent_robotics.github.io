@@ -2,10 +2,12 @@
 layout: single
 title: "Text-to-CAD: AI-Powered CAD Design and Manufacturing"
 date: 2026-07-07
-permalink: /projects/2026/07/07/text-to-cad/
+permalink: /resources/robotics/2026/07/07/text-to-cad/
+redirect_from:
+  - /projects/2026/07/07/text-to-cad/
 categories:
-  - projects
-  - ai-robotics
+  - resources
+  - robotics
 tags: [cad, ai-agents, design-automation, manufacturing, python, javascript, step-files, 3d-printing]
 description: "Library for AI agents to generate and modify CAD files and robotics descriptions through natural language, with manufacturing integrations."
 thumbnail: /_images/text-to-cad.png
