@@ -21,7 +21,6 @@ collections:
     permalink: /:path/
 
 header_pages:
-  - _pages/people.md
   - _pages/publications.md
   - _pages/projects.md
 

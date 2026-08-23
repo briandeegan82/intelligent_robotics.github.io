@@ -7,6 +7,8 @@ categories:
   - projects
   - ai-robotics
 tags: [cad, ai-agents, design-automation, manufacturing, python, javascript, step-files, 3d-printing]
+description: "Library for AI agents to generate and modify CAD files and robotics descriptions through natural language, with manufacturing integrations."
+thumbnail: /_images/text-to-cad.png
 ---
 
 # Text-to-CAD: Natural Language CAD Design

@@ -1,0 +1,11 @@
+featured:
+  - title: "QB3rt: A High-Performance Open Robotics Platform"
+    url: /qb3rt/
+    thumbnail: /_images/QB3rt.jpeg
+    description: "Open wheeled platform on Qualcomm RB3 Gen 2 with VIO, RTAB-Map, Nav2, and on-device vision for teaching and research."
+    label: "Build guide"
+  - title: "Educational Robotics Project: Build an 8-DOF Quadruped Robot"
+    url: /fitzee/
+    thumbnail: /_images/fitzee.png
+    description: "STEM curriculum covering 3D-printed assembly, soldering, embedded programming, and inverse-kinematics walking gaits."
+    label: "Build guide"
