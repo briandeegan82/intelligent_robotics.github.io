@@ -5,6 +5,7 @@ Course-facing website for the MSc Intelligent Robotics community, built with Jek
 ## Key Links
 
 - Programme page: [University of Galway MSc Intelligent Robotics](https://www.universityofgalway.ie/courses/taught-postgraduate-courses/intelligent-robotics.html)
+- Research: [CAR Group](https://car.universityofgalway.ie/)
 - LinkedIn: [Brian Deegan](https://www.linkedin.com/in/brian-deegan-54928b60/)
 - GitHub: [briandeegan82](https://github.com/briandeegan82)
 - Course repositories:
@@ -87,8 +88,8 @@ bundle install
 
 ## Structure
 
-- `index.md`: Homepage
-- `_pages/about.md`: Programme and profile overview
+- `index.md`: Homepage (programme overview, research links, and tutorials)
+- `_pages/about.md`: Redirects to homepage
 - `_pages/people.md`: Course people and links
 - `_pages/projects.md`: Project overview
 - `_pages/publications.md`: Publications and reports

@@ -2,8 +2,6 @@
 main:
   - title: "Home"
     url: /
-  - title: "About"
-    url: /about/
   - title: "People"
     url: /people/
   - title: "Projects"
@@ -14,8 +12,6 @@ main:
     url: /tutorials/
   - title: "Resources"
     url: /resources/
-  - title: "Labs"
-    url: /european-robotics-labs/
   - title: "Jobs"
     url: /robotics-jobs/
 
@@ -35,6 +31,9 @@ sidebar:
       - title: "MSc Intelligent Robotics"
         url: https://www.universityofgalway.ie/courses/taught-postgraduate-courses/intelligent-robotics.html
         icon: "fas fa-graduation-cap"
+      - title: "CAR Research Group"
+        url: https://car.universityofgalway.ie/
+        icon: "fas fa-flask"
 
   - title: "Course Repositories"
     children:
