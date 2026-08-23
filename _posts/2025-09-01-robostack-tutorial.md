@@ -6,6 +6,8 @@ author: Dr. Brian Deegan
 permalink: /tutorials/ros/2025/09/01/robostack-tutorial/
 categories: [tutorials, ros]
 tags: [robostack, conda, mamba, ros2, humble, jazzy, environment-management]
+thumbnail: /_images/tutorials/2025-09-01-robostack-tutorial.png
+thumbnail_source: RoboStack/jupyter-ros
 description: >
   A practical guide to installing ROS 2 via RoboStack — and why conda-based
   packaging is a game-changer compared to the traditional apt/source approach.

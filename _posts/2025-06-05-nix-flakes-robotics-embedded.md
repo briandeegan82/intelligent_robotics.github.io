@@ -7,6 +7,8 @@ categories:
   - tutorials
   - embedded
 tags: [nix, flakes, reproducible-builds, environment-management, rb3]
+thumbnail: /_images/tutorials/2025-06-05-nix-flakes-robotics-embedded.png
+thumbnail_source: NixOS/nix
 ---
 
 # Nix Flakes for Robotics and Embedded Development: A Practical Guide

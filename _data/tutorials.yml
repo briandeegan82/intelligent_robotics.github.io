@@ -2,30 +2,37 @@ categories:
   - slug: ros
     title: "ROS & ROS 2"
     description: "Middleware, setup, and networking for ROS 2 classrooms and projects."
+    thumbnail: /_images/tutorials/2025-06-07-rmw_zenoh_setup_guide.png
     order: 1
   - slug: embedded
     title: "Embedded & Microcontrollers"
     description: "Microcontrollers, RTOS, embedded Linux, and reproducible development environments."
+    thumbnail: /_images/tutorials/2026-08-07-rock-4c-plus-armbian-radxa-guide.png
     order: 2
   - slug: cad
     title: "3D Printing & CAD"
     description: "Onshape design, COTS parts libraries, and export workflows for 3D printing."
+    thumbnail: /_images/tutorials/2026-06-17-mkcad-onshape-extension.png
     order: 3
   - slug: calibration
     title: "Calibration"
     description: "Sensor extrinsics, TCP calibration, and commissioning guides."
+    thumbnail: /_images/tutorials/2025-06-02-camera_imu_calibration.png
     order: 4
   - slug: perception
     title: "Perception & SLAM"
     description: "Visual-inertial odometry, mapping, and localization tutorials."
+    thumbnail: /_images/tutorials/2025-06-13-rtabmap.png
     order: 5
   - slug: simulation
     title: "Simulation"
     description: "Physics engines and simulation environments for robotics development."
+    thumbnail: /_images/tutorials/2025-06-08-robotics-simulators-overview.png
     order: 6
   - slug: hardware
     title: "Hardware Platforms"
     description: "Robot arms, camera pipelines, and platform-specific setup guides."
+    thumbnail: /_images/tutorials/2025-06-03-lerobot_so_101_pick_place_setup_training_guide.webp
     order: 7
 
 resources:

@@ -7,6 +7,8 @@ categories:
   - tutorials
   - simulation
 tags: [gazebo, mujoco, webots, unity, isaac-sim, physics-engine]
+thumbnail: /_images/tutorials/2025-06-08-robotics-simulators-overview.png
+thumbnail_source: google-deepmind/mujoco
 ---
 
 # Simulation Environments for Robotics Development: Gazebo, MuJoCo, Webots, Unity, and Isaac Sim

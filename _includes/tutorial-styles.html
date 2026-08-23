@@ -43,6 +43,11 @@
     border: 1px solid #d9e2ec;
     border-radius: 12px;
     background: #fff;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .tutorial-category-card .tutorial-card-body {
     padding: 1rem;
   }
 
@@ -54,6 +59,45 @@
   .tutorial-category-card p {
     margin: 0.4rem 0;
     font-size: 0.95rem;
+  }
+
+  .tutorial-thumb {
+    display: block;
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    background: #edf2f7;
+    border-bottom: 1px solid #d9e2ec;
+  }
+
+  .tutorial-card {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 0 1rem;
+    align-items: start;
+  }
+
+  .tutorial-card .tutorial-thumb {
+    width: 120px;
+    height: 84px;
+    border-radius: 8px;
+    border: 1px solid #d9e2ec;
+    border-bottom: 1px solid #d9e2ec;
+  }
+
+  .tutorial-card .tutorial-card-body {
+    min-width: 0;
+  }
+
+  @media (max-width: 560px) {
+    .tutorial-card {
+      grid-template-columns: 1fr;
+    }
+
+    .tutorial-card .tutorial-thumb {
+      width: 100%;
+      height: 140px;
+    }
   }
 
   .tutorial-count {
@@ -68,19 +112,21 @@
     margin-top: 1rem;
   }
 
-  .tutorial-card {
+  .tutorial-card-shell {
     border: 1px solid #d9e2ec;
     border-radius: 12px;
     background: #fff;
     padding: 1rem 1.1rem;
   }
 
+  .tutorial-card-shell h3,
   .tutorial-card h3 {
     margin: 0 0 0.4rem;
     font-size: 1.1rem;
     line-height: 1.35;
   }
 
+  .tutorial-card-shell p,
   .tutorial-card p {
     margin: 0.45rem 0;
   }

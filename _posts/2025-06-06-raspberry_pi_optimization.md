@@ -7,6 +7,8 @@ categories:
   - tutorials
   - hardware
 tags: [raspberry-pi, camera, libcamera, optimization, vision]
+thumbnail: /_images/tutorials/2025-06-06-raspberry_pi_optimization.png
+thumbnail_source: raspberrypi/picamera2
 ---
 
 For robotics, the fastest camera pipeline on a Raspberry Pi is usually:

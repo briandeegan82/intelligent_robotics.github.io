@@ -7,6 +7,8 @@ categories:
   - tutorials
   - embedded
 tags: [microcontroller, arduino, arm, embedded-systems, comparison]
+thumbnail: /_images/tutorials/2025-06-04-modern-microcontrollers.png
+thumbnail_source: arduino/Arduino
 ---
 
 # Modern Microcontrollers

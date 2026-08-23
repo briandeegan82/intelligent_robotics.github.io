@@ -7,6 +7,8 @@ categories:
   - tutorials
   - ros
 tags: [ros, ros2, framework, middleware, history]
+thumbnail: /_images/tutorials/2025-06-11-ros-and-ros2-overview.png
+thumbnail_source: ros2/ros2
 ---
 
 # ROS and ROS 2: History, Concepts, and the Transition

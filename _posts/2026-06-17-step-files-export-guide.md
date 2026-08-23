@@ -8,6 +8,8 @@ categories:
   - cad
 tutorial_order: 4
 tags: [onshape, step, stl, 3mf, 3d-printing, export]
+thumbnail: /_images/tutorials/2026-06-17-step-files-export-guide.png
+thumbnail_source: juliaschatz/onshape-library-window
 ---
 
 When exporting hardware designs from Onshape into modern slicers like **PrusaSlicer** or **Bambu Studio**, your settings directly dictate whether curved surfaces print smooth or faceted, and whether bolt holes line up exactly as dimensioned.

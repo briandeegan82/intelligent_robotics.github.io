@@ -8,6 +8,8 @@ categories:
   - cad
 tutorial_order: 2
 tags: [onshape, 3d-printing, design-for-manufacturing, robotics, cad]
+thumbnail: /_images/tutorials/2026-06-17-3d-printing-robotics-design.png
+thumbnail_source: juliaschatz/onshape-library-window
 ---
 
 To design custom 3D-printed parts that can actually survive the physical demands of robotics—like structural loads, vibrating motors, and impacts—you have to design for the **additive manufacturing process itself**. Standard mechanical engineering rules change when your material is deposited layer by layer.

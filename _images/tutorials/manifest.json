@@ -1,0 +1,146 @@
+{
+  "2025-06-01-basalt_vio_numerical_failure": {
+    "file": "_images/tutorials/2025-06-01-basalt_vio_numerical_failure.png",
+    "source": "https://raw.githubusercontent.com/VladyslavUsenko/basalt/master/doc/img/teaser.png",
+    "repo": "VladyslavUsenko/basalt",
+    "bytes": 275281
+  },
+  "2025-06-02-camera_imu_calibration": {
+    "file": "_images/tutorials/2025-06-02-camera_imu_calibration.png",
+    "source": "https://raw.githubusercontent.com/wiki/ethz-asl/kalibr/images/kalibr_small.png",
+    "repo": "ethz-asl/kalibr",
+    "bytes": 21172
+  },
+  "2025-06-03-lerobot_so_101_pick_place_setup_training_guide": {
+    "file": "_images/tutorials/2025-06-03-lerobot_so_101_pick_place_setup_training_guide.webp",
+    "source": "https://raw.githubusercontent.com/huggingface/lerobot/main/media/readme/so100_video.webp",
+    "repo": "huggingface/lerobot",
+    "bytes": 492230
+  },
+  "2025-06-04-modern-microcontrollers": {
+    "file": "_images/tutorials/2025-06-04-modern-microcontrollers.png",
+    "source": "https://opengraph.githubassets.com/1/arduino/Arduino",
+    "repo": "arduino/Arduino",
+    "bytes": 41975
+  },
+  "2025-06-05-nix-flakes-robotics-embedded": {
+    "file": "_images/tutorials/2025-06-05-nix-flakes-robotics-embedded.png",
+    "source": "https://opengraph.githubassets.com/1/NixOS/nix",
+    "repo": "NixOS/nix",
+    "bytes": 44262
+  },
+  "2025-06-06-raspberry_pi_optimization": {
+    "file": "_images/tutorials/2025-06-06-raspberry_pi_optimization.png",
+    "source": "https://opengraph.githubassets.com/1/raspberrypi/picamera2",
+    "repo": "raspberrypi/picamera2",
+    "bytes": 56545
+  },
+  "2025-06-07-rmw_zenoh_setup_guide": {
+    "file": "_images/tutorials/2025-06-07-rmw_zenoh_setup_guide.png",
+    "source": "https://raw.githubusercontent.com/eclipse-zenoh/zenoh/master/zenoh-dragon.png",
+    "repo": "eclipse-zenoh/zenoh",
+    "bytes": 208487
+  },
+  "2025-06-08-robotics-simulators-overview": {
+    "file": "_images/tutorials/2025-06-08-robotics-simulators-overview.png",
+    "source": "https://raw.githubusercontent.com/google-deepmind/mujoco/main/banner.png",
+    "repo": "google-deepmind/mujoco",
+    "bytes": 103336
+  },
+  "2025-06-09-ros1_vs_ros2_middleware_overview": {
+    "file": "_images/tutorials/2025-06-09-ros1_vs_ros2_middleware_overview.png",
+    "source": "https://opengraph.githubassets.com/1/ros2/rmw",
+    "repo": "ros2/rmw",
+    "bytes": 42410
+  },
+  "2025-06-10-ros2_nvidia": {
+    "file": "_images/tutorials/2025-06-10-ros2_nvidia.png",
+    "source": "https://opengraph.githubassets.com/1/ros2/ros2_documentation",
+    "repo": "ros2/ros2_documentation",
+    "bytes": 51491
+  },
+  "2025-06-11-ros-and-ros2-overview": {
+    "file": "_images/tutorials/2025-06-11-ros-and-ros2-overview.png",
+    "source": "https://opengraph.githubassets.com/1/ros2/ros2",
+    "repo": "ros2/ros2",
+    "bytes": 48227
+  },
+  "2025-06-12-ros_network_config": {
+    "file": "_images/tutorials/2025-06-12-ros_network_config.png",
+    "source": "https://opengraph.githubassets.com/1/ros2/demos",
+    "repo": "ros2/demos",
+    "bytes": 38518
+  },
+  "2025-06-13-rtabmap": {
+    "file": "_images/tutorials/2025-06-13-rtabmap.png",
+    "source": "https://raw.githubusercontent.com/introlab/rtabmap/master/guilib/src/images/RTAB-Map100.png",
+    "repo": "introlab/rtabmap",
+    "bytes": 14177
+  },
+  "2025-06-14-TCP_calibration": {
+    "file": "_images/tutorials/2025-06-14-TCP_calibration.png",
+    "source": "https://opengraph.githubassets.com/1/wlkata/WLKATA-Mirobot-ROS",
+    "repo": "wlkata/WLKATA-Mirobot-ROS",
+    "bytes": 506737
+  },
+  "2025-06-15-wifi_network_setup": {
+    "file": "_images/tutorials/2025-06-15-wifi_network_setup.png",
+    "source": "https://opengraph.githubassets.com/1/ros2/demos",
+    "repo": "ros2/demos",
+    "bytes": 38518
+  },
+  "2025-09-01-robostack-tutorial": {
+    "file": "_images/tutorials/2025-09-01-robostack-tutorial.png",
+    "source": "https://raw.githubusercontent.com/wolfv/jupyter-ros/master/docs/assets/screenshot.png",
+    "repo": "RoboStack/jupyter-ros",
+    "bytes": 95364
+  },
+  "2026-06-16-embedded-operating-systems": {
+    "file": "_images/tutorials/2026-06-16-embedded-operating-systems.png",
+    "source": "https://opengraph.githubassets.com/1/ZephyrProject-rtos/zephyr",
+    "repo": "ZephyrProject-rtos/zephyr",
+    "bytes": 63199
+  },
+  "2026-06-16-yocto-project": {
+    "file": "_images/tutorials/2026-06-16-yocto-project.png",
+    "source": "https://opengraph.githubassets.com/1/yoctoproject/poky",
+    "repo": "yoctoproject/poky",
+    "bytes": 54218
+  },
+  "2026-06-17-3d-printing-robotics-design": {
+    "file": "_images/tutorials/2026-06-17-3d-printing-robotics-design.png",
+    "source": "https://opengraph.githubassets.com/1/juliaschatz/onshape-library-window",
+    "repo": "juliaschatz/onshape-library-window",
+    "bytes": 84601
+  },
+  "2026-06-17-mkcad-onshape-extension": {
+    "file": "_images/tutorials/2026-06-17-mkcad-onshape-extension.png",
+    "source": "https://opengraph.githubassets.com/1/juliaschatz/onshape-library-window",
+    "repo": "juliaschatz/onshape-library-window",
+    "bytes": 84601
+  },
+  "2026-06-17-onshape-resources": {
+    "file": "_images/tutorials/2026-06-17-onshape-resources.png",
+    "source": "https://opengraph.githubassets.com/1/juliaschatz/onshape-library-window",
+    "repo": "juliaschatz/onshape-library-window",
+    "bytes": 84601
+  },
+  "2026-06-17-step-files-export-guide": {
+    "file": "_images/tutorials/2026-06-17-step-files-export-guide.png",
+    "source": "https://opengraph.githubassets.com/1/juliaschatz/onshape-library-window",
+    "repo": "juliaschatz/onshape-library-window",
+    "bytes": 84601
+  },
+  "2026-06-26-modern_python_tools": {
+    "file": "_images/tutorials/2026-06-26-modern_python_tools.jpg",
+    "source": "https://github.com/astral-sh/uv/assets/1309177/629e59c0-9c6e-4013-9ad4-adb2bcf5080d",
+    "repo": "astral-sh/uv",
+    "bytes": 9464
+  },
+  "2026-08-07-rock-4c-plus-armbian-radxa-guide": {
+    "file": "_images/tutorials/2026-08-07-rock-4c-plus-armbian-radxa-guide.png",
+    "source": "https://opengraph.githubassets.com/1/radxa-build/rock-4c-plus",
+    "repo": "radxa-build/rock-4c-plus",
+    "bytes": 43674
+  }
+}

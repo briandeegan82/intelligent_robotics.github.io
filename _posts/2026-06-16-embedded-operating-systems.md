@@ -7,6 +7,8 @@ categories:
   - tutorials
   - embedded
 tags: [embedded-systems, rtos, embedded-linux, iot]
+thumbnail: /_images/tutorials/2026-06-16-embedded-operating-systems.png
+thumbnail_source: ZephyrProject-rtos/zephyr
 ---
 
 # The Silent Engine: A Comprehensive Guide to Embedded Operating Systems

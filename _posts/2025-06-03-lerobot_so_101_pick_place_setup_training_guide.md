@@ -7,6 +7,8 @@ categories:
   - tutorials
   - hardware
 tags: [lerobot, so-101, robot-arm, pick-and-place, training]
+thumbnail: /_images/tutorials/2025-06-03-lerobot_so_101_pick_place_setup_training_guide.webp
+thumbnail_source: huggingface/lerobot
 ---
 
 # LeRobot + SO-101 Pick-and-Place Setup & Training Guide

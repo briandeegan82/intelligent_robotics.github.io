@@ -8,6 +8,8 @@ categories:
   - cad
 tutorial_order: 1
 tags: [onshape, cad, 3d-printing, learning-resources, robotics]
+thumbnail: /_images/tutorials/2026-06-17-onshape-resources.png
+thumbnail_source: juliaschatz/onshape-library-window
 ---
 
 Here are the best crash courses available right now, depending on how you prefer to learn:

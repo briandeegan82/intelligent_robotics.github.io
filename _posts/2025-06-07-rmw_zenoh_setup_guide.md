@@ -7,6 +7,8 @@ categories:
   - tutorials
   - ros
 tags: [ros2, rmw_zenoh, middleware, networking, distributed-systems]
+thumbnail: /_images/tutorials/2025-06-07-rmw_zenoh_setup_guide.png
+thumbnail_source: eclipse-zenoh/zenoh
 ---
 
 # Setting Up `rmw_zenoh` for ROS 2

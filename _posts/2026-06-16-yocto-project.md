@@ -7,6 +7,8 @@ categories:
   - tutorials
   - embedded
 tags: [yocto, embedded-linux, bitbake, build-systems]
+thumbnail: /_images/tutorials/2026-06-16-yocto-project.png
+thumbnail_source: yoctoproject/poky
 ---
 
 # The Yocto Project: The Toolmaker's Framework for Custom Linux

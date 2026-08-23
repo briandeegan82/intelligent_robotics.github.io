@@ -7,6 +7,8 @@ categories:
   - tutorials
   - embedded
 tags: [rock-4c-plus, radxa, armbian, rockchip, rk3399, csi-camera, embedded-linux, sbc, debian, gstreamer]
+thumbnail: /_images/tutorials/2026-08-07-rock-4c-plus-armbian-radxa-guide.png
+thumbnail_source: radxa-build/rock-4c-plus
 ---
 
 ![Radxa ROCK 4C+ single-board computer]({{ site.baseurl }}/_images/rock4c-plus-board.webp){: .align-center style="max-width: 700px;"}

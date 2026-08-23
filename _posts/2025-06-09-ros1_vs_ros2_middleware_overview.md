@@ -7,6 +7,8 @@ categories:
   - tutorials
   - ros
 tags: [ros, ros2, middleware, rmw, comparison, architecture]
+thumbnail: /_images/tutorials/2025-06-09-ros1_vs_ros2_middleware_overview.png
+thumbnail_source: ros2/rmw
 ---
 
 # ROS 1 vs ROS 2 Middleware: Overview, Selection, and Optimization

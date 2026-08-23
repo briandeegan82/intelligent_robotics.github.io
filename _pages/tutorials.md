@@ -28,10 +28,17 @@ A curated library of step-by-step guides for robotics and embedded systems devel
 {% for cat in sorted_categories %}
   {% assign cat_posts = site.posts | where_exp: "post", "post.categories contains cat.slug" %}
   <section id="{{ cat.slug }}" class="tutorial-category-card">
-    <h3><a href="{{ site.baseurl }}/tutorials/{{ cat.slug }}/">{{ cat.title }}</a></h3>
-    <p class="tutorial-count">{{ cat_posts.size }} tutorial{% if cat_posts.size != 1 %}s{% endif %}</p>
-    <p>{{ cat.description }}</p>
-    <p><a href="{{ site.baseurl }}/tutorials/{{ cat.slug }}/">Open track &rarr;</a></p>
+    {% if cat.thumbnail %}
+      <a href="{{ site.baseurl }}/tutorials/{{ cat.slug }}/" aria-hidden="true" tabindex="-1">
+        <img class="tutorial-thumb" src="{{ cat.thumbnail | prepend: site.baseurl }}" alt="" loading="lazy">
+      </a>
+    {% endif %}
+    <div class="tutorial-card-body">
+      <h3><a href="{{ site.baseurl }}/tutorials/{{ cat.slug }}/">{{ cat.title }}</a></h3>
+      <p class="tutorial-count">{{ cat_posts.size }} tutorial{% if cat_posts.size != 1 %}s{% endif %}</p>
+      <p>{{ cat.description }}</p>
+      <p><a href="{{ site.baseurl }}/tutorials/{{ cat.slug }}/">Open track &rarr;</a></p>
+    </div>
   </section>
 {% endfor %}
 </div>
@@ -58,10 +65,19 @@ A curated library of step-by-step guides for robotics and embedded systems devel
   {% assign all_tutorials = site.posts | where_exp: "post", "post.categories contains 'tutorials'" %}
   {% for post in all_tutorials limit:8 %}
     {% assign preview = post.excerpt | strip_html | strip_newlines | truncate: 150 %}
-    <article class="tutorial-card">
-      <h3><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a></h3>
-      <p class="tutorial-meta">{{ post.date | date: "%d %b %Y" }}</p>
-      <p>{{ preview }}</p>
+    <article class="tutorial-card-shell">
+      <div class="tutorial-card">
+        {% if post.thumbnail %}
+          <a href="{{ post.url | prepend: site.baseurl }}" aria-hidden="true" tabindex="-1">
+            <img class="tutorial-thumb" src="{{ post.thumbnail | prepend: site.baseurl }}" alt="" loading="lazy">
+          </a>
+        {% endif %}
+        <div class="tutorial-card-body">
+          <h3><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a></h3>
+          <p class="tutorial-meta">{{ post.date | date: "%d %b %Y" }}</p>
+          <p>{{ preview }}</p>
+        </div>
+      </div>
     </article>
   {% endfor %}
 </div>

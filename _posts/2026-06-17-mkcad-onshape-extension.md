@@ -8,6 +8,8 @@ categories:
   - cad
 tutorial_order: 3
 tags: [onshape, mkcad, cad, cots-parts, robotics]
+thumbnail: /_images/tutorials/2026-06-17-mkcad-onshape-extension.png
+thumbnail_source: juliaschatz/onshape-library-window
 ---
 
 For competitive robotics and advanced mechanism design, the **MKCad** library is the gold standard in Onshape. It is maintained by the community and regularly updated with accurate, lightweight CAD models of commercial off-the-shelf (COTS) parts—including planetary gearboxes, brushless motors (like the REV NEO or Kraken X60), standard bearings, and metric/imperial structural extrusions.

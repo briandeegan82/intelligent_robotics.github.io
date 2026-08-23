@@ -7,6 +7,8 @@ categories:
   - tutorials
   - perception
 tags: [visual-inertial-odometry, basalt, debugging, sensor-fusion]
+thumbnail: /_images/tutorials/2025-06-01-basalt_vio_numerical_failure.png
+thumbnail_source: VladyslavUsenko/basalt
 ---
 
 # Basalt VIO: `Numerical failure in backsubstitution`

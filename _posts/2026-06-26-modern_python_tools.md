@@ -7,6 +7,8 @@ categories:
   - tutorials
   - embedded
 tags: [python, pixi, uv, ruff, pytest, development-environment, tooling]
+thumbnail: /_images/tutorials/2026-06-26-modern_python_tools.jpg
+thumbnail_source: astral-sh/uv
 ---
 
 # Setting Up a Modern Cross-Platform Python Project

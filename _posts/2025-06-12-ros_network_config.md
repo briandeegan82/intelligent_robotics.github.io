@@ -7,6 +7,8 @@ categories:
   - tutorials
   - ros
 tags: [ros2, networking, classroom, education, configuration]
+thumbnail: /_images/tutorials/2025-06-12-ros_network_config.png
+thumbnail_source: ros2/demos
 ---
 
 Here's a **step-by-step guide** for setting up a network for teaching **ROS 2** in a classroom. This guide covers both **wired and wireless** setups, network configuration, and testing.

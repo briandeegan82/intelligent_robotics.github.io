@@ -7,6 +7,8 @@ categories:
   - tutorials
   - calibration
 tags: [kalibr, ros, camera, imu, extrinsic-calibration]
+thumbnail: /_images/tutorials/2025-06-02-camera_imu_calibration.png
+thumbnail_source: ethz-asl/kalibr
 ---
 
 # Camera–IMU Calibration with Kalibr and ROS Bags

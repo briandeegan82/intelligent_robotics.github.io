@@ -42,13 +42,20 @@ Step-by-step guides organized by track. Start with a track hub or jump to recent
 {% for cat in sorted_categories %}
 {% assign cat_posts = site.posts | where_exp: "post", "post.categories contains cat.slug" %}
   <section class="tutorial-category-card">
-    <h3><a href="{{ site.baseurl }}/tutorials/{{ cat.slug }}/">{{ cat.title }}</a></h3>
-    <p class="tutorial-count">{{ cat_posts.size }} tutorial{% if cat_posts.size != 1 %}s{% endif %}</p>
-    <p>{{ cat.description }}</p>
-    {% assign latest_post = cat_posts | first %}
-    {% if latest_post %}
-      <p><strong>Latest:</strong> <a href="{{ latest_post.url | prepend: site.baseurl }}">{{ latest_post.title }}</a></p>
+    {% if cat.thumbnail %}
+      <a href="{{ site.baseurl }}/tutorials/{{ cat.slug }}/" aria-hidden="true" tabindex="-1">
+        <img class="tutorial-thumb" src="{{ cat.thumbnail | prepend: site.baseurl }}" alt="" loading="lazy">
+      </a>
     {% endif %}
+    <div class="tutorial-card-body">
+      <h3><a href="{{ site.baseurl }}/tutorials/{{ cat.slug }}/">{{ cat.title }}</a></h3>
+      <p class="tutorial-count">{{ cat_posts.size }} tutorial{% if cat_posts.size != 1 %}s{% endif %}</p>
+      <p>{{ cat.description }}</p>
+      {% assign latest_post = cat_posts | first %}
+      {% if latest_post %}
+        <p><strong>Latest:</strong> <a href="{{ latest_post.url | prepend: site.baseurl }}">{{ latest_post.title }}</a></p>
+      {% endif %}
+    </div>
   </section>
 {% endfor %}
 </div>

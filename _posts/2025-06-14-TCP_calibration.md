@@ -7,6 +7,8 @@ categories:
   - tutorials
   - calibration
 tags: [tcp-calibration, robot-arm, wlkata-mirobot, commissioning, kinematics]
+thumbnail: /_images/tutorials/2025-06-14-TCP_calibration.png
+thumbnail_source: wlkata/WLKATA-Mirobot-ROS
 ---
 Here’s a Level 2 version of your lab that moves much closer to how TCP calibration is actually performed during industrial robot commissioning—while still being achievable with the WLKATA Mirobot 6-DOF robotic arm.
 
