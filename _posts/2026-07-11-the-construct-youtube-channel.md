@@ -8,6 +8,7 @@ categories:
   - robotics
 tags: [ros, ros2, gazebo, simulation, education, youtube, robot-ignite-academy]
 description: "If you are teaching yourself ROS or ROS 2 and prefer video over documentation, The Construct is one of the most consistently useful channels to subscribe to. Run by the team behind The Construct robotics academy — led…"
+thumbnail: /_images/resources/the-construct.svg
 ---
 
 If you are teaching yourself ROS or ROS 2 and prefer video over documentation, [The Construct](https://www.youtube.com/@TheConstruct/featured) is one of the most consistently useful channels to subscribe to. Run by the team behind [The Construct](https://www.theconstruct.ai/) robotics academy — led by CEO Ricardo Téllez — the channel has been publishing ROS-focused content for years and covers everything from first-day basics to real robot integration.

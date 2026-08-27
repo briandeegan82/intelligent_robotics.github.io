@@ -66,7 +66,7 @@ A curated library of step-by-step guides for robotics and embedded systems devel
   {% for post in all_tutorials limit:8 %}
     {% assign preview = post.excerpt | strip_html | strip_newlines | truncate: 150 %}
     <article class="tutorial-card-shell">
-      <div class="tutorial-card">
+      <div class="tutorial-card{% if post.thumbnail %} tutorial-card--with-thumb{% endif %}">
         {% if post.thumbnail %}
           <a href="{{ post.url | prepend: site.baseurl }}" aria-hidden="true" tabindex="-1">
             <img class="tutorial-thumb" src="{{ post.thumbnail | prepend: site.baseurl }}" alt="" loading="lazy">

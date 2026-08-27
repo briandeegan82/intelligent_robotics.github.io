@@ -10,6 +10,7 @@ categories:
   - robotics
 tags: [low-light-enhancement, retinex, computer-vision, edge-deployment, cvpr]
 description: "Robots that perceive the world with cameras live or die by image quality, and low light is one of the hardest conditions to handle. A paper at CVPR 2026, Multinex: Lightweight Low-light Image Enhancement via Multi-prior…"
+thumbnail: /_images/resources/multinex.png
 ---
 
 Robots that perceive the world with cameras live or die by image quality, and low light is one of the hardest conditions to handle. A paper at **CVPR 2026**, *Multinex: Lightweight Low-light Image Enhancement via Multi-prior Retinex* by Alexandru Brateanu, Tingting Mu, Codruta O. Ancuti, and Cosmin Ancuti, tackles this problem with edge deployment squarely in mind.

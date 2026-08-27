@@ -72,9 +72,13 @@
 
   .tutorial-card {
     display: grid;
-    grid-template-columns: 120px 1fr;
+    grid-template-columns: 1fr;
     gap: 0 1rem;
     align-items: start;
+  }
+
+  .tutorial-card.tutorial-card--with-thumb {
+    grid-template-columns: 120px 1fr;
   }
 
   .tutorial-card .tutorial-thumb {
@@ -83,14 +87,22 @@
     border-radius: 8px;
     border: 1px solid #d9e2ec;
     border-bottom: 1px solid #d9e2ec;
+    object-fit: cover;
   }
 
   .tutorial-card .tutorial-card-body {
     min-width: 0;
   }
 
+  .tutorial-card .tutorial-card-body > p:not(.tutorial-meta) {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
   @media (max-width: 560px) {
-    .tutorial-card {
+    .tutorial-card.tutorial-card--with-thumb {
       grid-template-columns: 1fr;
     }
 

@@ -3,7 +3,7 @@
 <div class="tutorial-list">
   {% for item in site.data.projects.featured %}
     <article class="tutorial-card-shell">
-      <div class="tutorial-card">
+      <div class="tutorial-card{% if item.thumbnail %} tutorial-card--with-thumb{% endif %}">
         {% if item.thumbnail %}
           <a href="{{ item.url | prepend: site.baseurl }}" aria-hidden="true" tabindex="-1">
             <img class="tutorial-thumb" src="{{ item.thumbnail | prepend: site.baseurl }}" alt="" loading="lazy">
@@ -29,7 +29,7 @@
       {% assign preview = post.content | strip_html | strip_newlines | truncate: 170 %}
     {% endif %}
     <article class="tutorial-card-shell">
-      <div class="tutorial-card">
+      <div class="tutorial-card{% if post.thumbnail %} tutorial-card--with-thumb{% endif %}">
         {% if post.thumbnail %}
           <a href="{{ post.url | prepend: site.baseurl }}" aria-hidden="true" tabindex="-1">
             <img class="tutorial-thumb" src="{{ post.thumbnail | prepend: site.baseurl }}" alt="" loading="lazy">

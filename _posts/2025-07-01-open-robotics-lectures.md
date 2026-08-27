@@ -8,6 +8,7 @@ categories:
   - robotics
 tags: [robotics, lectures, open-courseware, education, kinematics, control, SLAM, manipulation, autonomous-systems]
 description: "One of the best-kept secrets in robotics education is just how much world-class lecture material has been made freely available online by leading university programmes. Whether you are a graduate student filling gaps in…"
+thumbnail: /_images/resources/open-robotics-lectures.png
 ---
 
 One of the best-kept secrets in robotics education is just how much world-class lecture material has been made freely available online by leading university programmes. Whether you are a graduate student filling gaps in your foundations, a researcher branching into an adjacent area, or a practitioner who learns better from video than from papers, this list is for you.
