@@ -2,13 +2,16 @@
 layout: single
 title: "MuJoCo for Humanoid Robotics: A Practical Learning Path"
 date: 2026-07-15
-permalink: /resources/robotics/2026/07/15/mujoco-humanoid-learning-path/
+permalink: /library/courses/robotics/2026/07/15/mujoco-humanoid-learning-path/
 categories:
-  - resources
-  - robotics
+  - library
+  - courses
 tags: [mujoco, humanoid, locomotion, reinforcement-learning, imitation-learning, sim-to-real, unitree, mjlab, isaac-lab, learning-path]
 description: "Goal: Go from 'I've never opened MuJoCo' to training and deploying humanoid locomotion (and eventually whole-body) policies on real robot platforms — without getting lost in oversized research"
 thumbnail: /_images/mujoco-banner.png
+library_type: courses
+redirect_from:
+  - /resources/robotics/2026/07/15/mujoco-humanoid-learning-path/
 ---
 
 ![MuJoCo banner]({{ site.baseurl }}/_images/mujoco-banner.png){: .align-center style="max-width: 700px;"}

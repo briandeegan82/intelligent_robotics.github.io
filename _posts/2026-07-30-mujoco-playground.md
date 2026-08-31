@@ -2,13 +2,16 @@
 layout: single
 title: "MuJoCo Playground: GPU-Accelerated Robot Learning Environments from DeepMind"
 date: 2026-07-30
-permalink: /resources/robotics/2026/07/30/mujoco-playground/
+permalink: /library/tools/robotics/2026/07/30/mujoco-playground/
 categories:
-  - resources
-  - robotics
+  - library
+  - tools
 tags: [mujoco, mjx, jax, reinforcement-learning, locomotion, manipulation, sim-to-real, gpu, deepmind]
 description: "MuJoCo Playground is Google DeepMind's open-source suite of GPU-accelerated environments for robot learning and sim-to-real research. It packages classic control tasks, quadruped and bipedal locomotion, and manipulation…"
 thumbnail: /_images/mujoco-playground-teaser.jpeg
+library_type: tools
+redirect_from:
+  - /resources/robotics/2026/07/30/mujoco-playground/
 ---
 
 ![MuJoCo Playground teaser]({{ site.baseurl }}/_images/mujoco-playground-teaser.jpeg){: .align-center style="max-width: 700px;"}
@@ -37,7 +40,7 @@ Getting started is straightforward - follow the instructions on the github repo.
 
 Python 3.10+ and a CUDA-capable GPU with JAX installed are the main requirements; everything is Apache 2.0 licensed. The [website](https://playground.mujoco.org/) collects the notebooks, environment gallery, and the accompanying [technical report](https://arxiv.org/abs/2502.08844).
 
-If you're following our [MuJoCo humanoid learning path]({{ site.baseurl }}/resources/robotics/2026/07/15/mujoco-humanoid-learning-path/), Playground slots in naturally around Phase 2: once you understand MJCF and basic PPO training, it's the cleanest way to experience GPU-parallel training on real robot models without leaving the MuJoCo ecosystem.
+If you're following our [MuJoCo humanoid learning path]({{ site.baseurl }}/library/courses/robotics/2026/07/15/mujoco-humanoid-learning-path/), Playground slots in naturally around Phase 2: once you understand MJCF and basic PPO training, it's the cleanest way to experience GPU-parallel training on real robot models without leaving the MuJoCo ecosystem.
 
 ---
 

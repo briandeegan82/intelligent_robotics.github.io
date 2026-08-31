@@ -2,13 +2,16 @@
 layout: single
 title: "CTU Prague — Optimal and Robust Control (B3M35ORR / BE3M35ORR)"
 date: 2026-08-31
-permalink: /resources/robotics/2026/08/31/ctu-optimal-robust-control/
+permalink: /library/courses/robotics/2026/08/31/ctu-optimal-robust-control/
 categories:
-  - resources
-  - robotics
+  - library
+  - courses
 tags: [control, optimal-control, robust-control, lqr, mpc, education, youtube, lectures, czech-technical-university]
 description: "Full lecture playlist for Optimal and Robust Control (B3M35ORR, BE3M35ORR) at Czech Technical University in Prague — a graduate-level treatment of modern control theory, freely available on YouTube."
 thumbnail: /_images/resources/ctu-optimal-robust-control.jpg
+library_type: courses
+redirect_from:
+  - /resources/robotics/2026/08/31/ctu-optimal-robust-control/
 ---
 
 [Optimal and Robust Control (B3M35ORR, BE3M35ORR)](https://www.youtube.com/playlist?list=PLMLojHoA_QPmRiPotD_TnfdUkglTexuqm) is a graduate course at **Czech Technical University (CTU) in Prague**, taught by the [aa4cc](https://www.youtube.com/@aa4cc) group. The full lecture series is on YouTube and covers the mathematical foundations and design methods for optimal and robust control — the material you'd expect from a serious MSc/PhD-level controls curriculum rather than an introductory overview.

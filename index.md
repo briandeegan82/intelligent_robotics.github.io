@@ -115,6 +115,10 @@ Full entry requirements, fees, scholarships, and supporting documents are on the
 - [EE5108 Digital Twins](https://github.com/EE5108-DigitalTwins)
 - [EE5110 Sensing and Perception](https://github.com/EE5110-Sensing-Perception)
 
+## Explore the site
+
+[Tutorials]({{ site.baseurl }}/tutorials/) · [Library]({{ site.baseurl }}/library/) · [Projects]({{ site.baseurl }}/projects/) · [Jobs Board]({{ site.baseurl }}/robotics-jobs/)
+
 ## Tutorials
 
 {% include tutorial-styles.html %}

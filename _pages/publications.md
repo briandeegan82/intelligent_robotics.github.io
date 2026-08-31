@@ -1,16 +1,7 @@
 ---
-layout: archive
+layout: null
 title: "Publications"
 permalink: /publications/
-author_profile: true
+redirect_to: /library/papers/
+search_exclude: true
 ---
-
-## Publications
-
-This page is a placeholder for publications, technical reports, and curated reading connected to the MSc Intelligent Robotics activities.
-
-## Planned Content
-
-- Peer-reviewed outputs and preprints
-- Project reports and technical summaries
-- Recommended literature by module area

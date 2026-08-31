@@ -2,13 +2,16 @@
 layout: single
 title: "USC CSCI 699 — Robot Learning: An Open Graduate Course Syllabus and Reading List"
 date: 2026-07-15
-permalink: /resources/robotics/2026/07/15/usc-csci699-robot-learning/
+permalink: /library/courses/robotics/2026/07/15/usc-csci699-robot-learning/
 categories:
-  - resources
-  - robotics
+  - library
+  - courses
 tags: [robot-learning, reinforcement-learning, imitation-learning, sim-to-real, rlhf, meta-learning, multi-agent, computer-vision, education, reading-list]
 description: "CSCI 699 — Robot Learning is a graduate special-topics course taught by Prof. Erdem Bıyık at the University of Southern California. The Fall 2025 offering's course page is fully public: lecture slides, homework PDFs,…"
 thumbnail: /_images/resources/usc-csci699.svg
+library_type: courses
+redirect_from:
+  - /resources/robotics/2026/07/15/usc-csci699-robot-learning/
 ---
 
 [CSCI 699 — Robot Learning](https://liralab.usc.edu/csci699/) is a graduate special-topics course taught by Prof. Erdem Bıyık at the University of Southern California. The Fall 2025 offering's course page is fully public: lecture slides, homework PDFs, and — most usefully — a week-by-week reading list of roughly seventy papers with arXiv links, curated to map the modern robot learning landscape.
@@ -45,7 +48,7 @@ Prerequisites are light on paper: familiarity with machine learning fundamentals
 
 The value here is less the slides than the curation. Robot learning moves fast enough that the hard problem for someone entering the field is not finding papers but knowing which seventy to read and in what order — and that is exactly what a well-run graduate seminar produces. The syllabus is current as of the 2025-26 academic year, covers the imitation-learning and VLA-adjacent work that has reshaped the field recently, and every reading links straight to arXiv, so it's usable as a self-study curriculum without any USC affiliation.
 
-It pairs well with the broader course listings in our [open robotics lectures]({{ site.baseurl }}/resources/robotics/2025/07/01/open-robotics-lectures/) round-up: where those lean towards classical kinematics, dynamics, and estimation, CSCI 699 is squarely aimed at the learning-based end of the stack.
+It pairs well with the broader course listings in our [open robotics lectures]({{ site.baseurl }}/library/courses/robotics/2025/07/01/open-robotics-lectures/) round-up: where those lean towards classical kinematics, dynamics, and estimation, CSCI 699 is squarely aimed at the learning-based end of the stack.
 
 ---
 

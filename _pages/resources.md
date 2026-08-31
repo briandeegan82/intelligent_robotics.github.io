@@ -1,13 +1,7 @@
 ---
-layout: archive
+layout: null
 title: "Resources"
 permalink: /resources/
-author_profile: false
+redirect_to: /library/
+search_exclude: true
 ---
-
-Curated links, tools, lectures, and open-source projects for the Intelligent Robotics community.
-
-## Resources
-
-{% include tutorial-styles.html %}
-{% include resource-posts.html %}

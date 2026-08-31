@@ -2,13 +2,16 @@
 layout: single
 title: "Open Robotics Lectures from University Programs Worldwide"
 date: 2025-07-01
-permalink: /resources/robotics/2025/07/01/open-robotics-lectures/
+permalink: /library/courses/robotics/2025/07/01/open-robotics-lectures/
 categories:
-  - resources
-  - robotics
+  - library
+  - courses
 tags: [robotics, lectures, open-courseware, education, kinematics, control, SLAM, manipulation, autonomous-systems]
 description: "One of the best-kept secrets in robotics education is just how much world-class lecture material has been made freely available online by leading university programmes. Whether you are a graduate student filling gaps in…"
 thumbnail: /_images/resources/open-robotics-lectures.png
+library_type: courses
+redirect_from:
+  - /resources/robotics/2025/07/01/open-robotics-lectures/
 ---
 
 One of the best-kept secrets in robotics education is just how much world-class lecture material has been made freely available online by leading university programmes. Whether you are a graduate student filling gaps in your foundations, a researcher branching into an adjacent area, or a practitioner who learns better from video than from papers, this list is for you.

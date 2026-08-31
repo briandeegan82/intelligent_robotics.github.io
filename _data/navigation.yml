@@ -2,16 +2,20 @@
 main:
   - title: "Home"
     url: /
-  - title: "Projects"
-    url: /projects/
-  - title: "Publications"
-    url: /publications/
   - title: "Tutorials"
     url: /tutorials/
-  - title: "Resources"
-    url: /resources/
-  - title: "Jobs"
-    url: /robotics-jobs/
+  - title: "Library"
+    url: /library/
+  - title: "Projects"
+    url: /projects/
+  - title: "Community"
+    children:
+      - title: "Jobs Board"
+        url: /robotics-jobs/
+      - title: "European Robotics Labs"
+        url: /european-robotics-labs/
+      - title: "People"
+        url: /people/
 
 # Sidebar navigation (for pages)
 sidebar:
@@ -45,7 +49,7 @@ sidebar:
         url: https://github.com/EE5110-Sensing-Perception
         icon: "fab fa-github"
 
-  - title: "Resources"
+  - title: "Learning"
     children:
       - title: "Tutorials"
         url: /tutorials/
@@ -57,8 +61,16 @@ sidebar:
         url: /tutorials/cad/
       - title: "Calibration Guides"
         url: /tutorials/calibration/
-      - title: "All Resources"
-        url: /resources/
+      - title: "Library"
+        url: /library/
+      - title: "Paper Spotlights"
+        url: /library/papers/
+      - title: "Tools & Software"
+        url: /library/tools/
+      - title: "Courses & Lectures"
+        url: /library/courses/
+      - title: "References"
+        url: /library/references/
       - title: "8-DOF Quadruped Project"
         url: /fitzee/
       - title: "QB3rt Project"

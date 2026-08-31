@@ -18,7 +18,7 @@ A curated library of step-by-step guides for robotics and embedded systems devel
     {% for cat in sorted_categories %}
       <a class="tutorial-chip" href="#{{ cat.slug }}">{{ cat.title }}</a>
     {% endfor %}
-    <a class="tutorial-chip" href="#resources">Resources</a>
+    <a class="tutorial-chip" href="{{ site.baseurl }}/library/">Library</a>
     <a class="tutorial-chip" href="#latest">Latest updates</a>
   </div>
 </div>
@@ -43,21 +43,7 @@ A curated library of step-by-step guides for robotics and embedded systems devel
 {% endfor %}
 </div>
 
-{% if site.data.tutorials.resources and site.data.tutorials.resources.size > 0 %}
-<h2 id="resources">Tutorial Resources</h2>
-<p class="tutorial-intro">Reference material and evergreen learning resources.</p>
-<div class="tutorial-list">
-  {% for resource in site.data.tutorials.resources %}
-    <article class="tutorial-card">
-      <h3><a href="{{ resource.url }}" target="_blank" rel="noopener">{{ resource.title }}</a></h3>
-      {% if resource.category %}
-        <p class="tutorial-meta">{{ resource.category }}</p>
-      {% endif %}
-      <p>{{ resource.description }}</p>
-    </article>
-  {% endfor %}
-</div>
-{% endif %}
+<p class="tutorial-intro">External references, papers, and curated tools live in the <a href="{{ site.baseurl }}/library/">Library</a>.</p>
 
 <h2 id="latest">Latest Tutorial Updates</h2>
 <p class="tutorial-intro">New and refreshed guides across all tracks.</p>

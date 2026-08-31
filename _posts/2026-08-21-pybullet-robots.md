@@ -2,13 +2,16 @@
 layout: single
 title: "pybullet_robots: A URDF Zoo for PyBullet Simulation"
 date: 2026-08-21
-permalink: /resources/robotics/2026/08/21/pybullet-robots/
+permalink: /library/tools/robotics/2026/08/21/pybullet-robots/
 categories:
-  - resources
-  - robotics
+  - library
+  - tools
 tags: [pybullet, simulation, urdf, manipulation, legged-robots, inverse-kinematics, open-source]
 description: "pybullet_robots is a collection of robot models and example scripts maintained by Erwin Coumans, the primary developer of PyBullet. It's a handy grab bag for anyone who wants a working URDF and a simulation loop without…"
 thumbnail: /_images/resources/2026-08-21-pybullet-robots.png
+library_type: tools
+redirect_from:
+  - /resources/robotics/2026/08/21/pybullet-robots/
 ---
 
 [pybullet_robots](https://github.com/erwincoumans/pybullet_robots) is a collection of robot models and example scripts maintained by [Erwin Coumans](https://github.com/erwincoumans), the primary developer of [PyBullet](https://pybullet.org/). It's a handy grab bag for anyone who wants a working URDF and a simulation loop without building either from scratch.

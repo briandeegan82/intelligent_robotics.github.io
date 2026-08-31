@@ -34,25 +34,3 @@ categories:
     description: "Robot arms, camera pipelines, and platform-specific setup guides."
     thumbnail: /_images/tutorials/2025-06-03-lerobot_so_101_pick_place_setup_training_guide.webp
     order: 7
-
-resources:
-  - title: "SLAM for Dummies (PDF)"
-    description: "Beginner-friendly SLAM fundamentals reference."
-    category: "Perception & SLAM"
-    url: "https://github.com/shaladdle/distslam/blob/master/papers/SLAM/SLAM%20for%20Dummies.pdf"
-  - title: "ROS 2 Documentation"
-    description: "Official ROS 2 concepts, tutorials, and API references."
-    category: "ROS & ROS 2"
-    url: "https://docs.ros.org/en/rolling/"
-  - title: "RTAB-Map Documentation"
-    description: "Core docs for graph-based SLAM, mapping, and localization workflows."
-    category: "Perception & SLAM"
-    url: "https://introlab.github.io/rtabmap/"
-  - title: "OpenCV Camera Calibration"
-    description: "Practical guide to intrinsic calibration and distortion models."
-    category: "Calibration"
-    url: "https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html"
-  - title: "Book ROS 2 (GitHub)"
-    description: "Open-source ROS 2 learning repository with practical examples and guidance."
-    category: "ROS & ROS 2"
-    url: "https://github.com/fmrico/book_ros2"

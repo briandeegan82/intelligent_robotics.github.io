@@ -1,0 +1,57 @@
+sections:
+  - slug: papers
+    title: "Paper Spotlights"
+    description: "Research summaries and takeaways from papers worth reading in manipulation, SLAM, and vision."
+    order: 1
+  - slug: tools
+    title: "Tools & Software"
+    description: "Open-source stacks, repos, and models you can use in robotics projects."
+    order: 2
+  - slug: courses
+    title: "Courses & Lectures"
+    description: "Lecture series, syllabi, books, and structured learning paths from universities worldwide."
+    order: 3
+  - slug: references
+    title: "References & Curated Lists"
+    description: "Evergreen explainers, documentation links, and curated directories."
+    order: 4
+
+external:
+  - title: "SLAM for Dummies (PDF)"
+    description: "Beginner-friendly SLAM fundamentals reference."
+    category: "Perception & SLAM"
+    track: perception
+    section: references
+    url: "https://github.com/shaladdle/distslam/blob/master/papers/SLAM/SLAM%20for%20Dummies.pdf"
+  - title: "ROS 2 Documentation"
+    description: "Official ROS 2 concepts, tutorials, and API references."
+    category: "ROS & ROS 2"
+    track: ros
+    section: references
+    url: "https://docs.ros.org/en/rolling/"
+  - title: "RTAB-Map Documentation"
+    description: "Core docs for graph-based SLAM, mapping, and localization workflows."
+    category: "Perception & SLAM"
+    track: perception
+    section: references
+    url: "https://introlab.github.io/rtabmap/"
+  - title: "OpenCV Camera Calibration"
+    description: "Practical guide to intrinsic calibration and distortion models."
+    category: "Calibration"
+    track: calibration
+    section: references
+    url: "https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html"
+  - title: "Book ROS 2 (GitHub)"
+    description: "Open-source ROS 2 learning repository with practical examples and guidance."
+    category: "ROS & ROS 2"
+    track: ros
+    section: references
+    url: "https://github.com/fmrico/book_ros2"
+
+related_tools:
+  - title: "G1Pilot"
+    url: /library/tools/robotics/2026/07/09/g1pilot/
+    description: "ROS 2 control stack for the Unitree G1 humanoid."
+  - title: "Text-to-CAD"
+    url: /library/tools/robotics/2026/07/07/text-to-cad/
+    description: "AI-powered CAD design and manufacturing for robotics."

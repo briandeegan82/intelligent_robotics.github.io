@@ -2,13 +2,16 @@
 layout: single
 title: "ORCA: An Open-Source Stack for Dexterous Robot Hand Learning"
 date: 2026-08-05
-permalink: /resources/robotics/2026/08/05/orca-dexterous-hand-stack/
+permalink: /library/tools/robotics/2026/08/05/orca-dexterous-hand-stack/
 categories:
-  - resources
-  - robotics
+  - library
+  - tools
 tags: [dexterous-manipulation, robot-hand, teleoperation, imitation-learning, lerobot, mujoco, open-source, act, hardware]
 description: "ORCA Dexterity is an end-to-end open-source stack for dexterous robot hand research, built by researchers from the University of Oxford, ETH Zurich, and ORCA Dexterity. It tackles a real pain point in manipulation…"
 thumbnail: /_images/resources/2026-08-05-orca-dexterous-hand-stack.png
+library_type: tools
+redirect_from:
+  - /resources/robotics/2026/08/05/orca-dexterous-hand-stack/
 ---
 
 [ORCA Dexterity](https://github.com/orcahand) is an end-to-end open-source stack for dexterous robot hand research, built by researchers from the University of Oxford, ETH Zurich, and ORCA Dexterity. It tackles a real pain point in manipulation research — hardware, simulation, teleoperation, and policy learning tools that don't talk to each other — by releasing a matched set of MIT-licensed repos designed to work together out of the box.

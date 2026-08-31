@@ -2,13 +2,16 @@
 layout: single
 title: "Controlling Robots with an LLM: Claude + ROS 2 via ROSA"
 date: 2026-07-31
-permalink: /resources/robotics/2026/07/31/llm-robot-control/
+permalink: /library/tools/robotics/2026/07/31/llm-robot-control/
 categories:
-  - resources
-  - robotics
+  - library
+  - tools
 tags: [llm, claude, ros2, rosa, langchain, gazebo, nav2, natural-language, simulation]
 description: "Controlling Robots using a Large Language Model by Michael Hart (Mike Likes Robots) is a practical, end-to-end walkthrough of putting a cloud-hosted LLM in the driver's seat of a ROS 2 robot. Rather than staying at the…"
 thumbnail: /_images/llm-robot-control-infographic.webp
+library_type: tools
+redirect_from:
+  - /resources/robotics/2026/07/31/llm-robot-control/
 ---
 
 ![LLM robot control infographic]({{ site.baseurl }}/_images/llm-robot-control-infographic.webp){: .align-center style="max-width: 700px;"}

@@ -2,13 +2,16 @@
 layout: single
 title: "Awesome Weekly Robotics: A Curated List of Open-Source Robotics Projects"
 date: 2026-08-05
-permalink: /resources/robotics/2026/08/05/awesome-weekly-robotics/
+permalink: /library/references/robotics/2026/08/05/awesome-weekly-robotics/
 categories:
-  - resources
-  - robotics
+  - library
+  - references
 tags: [awesome-list, open-source, hardware, software, slam, simulation, ros, education, newsletter]
 description: "Awesome Weekly Robotics is a curated, 'awesome list'-style directory of open-source robotics projects, maintained by msadowski as a companion to the Weekly Robotics newsletter. If you want a single page to skim for open…"
 thumbnail: /_images/resources/2026-08-05-awesome-weekly-robotics.png
+library_type: references
+redirect_from:
+  - /resources/robotics/2026/08/05/awesome-weekly-robotics/
 ---
 
 [Awesome Weekly Robotics](https://github.com/msadowski/awesome-weekly-robotics) is a curated, "awesome list"-style directory of open-source robotics projects, maintained by [msadowski](https://github.com/msadowski) as a companion to the [Weekly Robotics](https://weeklyrobotics.com/) newsletter. If you want a single page to skim for open hardware and software worth knowing about, this is one of the better ones to bookmark.
@@ -35,7 +38,7 @@ thumbnail: /_images/resources/2026-08-05-awesome-weekly-robotics.png
 
 Every entry favors permissively licensed projects (MIT, BSD, Apache 2.0, GPLv3), so most of what you find is actually usable rather than locked behind an academic license or a hardware paywall. It's also actively maintained — the list has racked up over 1,000 stars and community pull requests — and it doubles as a low-effort way to discover what's been surfacing in the Weekly Robotics newsletter without subscribing to every issue.
 
-It's a good complement to more narrowly scoped resources: pair it with our [tutorials page]({{ site.baseurl }}/tutorials/) or the [MuJoCo humanoid learning path]({{ site.baseurl }}/resources/robotics/2026/07/15/mujoco-humanoid-learning-path/) when you already know what you're building and just need a component or reference to fill a gap.
+It's a good complement to more narrowly scoped resources: pair it with our [tutorials page]({{ site.baseurl }}/tutorials/) or the [MuJoCo humanoid learning path]({{ site.baseurl }}/library/courses/robotics/2026/07/15/mujoco-humanoid-learning-path/) when you already know what you're building and just need a component or reference to fill a gap.
 
 ---
 

@@ -1,0 +1,31 @@
+---
+layout: null
+permalink: /search.json
+---
+[
+{%- assign first = true -%}
+{%- for doc in site.posts -%}
+  {%- unless first -%},{%- endunless -%}
+  {%- assign first = false -%}
+  {
+    "title": {{ doc.title | jsonify }},
+    "url": {{ doc.url | prepend: site.baseurl | jsonify }},
+    "excerpt": {{ doc.description | default: doc.excerpt | strip_html | strip_newlines | truncate: 220 | jsonify }},
+    "categories": {{ doc.categories | jsonify }},
+    "library_type": {{ doc.library_type | jsonify }}
+  }
+{%- endfor -%}
+{%- for doc in site.pages -%}
+  {%- if doc.title and doc.url != '/search.json' and doc.url != '/feed.xml' and doc.url != '/sitemap.xml' and doc.url != '/robots.txt' and doc.search_exclude != true -%}
+  {%- unless first -%},{%- endunless -%}
+  {%- assign first = false -%}
+  {
+    "title": {{ doc.title | jsonify }},
+    "url": {{ doc.url | prepend: site.baseurl | jsonify }},
+    "excerpt": {{ doc.description | default: doc.excerpt | strip_html | strip_newlines | truncate: 220 | jsonify }},
+    "categories": {{ doc.categories | jsonify }},
+    "library_type": {{ doc.library_type | jsonify }}
+  }
+  {%- endif -%}
+{%- endfor -%}
+]

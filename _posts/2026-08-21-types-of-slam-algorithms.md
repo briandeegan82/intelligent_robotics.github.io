@@ -2,13 +2,16 @@
 layout: single
 title: "7 Types of SLAM Algorithms, at a Glance"
 date: 2026-08-21
-permalink: /resources/robotics/2026/08/21/types-of-slam-algorithms/
+permalink: /library/references/robotics/2026/08/21/types-of-slam-algorithms/
 categories:
-  - resources
-  - robotics
+  - library
+  - references
 tags: [slam, localization, mapping, lidar, ekf, graph-optimization, visual-slam, autonomous-navigation]
 description: "Simultaneous Localization and Mapping (SLAM) is one of those topics where the sheer number of algorithm names — EKF-SLAM, GraphSLAM, ORB-SLAM, LOAM, and so on — can obscure how differently they actually solve the…"
 thumbnail: /_images/types-of-slam-infographic.jpeg
+library_type: references
+redirect_from:
+  - /resources/robotics/2026/08/21/types-of-slam-algorithms/
 ---
 
 ![7 types of SLAM algorithms infographic]({{ site.baseurl }}/_images/types-of-slam-infographic.jpeg){: .align-center style="max-width: 700px;"}

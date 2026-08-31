@@ -1,0 +1,14 @@
+---
+layout: archive
+title: "Paper Spotlights"
+permalink: /library/papers/
+library_section: papers
+author_profile: false
+---
+
+{% include tutorial-styles.html %}
+{% assign current_section = site.data.library.sections | where: "slug", page.library_section | first %}
+<p class="tutorial-intro">{{ current_section.description }}</p>
+<p><a href="{{ site.baseurl }}/library/">&larr; Back to Library</a></p>
+
+{% include library-posts.html section=page.library_section %}

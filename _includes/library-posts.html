@@ -1,0 +1,71 @@
+{% assign section_slug = include.section %}
+{% assign library_posts = site.posts | where_exp: "post", "post.library_type == section_slug" %}
+{% if include.sort == "title" %}
+  {% assign library_posts = library_posts | sort: "title" %}
+{% endif %}
+
+{% assign badge_label = "Item" %}
+{% case section_slug %}
+  {% when "papers" %}{% assign badge_label = "Paper" %}
+  {% when "tools" %}{% assign badge_label = "Tool" %}
+  {% when "courses" %}{% assign badge_label = "Course" %}
+  {% when "references" %}{% assign badge_label = "Reference" %}
+{% endcase %}
+
+{% if section_slug == "references" and site.data.library.external %}
+  {% assign external_refs = site.data.library.external | where: "section", "references" | sort: "title" %}
+{% else %}
+  {% assign external_refs = "" | split: "" %}
+{% endif %}
+
+{% assign has_external = external_refs.size %}
+{% if library_posts.size == 0 and has_external == 0 %}
+  <p>No items are published in this section yet.</p>
+{% else %}
+  <div class="tutorial-list">
+    {% for post in library_posts %}
+      {% assign preview = post.description %}
+      {% if preview == nil or preview == "" %}
+        {% assign preview = post.excerpt | strip_html | strip_newlines | truncate: 170 %}
+      {% endif %}
+      {% if preview == "" %}
+        {% assign preview = post.content | strip_html | strip_newlines | truncate: 170 %}
+      {% endif %}
+      <article class="tutorial-card-shell">
+        <div class="tutorial-card{% if post.thumbnail %} tutorial-card--with-thumb{% endif %}">
+          {% if post.thumbnail %}
+            <a href="{{ post.url | prepend: site.baseurl }}" aria-hidden="true" tabindex="-1">
+              <img class="tutorial-thumb" src="{{ post.thumbnail | prepend: site.baseurl }}" alt="" loading="lazy">
+            </a>
+          {% endif %}
+          <div class="tutorial-card-body">
+            <h3><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a></h3>
+            <p class="tutorial-meta"><span class="library-badge">{{ badge_label }}</span> · Updated {{ post.date | date: "%d %b %Y" }}</p>
+            <p>{{ preview }}</p>
+            {% if post.tags and post.tags.size > 0 %}
+              <div class="tutorial-tags">
+                {% for tag in post.tags limit: 4 %}
+                  <span class="tutorial-tag">#{{ tag }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </article>
+    {% endfor %}
+
+    {% if external_refs %}
+      {% for item in external_refs %}
+        <article class="tutorial-card-shell">
+          <div class="tutorial-card">
+            <div class="tutorial-card-body">
+              <h3><a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}</a></h3>
+              <p class="tutorial-meta"><span class="library-badge">{{ badge_label }}</span>{% if item.category %} · {{ item.category }}{% endif %} · External link</p>
+              <p>{{ item.description }}</p>
+            </div>
+          </div>
+        </article>
+      {% endfor %}
+    {% endif %}
+  </div>
+{% endif %}

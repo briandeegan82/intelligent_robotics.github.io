@@ -2,13 +2,16 @@
 layout: single
 title: "Paper Spotlight: B-Spline Policy — Continuous Action Representations for Faster Manipulation"
 date: 2026-07-17
-permalink: /resources/manipulation/2026/07/17/b-spline-policy/
+permalink: /library/papers/manipulation/2026/07/17/b-spline-policy/
 categories:
-  - resources
-  - manipulation
+  - library
+  - papers
 tags: [manipulation, imitation-learning, diffusion-policy, act, action-representation, visuomotor-policy, robot-learning]
 description: "B-Spline Policy (BSP): a continuous action representation for visuomotor"
 thumbnail: /_images/bspline-method.svg
+library_type: papers
+redirect_from:
+  - /resources/manipulation/2026/07/17/b-spline-policy/
 ---
 
 ![B-Spline Policy method diagram]({{ site.baseurl }}/_images/bspline-method.svg){: .align-center style="max-width: 700px;"}
