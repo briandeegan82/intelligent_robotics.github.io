@@ -85,7 +85,7 @@ Graduates are prepared for dynamic roles in autonomous vehicles, advanced manufa
 
 ## Research
 
-Teaching and projects on this programme connect to active robotics research at the University of Galway. For ongoing research in control, autonomy, and robotics systems, see the **[Control &amp; Autonomy Research (CAR) Group](https://car.universityofgalway.ie/)**.
+Teaching and projects on this programme connect to active robotics research at the University of Galway. For ongoing research in control, autonomy, and robotics systems, see the **[Connaught Automotive Research (CAR) Group](https://car.universityofgalway.ie/)**.
 
 ## Learning and assessment
 
