@@ -7,7 +7,7 @@ redirect_from:
   - /resources/
 ---
 
-Curated papers, tools, courses, and reference material for the Intelligent Robotics community.
+Curated papers, tools, courses, conferences, and reference material for the Intelligent Robotics community.
 
 {% include tutorial-styles.html %}
 
@@ -25,11 +25,23 @@ Curated papers, tools, courses, and reference material for the Intelligent Robot
 {% assign sorted_sections = site.data.library.sections | sort: "order" %}
 <div class="tutorial-category-grid">
 {% for section in sorted_sections %}
-  {% assign section_posts = site.posts | where_exp: "post", "post.library_type == section.slug" %}
+  {% if section.slug == 'conferences' %}
+    {% assign section_count = site.data.library.conferences.size %}
+  {% elsif section.slug == 'references' %}
+    {% assign section_posts = site.posts | where_exp: "post", "post.library_type == section.slug" %}
+    {% assign section_count = section_posts.size %}
+  {% else %}
+    {% assign section_posts = site.posts | where_exp: "post", "post.library_type == section.slug" %}
+    {% assign section_count = section_posts.size %}
+  {% endif %}
   <section id="{{ section.slug }}" class="tutorial-category-card">
     <div class="tutorial-card-body">
       <h3><a href="{{ site.baseurl }}/library/{{ section.slug }}/">{{ section.title }}</a></h3>
-      <p class="tutorial-count">{{ section_posts.size }} item{% if section_posts.size != 1 %}s{% endif %}{% if section.slug == 'references' %} + {{ site.data.library.external.size }} external links{% endif %}</p>
+      {% if section.slug == 'references' %}
+        <p class="tutorial-count">{{ section_count }} item{% if section_count != 1 %}s{% endif %} + {{ site.data.library.external.size }} external links</p>
+      {% else %}
+        <p class="tutorial-count">{{ section_count }} item{% if section_count != 1 %}s{% endif %}</p>
+      {% endif %}
       <p>{{ section.description }}</p>
       <p><a href="{{ site.baseurl }}/library/{{ section.slug }}/">Open section &rarr;</a></p>
     </div>

@@ -71,6 +71,8 @@ sidebar:
         url: /library/courses/
       - title: "References"
         url: /library/references/
+      - title: "Conferences"
+        url: /library/conferences/
       - title: "8-DOF Quadruped Project"
         url: /fitzee/
       - title: "QB3rt Project"
