@@ -8,8 +8,8 @@ sections:
     description: "Open-source stacks, repos, and models you can use in robotics projects."
     order: 2
   - slug: courses
-    title: "Courses & Lectures"
-    description: "Lecture series, syllabi, books, and structured learning paths from universities worldwide."
+    title: "Free University Courses"
+    description: "Structured free/open university robotics curriculum — Michigan, MIT, Stanford, ETH, NPTEL and more."
     order: 3
   - slug: references
     title: "References & Curated Lists"

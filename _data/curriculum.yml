@@ -1,0 +1,1029 @@
+title: Free University Robotics Curriculum
+intro: A structured directory of university robotics courses with freely accessible material. Where a
+  university publishes lectures, notes, assignments, or projects openly, it is included. Where a course
+  is only listed in a catalogue without verified free materials, it is flagged rather than presented as
+  free.
+caveat: Excellent robotics programmes at Oxford, Cornell, TUM, MSU and elsewhere are worth watching for
+  research, but a strong university course does not automatically mean the materials are public MOOCs.
+  This directory emphasises MIT, Stanford, Michigan, ETH and NPTEL, where public educational material
+  could be verified.
+legend:
+- key: open
+  label: Free/open
+  description: Substantial course material publicly accessible
+- key: partial
+  label: Free material
+  description: Lectures/resources available, but less complete or not a self-contained course
+- key: mooc
+  label: MOOC/audit
+  description: Generally free to study, optional paid certificate
+- key: reference
+  label: Reference only
+  description: University course exists, but a free public version was not verified
+hubs:
+- title: MIT OpenCourseWare
+  url: https://ocw.mit.edu/
+- title: Stanford Engineering Everywhere
+  url: https://see.stanford.edu/
+- title: Michigan Robotics — Online Courses
+  url: https://robotics.umich.edu/academics/courses/online-courses/
+- title: ETH Zürich Robotic Systems Lab — Lectures
+  url: https://rsl.ethz.ch/education-students/lectures.html
+- title: NPTEL/SWAYAM
+  url: https://onlinecourses.nptel.ac.in/
+tracks:
+- slug: math
+  title: Mathematical foundations
+  order: 1
+  intro: 'Best starting point: Michigan ROB 101. Michigan uses ROB 101 as an alternative to conventional
+    linear-algebra requirements for robotics students.'
+  courses:
+  - n: 1
+    title: ROB 101 – Computational Linear Algebra
+    university: Michigan
+    level: Beginner
+    topics: Linear algebra, matrices, vectors, transformations
+    free: open
+    url: https://robotics.umich.edu/academics/courses/online-courses/
+    featured: true
+  - n: 2
+    title: ROB 201 – Calculus for the Modern Engineer
+    university: Michigan
+    level: Beginner
+    topics: Calculus for engineering/robotics
+    free: open
+    url: https://robotics.umich.edu/academics/courses/online-courses/
+  - n: 3
+    title: ROB 501 – Mathematics for Robotics
+    university: Michigan
+    level: Advanced
+    topics: Robotics mathematics, geometry, linear algebra
+    free: open
+    url: https://robotics.umich.edu/academics/courses/online-courses/
+  - n: 4
+    title: Mathematics for Machine Learning
+    university: Imperial College London
+    level: Intermediate
+    topics: Linear algebra, calculus, probability
+    free: mooc
+    url: https://www.coursera.org/specializations/mathematics-machine-learning
+  - n: 5
+    title: 'Mathematics for ML: Linear Algebra'
+    university: Imperial College London
+    level: Intermediate
+    topics: Eigenvalues, vector spaces, matrix operations
+    free: mooc
+    url: https://www.coursera.org/learn/linear-algebra-machine-learning
+  - n: 6
+    title: 'Mathematics for ML: Multivariate Calculus'
+    university: Imperial College London
+    level: Intermediate
+    topics: Gradients, Jacobians, optimisation
+    free: mooc
+    url: https://www.coursera.org/learn/multivariate-calculus-machine-learning
+  - n: 7
+    title: 'Mathematics for ML: PCA'
+    university: Imperial College London
+    level: Intermediate
+    topics: Dimensionality reduction
+    free: mooc
+    url: https://www.coursera.org/learn/pca-machine-learning
+- slug: programming
+  title: Programming & computational robotics
+  order: 2
+  intro: Michigan lists ROB 102, ROB 320 and ROB 502 among freely accessible courses. ETH RSL provides
+    Programming for Robotics – Introduction to ROS.
+  courses:
+  - n: 8
+    title: ROB 102 – Introduction to Algorithms and Programming
+    university: Michigan
+    level: Beginner
+    topics: Programming, algorithms
+    free: open
+    url: https://robotics.umich.edu/academics/courses/online-courses/
+  - n: 9
+    title: ROB 502 – Programming for Robotics
+    university: Michigan
+    level: Intermediate
+    topics: Robotics programming
+    free: open
+    url: https://robotics.umich.edu/academics/courses/online-courses/
+  - n: 10
+    title: ROB 320 – Robot Operating Systems
+    university: Michigan
+    level: Intermediate
+    topics: ROS
+    free: open
+    url: https://robotics.umich.edu/academics/courses/online-courses/
+  - n: 11
+    title: Programming for Robotics – Introduction to ROS
+    university: ETH Zürich
+    level: Intermediate
+    topics: ROS, robot software
+    free: open
+    url: https://rsl.ethz.ch/education-students/lectures.html
+    featured: true
+  - n: 12
+    title: 6.01SC – Introduction to EECS I
+    university: MIT
+    level: Beginner
+    topics: Python, computation, electronics, robotics
+    free: open
+    url: https://ocw.mit.edu/courses/6-01sc-introduction-to-electrical-engineering-and-computer-science-i-spring-2011/
+  - n: 13
+    title: 6.270 – Autonomous Robot Design Competition
+    university: MIT
+    level: Intermediate
+    topics: Programming autonomous robots
+    free: open
+    url: https://ocw.mit.edu/
+  - n: 14
+    title: 2.007 – Design and Manufacturing I
+    university: MIT
+    level: Intermediate
+    topics: Robot design, fabrication, programming
+    free: open
+    url: https://ocw.mit.edu/courses/2-007-design-and-manufacturing-i-spring-2009/
+  - n: 15
+    title: Introduction to Robotics
+    university: IIT Kanpur / NPTEL
+    level: Beginner
+    topics: Programming + fundamentals
+    free: mooc
+    url: https://onlinecourses.nptel.ac.in/noc21_me32/preview
+  - n: 16
+    title: 'Industrial Robotics: Theories for Implementation'
+    university: IIT-ISM Dhanbad / NPTEL
+    level: Beginner
+    topics: Programming, industrial robots
+    free: mooc
+    url: https://onlinecourses.nptel.ac.in/
+- slug: classical
+  title: Classical robotics
+  order: 3
+  intro: The core robotics sequence to take seriously. Stanford CS223A and MIT 2.12 are unusually complete
+    as open courses.
+  courses:
+  - n: 17
+    title: CS223A – Introduction to Robotics
+    university: Stanford
+    level: Intermediate
+    topics: Kinematics, dynamics, control, planning
+    free: open
+    url: https://see.stanford.edu/Course/CS223A
+    featured: true
+  - n: 18
+    title: 2.12 – Introduction to Robotics
+    university: MIT
+    level: Intermediate
+    topics: Mechanisms, kinematics, dynamics, control
+    free: open
+    url: https://ocw.mit.edu/courses/2-12-introduction-to-robotics-fall-2005/
+    featured: true
+  - n: 19
+    title: ROB 311 – How to Build Robots and Make Them Move
+    university: Michigan
+    level: Intermediate
+    topics: Robot construction + motion
+    free: open
+    url: https://robotics.umich.edu/academics/courses/online-courses/
+  - n: 20
+    title: ROB 510 – Robot Kinematics and Dynamics
+    university: Michigan
+    level: Advanced
+    topics: Kinematics, dynamics
+    free: open
+    url: https://robotics.umich.edu/academics/courses/online-courses/
+  - n: 21
+    title: Robot Dynamics
+    university: ETH Zürich
+    level: Advanced
+    topics: Dynamics of robots
+    free: open
+    url: https://rsl.ethz.ch/education-students/lectures.html
+  - n: 22
+    title: Introduction to Robotics
+    university: IIT Kanpur / NPTEL
+    level: Intermediate
+    topics: Manipulators, modelling, control
+    free: mooc
+    url: https://onlinecourses.nptel.ac.in/noc21_me32/preview
+  - n: 23
+    title: Mechanics and Control of Robotic Manipulators
+    university: IIT Palakkad / NPTEL
+    level: Advanced
+    topics: Mechanics + control
+    free: mooc
+    url: https://onlinecourses.nptel.ac.in/
+  - n: 24
+    title: Industrial Robotics
+    university: NPTEL
+    level: Beginner/intermediate
+    topics: Industrial manipulators
+    free: mooc
+    url: https://onlinecourses.nptel.ac.in/
+  - n: 25
+    title: Robotic Manipulation
+    university: MIT
+    level: Advanced
+    topics: Manipulation, geometry, planning
+    free: open
+    url: https://ocw.mit.edu/
+  - n: 26
+    title: Underactuated Robotics
+    university: MIT
+    level: Advanced
+    topics: Nonlinear dynamics, control, locomotion
+    free: open
+    url: https://underactuated.csail.mit.edu/
+    featured: true
+- slug: control
+  title: Robot control
+  order: 4
+  intro: 'If control is your main interest: ROB 101 → CS223A → MIT Underactuated Robotics.'
+  courses:
+  - n: 27
+    title: CS223A – Introduction to Robotics
+    university: Stanford
+    level: Intermediate
+    topics: Classical robot control
+    free: open
+    url: https://see.stanford.edu/Course/CS223A
+  - n: 28
+    title: ROB 514 – Introduction to Robot Controls
+    university: Michigan
+    level: Advanced
+    topics: Robot control
+    free: open
+    url: https://robotics.umich.edu/academics/courses/online-courses/
+  - n: 29
+    title: ROB 515 – Advanced Robot Controls
+    university: Michigan
+    level: Advanced
+    topics: Advanced control
+    free: open
+    url: https://robotics.umich.edu/academics/courses/online-courses/
+  - n: 30
+    title: 6.832 – Underactuated Robotics
+    university: MIT
+    level: Advanced
+    topics: Nonlinear/optimal control
+    free: open
+    url: https://underactuated.csail.mit.edu/
+    featured: true
+  - n: 31
+    title: Robot Dynamics
+    university: ETH Zürich
+    level: Advanced
+    topics: Dynamics
+    free: open
+    url: https://rsl.ethz.ch/education-students/lectures.html
+  - n: 32
+    title: Mechanics and Control of Robotic Manipulators
+    university: IIT Palakkad / NPTEL
+    level: Advanced
+    topics: Manipulator control
+    free: mooc
+    url: https://onlinecourses.nptel.ac.in/
+  - n: 33
+    title: Advanced Robotics
+    university: NPTEL
+    level: Advanced
+    topics: Advanced robot systems
+    free: mooc
+    url: https://onlinecourses.nptel.ac.in/
+  - n: 34
+    title: 'Robotics: Dynamics and Control'
+    university: NPTEL
+    level: Advanced
+    topics: Dynamics/control
+    free: mooc
+    url: https://onlinecourses.nptel.ac.in/
+- slug: mobile
+  title: Mobile robotics
+  order: 5
+  courses:
+  - n: 35
+    title: 'ROB 530 – Mobile Robotics: Methods and Algorithms'
+    university: Michigan
+    level: Advanced
+    topics: Localization, mapping, navigation
+    free: open
+    url: https://robotics.umich.edu/academics/courses/online-courses/
+    featured: true
+  - n: 36
+    title: ROB 330 – Localization, Mapping and Navigation
+    university: Michigan
+    level: Advanced
+    topics: SLAM/navigation
+    free: open
+    url: https://robotics.umich.edu/academics/courses/online-courses/
+  - n: 37
+    title: Mobile Robotics
+    university: NPTEL
+    level: Intermediate
+    topics: Mobile robots
+    free: mooc
+    url: https://onlinecourses.nptel.ac.in/
+  - n: 38
+    title: Autonomous Mobile Robots
+    university: ETH Zürich
+    level: Advanced
+    topics: Navigation/autonomy
+    free: mooc
+    url: https://www.classcentral.com/course/autonomous-robotics-eth-zurich-autonomous-mobile--1564
+  - n: 39
+    title: 2.12 – Introduction to Robotics
+    university: MIT
+    level: Intermediate
+    topics: Mobile robot mechanisms/planning
+    free: open
+    url: https://ocw.mit.edu/courses/2-12-introduction-to-robotics-fall-2005/
+  - n: 40
+    title: 'ROB 535 – Self-Driving Cars: Perception and Control'
+    university: Michigan
+    level: Advanced
+    topics: Autonomous vehicles
+    free: open
+    url: https://robotics.umich.edu/academics/courses/online-courses/
+- slug: perception
+  title: Robot perception / computer vision
+  order: 6
+  courses:
+  - n: 41
+    title: ROB 430 – Deep Learning for Robot Perception and Manipulation
+    university: Michigan
+    level: Advanced
+    topics: Deep learning + robotics
+    free: open
+    url: https://robotics.umich.edu/academics/courses/online-courses/
+  - n: 42
+    title: ROB 432 / EECS 442 – Computer Vision
+    university: Michigan
+    level: Advanced
+    topics: Vision
+    free: open
+    url: https://robotics.umich.edu/academics/courses/complete-course-list/
+  - n: 43
+    title: ROB 498 – 3D Robot Perception
+    university: Michigan
+    level: Advanced
+    topics: 3-D perception
+    free: open
+    url: https://robotics.umich.edu/academics/courses/complete-course-list/
+  - n: 44
+    title: ROB 530 – Mobile Robotics
+    university: Michigan
+    level: Advanced
+    topics: Perception + localization
+    free: open
+    url: https://robotics.umich.edu/academics/courses/online-courses/
+  - n: 45
+    title: "Robot Learning: From Fundamentals to Foundation Models (263-5911-00L)"
+    university: ETH Zürich
+    level: Advanced
+    topics: Imitation learning, RL, VLA models, foundation models for robotics
+    free: open
+    url: https://video.ethz.ch/lectures/d-infk/2026/spring/263-5911-00L
+    materials_url: https://cvg.ethz.ch/lectures/Robot-Learning/
+    note: "Lecture videos on the ETH video portal; course materials on the CVG lectures page."
+  - n: 46
+    title: AI for Robotics
+    university: NPTEL
+    level: Intermediate/advanced
+    topics: AI + perception
+    free: mooc
+    url: https://onlinecourses.nptel.ac.in/
+  - n: 47
+    title: 6.801 – Machine Vision
+    university: MIT
+    level: Intermediate
+    topics: Geometric and photometric vision foundations
+    free: open
+    url: https://www.youtube.com/playlist?list=PLUl4u3cNGP63pfpS1gV5P9tDxxL_e4W8O
+- slug: planning
+  title: Motion planning
+  order: 7
+  courses:
+  - n: 48
+    title: ROB 520 – Motion Planning
+    university: Michigan
+    level: Advanced
+    topics: Motion planning
+    free: open
+    url: https://robotics.umich.edu/academics/courses/complete-course-list/
+  - n: 49
+    title: CS223A – Introduction to Robotics
+    university: Stanford
+    level: Intermediate
+    topics: Planning fundamentals
+    free: open
+    url: https://see.stanford.edu/Course/CS223A
+  - n: 50
+    title: 6.4210 – Robotic Manipulation
+    university: MIT
+    level: Advanced
+    topics: Task-and-motion planning
+    free: open
+    url: https://manipulation.csail.mit.edu/
+  - n: 51
+    title: Underactuated Robotics
+    university: MIT
+    level: Advanced
+    topics: Trajectory optimisation
+    free: open
+    url: https://underactuated.csail.mit.edu/
+  - n: 52
+    title: 'Mobile Robotics: Methods and Algorithms'
+    university: Michigan
+    level: Advanced
+    topics: Planning for mobile robots
+    free: open
+    url: https://robotics.umich.edu/academics/courses/online-courses/
+  - n: 53
+    title: Introduction to Robotics
+    university: IIT Kanpur / NPTEL
+    level: Intermediate
+    topics: Manipulator planning basics
+    free: mooc
+    url: https://onlinecourses.nptel.ac.in/noc21_me32/preview
+- slug: manipulation
+  title: Manipulation
+  order: 8
+  courses:
+  - n: 54
+    title: 6.4210 – Robotic Manipulation
+    university: MIT
+    level: Advanced
+    topics: 3-D geometry, perception, planning
+    free: open
+    url: https://manipulation.csail.mit.edu/
+    featured: true
+  - n: 55
+    title: Introduction to Robotic Manipulation
+    university: Michigan
+    level: Advanced
+    topics: Manipulation
+    free: open
+    url: https://robotics.umich.edu/academics/courses/complete-course-list/
+  - n: 56
+    title: CS223A – Introduction to Robotics
+    university: Stanford
+    level: Intermediate
+    topics: Manipulator modelling and control
+    free: open
+    url: https://see.stanford.edu/Course/CS223A
+  - n: 57
+    title: 2.12 – Introduction to Robotics
+    university: MIT
+    level: Intermediate
+    topics: Mechanisms and control
+    free: open
+    url: https://ocw.mit.edu/courses/2-12-introduction-to-robotics-fall-2005/
+  - n: 58
+    title: Mechanics and Control of Robotic Manipulators
+    university: IIT Palakkad / NPTEL
+    level: Advanced
+    topics: Manipulator mechanics
+    free: mooc
+    url: https://onlinecourses.nptel.ac.in/
+  - n: 59
+    title: Robot Kinematics and Dynamics
+    university: Michigan
+    level: Advanced
+    topics: Kinematics & dynamics
+    free: open
+    url: https://robotics.umich.edu/academics/courses/online-courses/
+- slug: legged
+  title: Legged / dynamic robotics
+  order: 9
+  courses:
+  - n: 60
+    title: 6.832 – Underactuated Robotics
+    university: MIT
+    level: Advanced
+    topics: Nonlinear dynamics, locomotion
+    free: open
+    url: https://underactuated.csail.mit.edu/
+    featured: true
+  - n: 61
+    title: Robot Dynamics
+    university: ETH Zürich
+    level: Advanced
+    topics: Dynamics
+    free: open
+    url: https://rsl.ethz.ch/education-students/lectures.html
+  - n: 62
+    title: Bio-Inspired Robotic Design
+    university: Michigan
+    level: Advanced
+    topics: Bio-inspired design
+    free: open
+    url: https://robotics.umich.edu/academics/courses/complete-course-list/
+  - n: 63
+    title: Soft Robotics
+    university: Michigan
+    level: Advanced
+    topics: Soft robots
+    free: open
+    url: https://robotics.umich.edu/academics/courses/complete-course-list/
+  - n: 64
+    title: Advanced Robotics
+    university: NPTEL
+    level: Advanced
+    topics: Advanced systems
+    free: mooc
+    url: https://onlinecourses.nptel.ac.in/
+  - n: 65
+    title: Experimental Robotics
+    university: IIT Kharagpur / NPTEL
+    level: Advanced
+    topics: Serial, tracked, hexapod, drone, humanoid experiments
+    free: mooc
+    url: https://onlinecourses.nptel.ac.in/noc24_ge31/preview
+- slug: ai
+  title: AI + robotics
+  order: 10
+  courses:
+  - n: 66
+    title: ROB 102 – Introduction to Algorithms and Programming
+    university: Michigan
+    level: Beginner
+    topics: Algorithms foundation
+    free: open
+    url: https://robotics.umich.edu/academics/courses/online-courses/
+  - n: 67
+    title: ROB 429 – Robot Learning for Planning and Control
+    university: Michigan
+    level: Advanced
+    topics: Robot learning
+    free: open
+    url: https://robotics.umich.edu/academics/courses/complete-course-list/
+  - n: 68
+    title: ROB 430 – Deep Learning for Robot Perception and Manipulation
+    university: Michigan
+    level: Advanced
+    topics: Deep learning + robotics
+    free: open
+    url: https://robotics.umich.edu/academics/courses/online-courses/
+  - n: 69
+    title: 16.412J – Cognitive Robotics
+    university: MIT
+    level: Advanced
+    topics: Cognitive/autonomous robotics
+    free: open
+    url: https://ocw.mit.edu/courses/16-412j-cognitive-robotics-spring-2016/
+  - n: 70
+    title: Application of AI to Robotics
+    university: IIT Roorkee / NPTEL
+    level: Intermediate
+    topics: Perception, planning, navigation, interaction
+    free: mooc
+    url: https://onlinecourses.nptel.ac.in/
+  - n: 71
+    title: Foundations of Cognitive Robotics
+    university: IIT Kanpur / NPTEL
+    level: Intermediate
+    topics: Cognitive robotics
+    free: mooc
+    url: https://onlinecourses.nptel.ac.in/
+  - n: 72
+    title: Advanced Robotics
+    university: NPTEL
+    level: Advanced
+    topics: Advanced robot systems
+    free: mooc
+    url: https://onlinecourses.nptel.ac.in/
+  - n: 73
+    title: CS287 – Advanced Robotics
+    university: UC Berkeley
+    level: Advanced
+    topics: MDPs, planning, manipulation, robot learning
+    free: open
+    url: https://people.eecs.berkeley.edu/~pabbeel/cs287-fa19/
+- slug: av
+  title: Autonomous vehicles
+  order: 11
+  courses:
+  - n: 74
+    title: 'ROB 535 – Self Driving Cars: Perception and Control'
+    university: Michigan
+    level: Advanced
+    topics: Autonomous vehicles
+    free: open
+    url: https://robotics.umich.edu/academics/courses/online-courses/
+  - n: 75
+    title: ROB 530 – Mobile Robotics
+    university: Michigan
+    level: Advanced
+    topics: Mobile autonomy
+    free: open
+    url: https://robotics.umich.edu/academics/courses/online-courses/
+  - n: 76
+    title: ROB 330 – Localization, Mapping and Navigation
+    university: Michigan
+    level: Advanced
+    topics: SLAM/navigation
+    free: open
+    url: https://robotics.umich.edu/academics/courses/online-courses/
+  - n: 77
+    title: ME 780 – Perception for Autonomous Driving
+    university: University of Waterloo
+    level: Advanced
+    topics: Camera, LiDAR, radar, fusion
+    free: open
+    url: https://www.youtube.com/playlist?list=PLEQvNLZXEcNER_f7CKT-M8MnRiG0PXFMQ
+  - n: 78
+    title: Mobile Robotics
+    university: NPTEL
+    level: Intermediate/advanced
+    topics: Mobile robots
+    free: mooc
+    url: https://onlinecourses.nptel.ac.in/
+- slug: hardware
+  title: Hardware / building robots
+  order: 12
+  courses:
+  - n: 79
+    title: ROB 311 – How to Build Robots and Make Them Move
+    university: Michigan
+    level: Intermediate
+    topics: Build and move robots
+    free: open
+    url: https://robotics.umich.edu/academics/courses/online-courses/
+    featured: true
+  - n: 80
+    title: 2.007 – Design and Manufacturing I
+    university: MIT
+    level: Intermediate
+    topics: Design and fabrication
+    free: open
+    url: https://ocw.mit.edu/courses/2-007-design-and-manufacturing-i-spring-2009/
+  - n: 81
+    title: 2.017J – Design of Electromechanical Robotic Systems
+    university: MIT
+    level: Intermediate
+    topics: Electromechanical systems
+    free: open
+    url: https://ocw.mit.edu/courses/2-017j-design-of-electromechanical-robotic-systems-fall-2009/
+  - n: 82
+    title: 6.270 – Autonomous Robot Design Competition
+    university: MIT
+    level: Intermediate
+    topics: Competition robots
+    free: open
+    url: https://ocw.mit.edu/
+  - n: 83
+    title: Experimental Robotics
+    university: IIT Kharagpur / NPTEL
+    level: Intermediate
+    topics: Hands-on experiments
+    free: mooc
+    url: https://onlinecourses.nptel.ac.in/noc24_ge31/preview
+  - n: 84
+    title: Industrial Robotics
+    university: NPTEL
+    level: Beginner/intermediate
+    topics: Industrial robots
+    free: mooc
+    url: https://onlinecourses.nptel.ac.in/
+- slug: hri
+  title: Human–robot interaction
+  order: 13
+  courses:
+  - n: 85
+    title: ROB 540 – Computational Human-Robot Interaction
+    university: Michigan
+    level: Advanced
+    topics: Computational HRI
+    free: open
+    url: https://robotics.umich.edu/academics/courses/complete-course-list/
+  - n: 86
+    title: Design HRI
+    university: Michigan
+    level: Advanced
+    topics: HRI design
+    free: open
+    url: https://robotics.umich.edu/academics/courses/complete-course-list/
+  - n: 87
+    title: 16.412J – Cognitive Robotics
+    university: MIT
+    level: Advanced
+    topics: Cognitive robotics
+    free: open
+    url: https://ocw.mit.edu/courses/16-412j-cognitive-robotics-spring-2016/
+  - n: 88
+    title: Bio-Inspired Robotic Design
+    university: Michigan
+    level: Advanced
+    topics: Bio-inspired design
+    free: open
+    url: https://robotics.umich.edu/academics/courses/complete-course-list/
+  - n: 89
+    title: Foundations of Cognitive Robotics
+    university: IIT Kanpur / NPTEL
+    level: Intermediate
+    topics: Cognitive robotics
+    free: mooc
+    url: https://onlinecourses.nptel.ac.in/
+- slug: soft
+  title: Soft / bio-inspired robotics
+  order: 14
+  courses:
+  - n: 90
+    title: ROB 560 – Bio-Inspired Robotic Design
+    university: Michigan
+    level: Advanced
+    topics: Bio-inspired design
+    free: open
+    url: https://robotics.umich.edu/academics/courses/complete-course-list/
+  - n: 91
+    title: ROB 561 – Soft Robotics
+    university: Michigan
+    level: Advanced
+    topics: Soft robotics
+    free: open
+    url: https://robotics.umich.edu/academics/courses/complete-course-list/
+  - n: 92
+    title: Experimental Robotics
+    university: IIT Kharagpur / NPTEL
+    level: Advanced
+    topics: Experimental platforms
+    free: mooc
+    url: https://onlinecourses.nptel.ac.in/noc24_ge31/preview
+  - n: 93
+    title: Underactuated Robotics
+    university: MIT
+    level: Advanced
+    topics: Dynamic locomotion
+    free: open
+    url: https://underactuated.csail.mit.edu/
+- slug: nptel
+  title: NPTEL / SWAYAM highlights
+  order: 15
+  intro: Large free IIT course catalogue. Material is free to study; proctored certificates are optional
+    and paid.
+  courses:
+  - n: 94
+    title: Introduction to Robotics
+    university: IIT Kanpur / NPTEL
+    level: Intermediate
+    topics: First-level manipulator analysis, design, control
+    free: open
+    url: https://onlinecourses.nptel.ac.in/noc21_me32/preview
+  - n: 95
+    title: Mechanics and Control of Robotic Manipulators
+    university: IIT Palakkad / NPTEL
+    level: Advanced
+    topics: Manipulator mechanics and control
+    free: open
+    url: https://onlinecourses.nptel.ac.in/
+  - n: 96
+    title: 'Industrial Robotics: Theories for Implementation'
+    university: IIT-ISM Dhanbad / NPTEL
+    level: Beginner/intermediate
+    topics: Industrial robotics
+    free: open
+    url: https://onlinecourses.nptel.ac.in/
+  - n: 97
+    title: Experimental Robotics
+    university: IIT Kharagpur / NPTEL
+    level: Advanced
+    topics: Hands-on multi-platform experiments
+    free: open
+    url: https://onlinecourses.nptel.ac.in/noc24_ge31/preview
+  - n: 98
+    title: Foundations of Cognitive Robotics
+    university: IIT Kanpur / NPTEL
+    level: Beginner/intermediate
+    topics: Cognitive robotics
+    free: open
+    url: https://onlinecourses.nptel.ac.in/
+  - n: 99
+    title: Application of AI to Robotics
+    university: IIT Roorkee / NPTEL
+    level: Intermediate
+    topics: AI for robotics
+    free: open
+    url: https://onlinecourses.nptel.ac.in/
+  - n: 100
+    title: Advanced Robotics
+    university: NPTEL
+    level: Advanced
+    topics: Advanced robotics
+    free: open
+    url: https://onlinecourses.nptel.ac.in/
+- slug: additional
+  title: Additional open lectures (migrated)
+  order: 16
+  intro: Courses previously listed on this site's Open Robotics Lectures round-up, consolidated here.
+  courses:
+  - n: 101
+    title: Robotics 1 & Robotics 2
+    university: Università di Roma (Alessandro De Luca)
+    level: Intermediate/advanced
+    topics: DH, kinematics, dynamics, nonlinear control
+    free: open
+    url: https://www.youtube.com/playlist?list=PLAQopGWlIcyaqDBW1zSKx7lHfVcOmWSWt
+  - n: 102
+    title: Robot Mechanics and Control / Modern Robotics
+    university: Seoul National University (Frank Park)
+    level: Advanced
+    topics: Lie groups, screw theory, Modern Robotics textbook
+    free: open
+    url: http://modernrobotics.org
+  - n: 103
+    title: 16-715 – Robot Dynamics
+    university: CMU
+    level: Advanced
+    topics: Rigid body dynamics, contact, simulation
+    free: open
+    url: https://www.cs.cmu.edu/~rdyna/16715/
+  - n: 104
+    title: 16-745 – Optimal Control and Reinforcement Learning
+    university: CMU
+    level: Advanced
+    topics: LQR, iLQR, MPC, policy gradients
+    free: open
+    url: https://www.youtube.com/playlist?list=PLZnJoM76RM6KgchA1BI7DXQBN5T8daTOy
+  - n: 105
+    title: ME 597 – Autonomous Mobile Robotics
+    university: University of Waterloo (Barfoot)
+    level: Advanced
+    topics: State estimation, filters, VO, SLAM
+    free: open
+    url: https://www.youtube.com/playlist?list=PLEQvNLZXEcNEPySeXxiVTlv73T8BXNQZJ
+  - n: 106
+    title: Visual Navigation for Flying Robots
+    university: TU Munich
+    level: Advanced
+    topics: VO, dense mapping, quadrotor control
+    free: open
+    url: https://www.youtube.com/playlist?list=PLTBdjV_4f-EKeki5ps2WHqJqyQvxls4ha
+  - n: 107
+    title: Introduction to Vision and Robotics
+    university: University of Edinburgh
+    level: Intermediate
+    topics: Projective geometry, stereo, navigation
+    free: open
+    url: http://www.inf.ed.ac.uk/teaching/courses/ivr/
+  - n: 108
+    title: METR 4202/7202 – Robotics & Automation
+    university: University of Queensland
+    level: Intermediate
+    topics: Kinematics, dynamics, vision, planning
+    free: open
+    url: https://www.youtube.com/playlist?list=PLyPiP9VCZmVCLMnnbJRLxjmhHmBH7MVKP
+  - n: 109
+    title: Optimal and Robust Control (B3M35ORR)
+    university: CTU Prague
+    level: Advanced
+    topics: LQR, MPC, robust control lecture series
+    free: open
+    url: https://www.youtube.com/playlist?list=PLMLojHoA_QPmRiPotD_TnfdUkglTexuqm
+priority:
+  beginner:
+  - Michigan ROB 101 — Computational Linear Algebra
+  - Michigan ROB 102 — Algorithms & Programming
+  - Michigan ROB 201 — Calculus
+  - MIT 6.01SC — Introduction to EECS
+  - IIT Kanpur — Introduction to Robotics
+  - NPTEL — Industrial Robotics
+  - NPTEL — Foundations of Cognitive Robotics
+  core:
+  - Stanford CS223A — Introduction to Robotics
+  - MIT 2.12 — Introduction to Robotics
+  - Michigan ROB 311 — How to Build Robots
+  - Michigan ROB 320 — Robot Operating Systems
+  - Michigan ROB 502 — Programming for Robotics
+  - ETH — Programming for Robotics / ROS
+  - ETH — Robot Dynamics
+  - IIT Palakkad — Mechanics & Control of Robotic Manipulators
+  intermediate:
+  - Michigan ROB 510 — Robot Kinematics & Dynamics
+  - Michigan ROB 514 — Introduction to Robot Controls
+  - Michigan ROB 520 — Motion Planning
+  - Michigan ROB 530 — Mobile Robotics
+  - Michigan ROB 330 — Localization, Mapping & Navigation
+  - MIT 6.270 — Autonomous Robot Design
+  - MIT 2.007 — Design & Manufacturing
+  - MIT 2.017J — Electromechanical Robotic Systems
+  - NPTEL — Advanced Robotics
+  advanced:
+  - MIT 6.4210 — Robotic Manipulation
+  - MIT 6.832 — Underactuated Robotics
+  - Michigan ROB 501 — Mathematics for Robotics
+  - Michigan ROB 515 — Advanced Robot Controls
+  - Michigan ROB 535 — Self-Driving Cars
+  - Michigan ROB 540 — Computational HRI
+  - Michigan ROB 560 — Bio-Inspired Robotic Design
+  - Michigan ROB 561 — Soft Robotics
+  - MIT 16.412J — Cognitive Robotics
+  - NPTEL — Experimental Robotics
+  - NPTEL — Application of AI to Robotics
+top15:
+- rank: 1
+  title: Stanford CS223A
+  why: Best classical robotics foundation
+  url: https://see.stanford.edu/Course/CS223A
+- rank: 2
+  title: MIT 2.12
+  why: Broad robotics engineering
+  url: https://ocw.mit.edu/courses/2-12-introduction-to-robotics-fall-2005/
+- rank: 3
+  title: Michigan ROB 101
+  why: Essential mathematical foundation
+  url: https://robotics.umich.edu/academics/courses/online-courses/
+- rank: 4
+  title: Michigan ROB 102
+  why: Programming foundation
+  url: https://robotics.umich.edu/academics/courses/online-courses/
+- rank: 5
+  title: Michigan ROB 320
+  why: ROS/software
+  url: https://robotics.umich.edu/academics/courses/online-courses/
+- rank: 6
+  title: Michigan ROB 530
+  why: Mobile robotics
+  url: https://robotics.umich.edu/academics/courses/online-courses/
+- rank: 7
+  title: ETH Programming for Robotics
+  why: Excellent ROS complement
+  url: https://rsl.ethz.ch/education-students/lectures.html
+- rank: 8
+  title: ETH Robot Dynamics
+  why: Strong dynamics
+  url: https://rsl.ethz.ch/education-students/lectures.html
+- rank: 9
+  title: MIT 6.4210 / Manipulation
+  why: Modern manipulation
+  url: https://manipulation.csail.mit.edu/
+- rank: 10
+  title: MIT 6.832
+  why: Advanced control/dynamics
+  url: https://underactuated.csail.mit.edu/
+- rank: 11
+  title: Michigan ROB 520
+  why: Motion planning
+  url: https://robotics.umich.edu/academics/courses/complete-course-list/
+- rank: 12
+  title: Michigan ROB 330
+  why: SLAM/navigation
+  url: https://robotics.umich.edu/academics/courses/online-courses/
+- rank: 13
+  title: Michigan ROB 430
+  why: Deep learning + perception
+  url: https://robotics.umich.edu/academics/courses/online-courses/
+- rank: 14
+  title: NPTEL Experimental Robotics
+  why: Practical breadth
+  url: https://onlinecourses.nptel.ac.in/noc24_ge31/preview
+- rank: 15
+  title: MIT 16.412J
+  why: Cognitive/autonomous robotics
+  url: https://ocw.mit.edu/courses/16-412j-cognitive-robotics-spring-2016/
+path:
+- title: Mathematics
+  items:
+  - Michigan ROB 101 (Linear Algebra)
+  - Michigan ROB 201 (Calculus)
+  - Probability/Stats
+- title: Programming
+  items:
+  - Michigan ROB 102
+  - Python
+  - C++ / algorithms
+- title: Robotics fundamentals
+  items:
+  - Stanford CS223A
+  - MIT 2.12
+- title: Control
+  items:
+  - MIT 6.832
+  - Michigan controls sequence
+- title: Software
+  items:
+  - ROS — Michigan ROB 320 / ETH ROS
+- title: Perception
+  items:
+  - Computer vision
+  - Localization
+  - Mapping
+- title: Mobile robotics
+  items:
+  - Michigan ROB 530
+- title: Motion planning
+  items:
+  - Michigan ROB 520
+- title: Manipulation
+  items:
+  - MIT 6.4210
+- title: Robot learning
+  items:
+  - Michigan ROB 429 / ROB 430
+- title: Specialisation
+  items:
+  - Legs
+  - HRI
+  - AVs
+  - Soft robotics

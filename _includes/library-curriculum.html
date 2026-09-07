@@ -1,0 +1,50 @@
+{% assign free_labels = "open:Free/open,partial:Free material,mooc:MOOC/audit,reference:Reference only" | split: "," %}
+
+{% for track in site.data.curriculum.tracks %}
+  <section id="{{ track.slug }}" class="curriculum-track">
+    <h2>{{ track.order }}. {{ track.title }}</h2>
+    {% if track.intro %}
+      <p class="tutorial-intro">{{ track.intro }}</p>
+    {% endif %}
+    <div class="tutorial-list">
+      {% for course in track.courses %}
+        {% assign free_label = course.free %}
+        {% case course.free %}
+          {% when "open" %}{% assign free_label = "Free/open" %}
+          {% when "partial" %}{% assign free_label = "Free material" %}
+          {% when "mooc" %}{% assign free_label = "MOOC/audit" %}
+          {% when "reference" %}{% assign free_label = "Reference only" %}
+        {% endcase %}
+        <article class="tutorial-card-shell">
+          <div class="tutorial-card">
+            <div class="tutorial-card-body">
+              <h3>
+                {% if course.featured %}<span class="curriculum-star" title="Recommended">★</span> {% endif %}
+                {% if course.url %}
+                  <a href="{{ course.url }}" target="_blank" rel="noopener">{{ course.title }}</a>
+                {% else %}
+                  {{ course.title }}
+                {% endif %}
+              </h3>
+              <p class="tutorial-meta">
+                <span class="library-badge library-badge--{{ course.free }}">{{ free_label }}</span>
+                · {{ course.university }}
+                · {{ course.level }}
+                {% if course.n %} · #{{ course.n }}{% endif %}
+              </p>
+              {% if course.topics %}
+                <p>{{ course.topics }}</p>
+              {% endif %}
+              {% if course.materials_url %}
+                <p><a href="{{ course.materials_url }}" target="_blank" rel="noopener">Course materials</a></p>
+              {% endif %}
+              {% if course.note %}
+                <p class="tutorial-intro">{{ course.note }}</p>
+              {% endif %}
+            </div>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+{% endfor %}

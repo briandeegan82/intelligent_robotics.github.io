@@ -7,7 +7,7 @@ redirect_from:
   - /resources/
 ---
 
-Curated papers, tools, courses, conferences, and reference material for the Intelligent Robotics community.
+Curated papers, tools, free university courses, conferences, and reference material for the Intelligent Robotics community.
 
 {% include tutorial-styles.html %}
 
@@ -27,6 +27,11 @@ Curated papers, tools, courses, conferences, and reference material for the Inte
 {% for section in sorted_sections %}
   {% if section.slug == 'conferences' %}
     {% assign section_count = site.data.library.conferences.size %}
+  {% elsif section.slug == 'courses' %}
+    {% assign section_count = 0 %}
+    {% for track in site.data.curriculum.tracks %}
+      {% assign section_count = section_count | plus: track.courses.size %}
+    {% endfor %}
   {% elsif section.slug == 'references' %}
     {% assign section_posts = site.posts | where_exp: "post", "post.library_type == section.slug" %}
     {% assign section_count = section_posts.size %}
