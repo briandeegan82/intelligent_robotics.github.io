@@ -4,8 +4,12 @@ main:
     url: /
   - title: "Tutorials"
     url: /tutorials/
+  - title: "Courses"
+    url: /library/courses/
   - title: "Library"
     url: /library/
+  - title: "Conferences"
+    url: /library/conferences/
   - title: "Projects"
     url: /projects/
   - title: "Community"

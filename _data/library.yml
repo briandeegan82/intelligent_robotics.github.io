@@ -133,11 +133,3 @@ external:
     track: ros
     section: references
     url: "https://github.com/fmrico/book_ros2"
-
-related_tools:
-  - title: "G1Pilot"
-    url: /library/tools/robotics/2026/07/09/g1pilot/
-    description: "ROS 2 control stack for the Unitree G1 humanoid."
-  - title: "Text-to-CAD"
-    url: /library/tools/robotics/2026/07/07/text-to-cad/
-    description: "AI-powered CAD design and manufacturing for robotics."
