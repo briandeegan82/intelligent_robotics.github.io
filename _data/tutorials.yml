@@ -34,3 +34,9 @@ categories:
     description: "Robot arms, camera pipelines, and platform-specific setup guides."
     thumbnail: /_images/tutorials/2025-06-03-lerobot_so_101_pick_place_setup_training_guide.webp
     order: 7
+
+external:
+  - title: "Articulated Robotics"
+    description: "Practical robotics tutorials covering ROS, software, projects, and community resources."
+    category: "ROS & robotics"
+    url: "https://articulatedrobotics.xyz/"
