@@ -12,10 +12,12 @@ main:
     url: /library/conferences/
   - title: "Projects"
     url: /projects/
+  - title: "Blog"
+    url: /blog/
+  - title: "Jobs"
+    url: /robotics-jobs/
   - title: "Community"
     children:
-      - title: "Jobs Board"
-        url: /robotics-jobs/
       - title: "European Robotics Labs"
         url: /european-robotics-labs/
       - title: "People"
@@ -77,6 +79,8 @@ sidebar:
         url: /library/references/
       - title: "Conferences"
         url: /library/conferences/
+      - title: "Blog"
+        url: /blog/
       - title: "8-DOF Quadruped Project"
         url: /fitzee/
       - title: "QB3rt Project"
