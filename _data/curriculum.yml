@@ -881,6 +881,62 @@ tracks:
     topics: LQR, MPC, robust control lecture series
     free: open
     url: https://www.youtube.com/playlist?list=PLMLojHoA_QPmRiPotD_TnfdUkglTexuqm
+  - n: 110
+    title: Underactuated Robotics
+    university: MIT (Russ Tedrake)
+    level: Advanced
+    topics: Nonlinear dynamics, optimal control, walking/flying robots
+    free: open
+    url: http://underactuated.csail.mit.edu/underactuated.html
+  - n: 111
+    title: 2.12 – Introduction to Robotics
+    university: MIT OpenCourseWare
+    level: Intermediate
+    topics: Kinematics, dynamics, control, mechatronics
+    free: open
+    url: http://ocw.mit.edu/courses/mechanical-engineering/2-12-introduction-to-robotics-fall-2005/
+  - n: 112
+    title: Introduction to Mobile Robotics
+    university: University of Freiburg (Burgard)
+    level: Intermediate/advanced
+    topics: Localization, mapping, SLAM, path planning
+    free: open
+    url: http://ais.informatik.uni-freiburg.de/teaching/ss16/robotics/index_en.php
+  - n: 113
+    title: CS287 – Advanced Robotics
+    university: UC Berkeley (Pieter Abbeel)
+    level: Advanced
+    topics: Optimization, estimation, control, robot learning
+    free: open
+    url: https://people.eecs.berkeley.edu/~pabbeel/cs287-fa19/
+  - n: 114
+    title: CS223A – Introduction to Robotics
+    university: Stanford (Oussama Khatib)
+    level: Intermediate
+    topics: Kinematics, dynamics, motion planning, control
+    free: open
+    url: https://see.stanford.edu/Course/CS223A
+  - n: 115
+    title: Autonomous Mobile Robots
+    university: ETH Zürich (edX)
+    level: Intermediate
+    topics: Perception, localization, mapping, motion planning
+    free: mooc
+    url: https://www.edx.org/learn/robotics/eth-zurich-autonomous-mobile-robots
+  - n: 116
+    title: Self-Driving Cars with Duckietown
+    university: ETH Zürich (edX)
+    level: Intermediate
+    topics: Autonomy stack, perception, control on a real platform
+    free: mooc
+    url: https://www.edx.org/learn/technology/eth-zurich-self-driving-cars-with-duckietown
+  - n: 117
+    title: Robotics Specialization (GRASP Lab)
+    university: University of Pennsylvania (Coursera)
+    level: Intermediate
+    topics: Aerial robotics, mobility, perception, estimation, planning
+    free: mooc
+    url: https://www.coursera.org/specializations/robotics
 priority:
   beginner:
   - Michigan ROB 101 — Computational Linear Algebra

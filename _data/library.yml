@@ -133,3 +133,147 @@ external:
     track: ros
     section: references
     url: "https://github.com/fmrico/book_ros2"
+  - title: "Probabilistic Robotics (Thrun, Burgard, Fox)"
+    description: "The canonical text on probabilistic state estimation, localization, mapping, and SLAM."
+    category: "Books"
+    section: references
+    url: "https://www.amazon.com/Probabilistic-Robotics-Intelligent-Autonomous-Agents/dp/0262201623/"
+  - title: "Planning Algorithms (Steven M. LaValle)"
+    description: "Free online textbook covering motion planning, sampling-based methods, and decision-theoretic planning."
+    category: "Books"
+    section: references
+    url: "http://planning.cs.uiuc.edu/"
+  - title: "Modern Robotics: Mechanics, Planning, and Control (Lynch & Park)"
+    description: "Free textbook and companion materials using screw theory and the product-of-exponentials formulation."
+    category: "Books"
+    section: references
+    url: "http://hades.mech.northwestern.edu/index.php/LynchAndPark"
+  - title: "A Mathematical Introduction to Robotic Manipulation (Murray, Li, Sastry)"
+    description: "Freely available classic on the mathematics of manipulation — kinematics, dynamics, and control."
+    category: "Books"
+    section: references
+    url: "http://www.cds.caltech.edu/~murray/mlswiki/?title=First_edition"
+  - title: "A Gentle Introduction to ROS (Jason O'Kane)"
+    description: "Free PDF introduction to ROS concepts and workflow for newcomers."
+    category: "Books"
+    track: ros
+    section: references
+    url: "https://cse.sc.edu/~jokane/agitr/agitr-letter.pdf"
+  - title: "Introduction to Autonomous Robots (Correll et al.)"
+    description: "Open textbook covering kinematics, control, sensing, and robot programming fundamentals."
+    category: "Books"
+    section: references
+    url: "https://github.com/correll/Introduction-to-Autonomous-Robots/releases"
+  - title: "Behavior Trees in Robotics and AI: An Introduction"
+    description: "Free online book on behavior trees as a control architecture for robots and autonomous agents."
+    category: "Books"
+    section: references
+    url: "https://btirai.github.io/"
+  - title: "Automated Planning and Acting (Ghallab, Nau, Traverso)"
+    description: "Freely available textbook on deliberative planning and acting for autonomous systems."
+    category: "Books"
+    section: references
+    url: "http://projects.laas.fr/planning/"
+  - title: "Gazebo"
+    description: "Widely used open-source robot simulator with physics, sensors, and ROS integration."
+    category: "Software & simulators"
+    track: simulation
+    section: references
+    url: "http://gazebosim.org/"
+  - title: "Webots"
+    description: "Open-source 3D robot simulator for modelling, programming, and testing robots."
+    category: "Software & simulators"
+    track: simulation
+    section: references
+    url: "https://cyberbotics.com/"
+  - title: "CoppeliaSim (formerly V-REP)"
+    description: "Versatile robot simulation framework with an integrated development environment."
+    category: "Software & simulators"
+    track: simulation
+    section: references
+    url: "https://www.coppeliarobotics.com/"
+  - title: "Drake"
+    description: "MIT toolbox for model-based design, planning, and control of dynamical robotic systems."
+    category: "Software & simulators"
+    track: simulation
+    section: references
+    url: "https://drake.mit.edu/"
+  - title: "MRPT — Mobile Robot Programming Toolkit"
+    description: "C++ libraries for SLAM, computer vision, and motion planning in mobile robotics."
+    category: "Software & simulators"
+    track: perception
+    section: references
+    url: "https://www.mrpt.org/"
+  - title: "Unity Robotics Hub"
+    description: "Tools and tutorials for using Unity as a simulation and visualization environment for robots."
+    category: "Software & simulators"
+    track: simulation
+    section: references
+    url: "https://github.com/Unity-Technologies/Unity-Robotics-Hub"
+  - title: "IEEE Transactions on Robotics"
+    description: "Flagship IEEE RAS journal covering the full breadth of robotics research."
+    category: "Journals"
+    section: references
+    url: "https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=8860"
+  - title: "The International Journal of Robotics Research (IJRR)"
+    description: "Long-running peer-reviewed journal for foundational and applied robotics research."
+    category: "Journals"
+    section: references
+    url: "http://www.ijrr.org/"
+  - title: "Journal of Field Robotics"
+    description: "Peer-reviewed journal focused on robots operating in real, unstructured environments."
+    category: "Journals"
+    section: references
+    url: "http://www.journalfieldrobotics.org/Home.html"
+  - title: "Autonomous Robots (Springer)"
+    description: "Journal covering the theory and applications of autonomous robotic systems."
+    category: "Journals"
+    section: references
+    url: "http://www.springer.com/engineering/robotics/journal/10514"
+  - title: "Frontiers in Robotics and AI"
+    description: "Open-access journal spanning robotics, artificial intelligence, and their intersection."
+    category: "Journals"
+    section: references
+    url: "https://www.frontiersin.org/journals/robotics-and-ai"
+  - title: "Awesome Robotics (kiloreux)"
+    description: "The broad community-maintained awesome list of robotics courses, books, software, and more."
+    category: "Curated lists"
+    section: references
+    url: "https://github.com/kiloreux/awesome-robotics"
+  - title: "Awesome Robotics Libraries"
+    description: "Curated directory of robotics libraries and simulators across the ecosystem."
+    category: "Curated lists"
+    section: references
+    url: "https://github.com/jslee02/awesome-robotics-libraries"
+  - title: "Awesome ROS2"
+    description: "Curated list of ROS 2 packages, tools, and learning resources."
+    category: "Curated lists"
+    track: ros
+    section: references
+    url: "https://github.com/fkromer/awesome-ros2"
+  - title: "Awesome Computer Vision"
+    description: "Curated list of computer vision resources — foundational for robot perception."
+    category: "Curated lists"
+    track: perception
+    section: references
+    url: "https://github.com/jbhuang0604/awesome-computer-vision"
+  - title: "Awesome Reinforcement Learning"
+    description: "Curated list of reinforcement learning resources relevant to robot learning."
+    category: "Curated lists"
+    section: references
+    url: "https://github.com/aikorea/awesome-rl/"
+  - title: "IEEE Spectrum Robotics"
+    description: "News and analysis on robotics research, industry, and emerging platforms."
+    category: "Communities & news"
+    section: references
+    url: "https://spectrum.ieee.org/robotics"
+  - title: "Robotics Stack Exchange"
+    description: "Q&A community for robotics engineering, ROS, and hardware questions."
+    category: "Communities & news"
+    section: references
+    url: "https://robotics.stackexchange.com/"
+  - title: "r/robotics"
+    description: "Active Reddit community for robotics projects, news, and discussion."
+    category: "Communities & news"
+    section: references
+    url: "https://www.reddit.com/r/robotics/"
