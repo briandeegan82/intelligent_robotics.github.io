@@ -401,6 +401,13 @@ tracks:
     topics: Geometric and photometric vision foundations
     free: open
     url: https://www.youtube.com/playlist?list=PLUl4u3cNGP63pfpS1gV5P9tDxxL_e4W8O
+  - n: 119
+    title: 16.485 – Visual Navigation for Autonomous Vehicles (VNAV)
+    university: MIT
+    level: Advanced
+    topics: Geometry, visual odometry, mapping, optimisation for navigation
+    free: open
+    url: https://vnav.mit.edu/
 - slug: planning
   title: Motion planning
   order: 7
@@ -640,6 +647,14 @@ tracks:
     topics: Mobile robots
     free: mooc
     url: https://onlinecourses.nptel.ac.in/
+  - n: 118
+    title: 16.485 – Visual Navigation for Autonomous Vehicles (VNAV)
+    university: MIT
+    level: Advanced
+    topics: Visual navigation geometry, optimisation, state-of-the-art algorithms, ROS labs
+    free: open
+    url: https://vnav.mit.edu/
+    featured: true
 - slug: hardware
   title: Hardware / building robots
   order: 12
@@ -971,6 +986,7 @@ priority:
   - Michigan ROB 501 — Mathematics for Robotics
   - Michigan ROB 515 — Advanced Robot Controls
   - Michigan ROB 535 — Self-Driving Cars
+  - MIT 16.485 — Visual Navigation for Autonomous Vehicles
   - Michigan ROB 540 — Computational HRI
   - Michigan ROB 560 — Bio-Inspired Robotic Design
   - Michigan ROB 561 — Soft Robotics
