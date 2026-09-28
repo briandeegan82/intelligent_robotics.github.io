@@ -7,6 +7,13 @@ baseurl: /intelligent_robotics.github.io
 
 remote_theme: academicpages/academicpages.github.io
 
+# Privacy-friendly analytics via GoatCounter (https://www.goatcounter.com/).
+# Dashboard: https://intelligentrobotics.goatcounter.com
+# Analytics load only when JEKYLL_ENV=production (GitHub Pages does this by default).
+analytics:
+  provider: "custom"
+goatcounter: "intelligentrobotics"
+
 plugins:
   - jekyll-include-cache
   - jekyll-redirect-from
