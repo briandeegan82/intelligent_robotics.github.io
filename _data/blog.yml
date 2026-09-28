@@ -1,0 +1,7 @@
+posts:
+  - title: "ROS 2 and Self-Driving Cars: The Software Framework Connecting Autonomous Systems"
+    author: "The Auto Journey"
+    date: 2026-08-30
+    description: "How ROS 2 middleware connects cameras, LiDAR, localization, planning, and control in autonomous vehicle software stacks."
+    url: "https://theautojourney.medium.com/ros-2-and-self-driving-cars-the-software-framework-connecting-autonomous-systems-652cbb43ebfa"
+    source: "Medium"

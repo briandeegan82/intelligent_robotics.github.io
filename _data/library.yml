@@ -245,6 +245,12 @@ external:
     category: "Curated lists"
     section: references
     url: "https://github.com/jslee02/awesome-robotics-libraries"
+  - title: "Best-of Robot Simulators"
+    description: "Ranked, category-grouped directory of ~180 robot simulators, physics engines, and related tools — maintained by Kimberly McGuire."
+    category: "Curated lists"
+    track: simulation
+    section: references
+    url: "https://github.com/knmcguire/best-of-robot-simulators"
   - title: "Awesome ROS2"
     description: "Curated list of ROS 2 packages, tools, and learning resources."
     category: "Curated lists"

@@ -395,12 +395,15 @@ tracks:
     free: mooc
     url: https://onlinecourses.nptel.ac.in/
   - n: 47
-    title: 6.801 – Machine Vision
+    title: 6.801 / 6.866 – Machine Vision
     university: MIT
     level: Intermediate
-    topics: Geometric and photometric vision foundations
+    topics: Image formation, optical flow, photometric vision, camera calibration
     free: open
-    url: https://www.youtube.com/playlist?list=PLUl4u3cNGP63pfpS1gV5P9tDxxL_e4W8O
+    url: https://ocw.mit.edu/courses/6-801-machine-vision-fall-2020/
+    materials_url: https://ocw.mit.edu/courses/6-801-machine-vision-fall-2020/download/
+    note: "Prof. Berthold Horn (Fall 2020). Lecture videos, notes, problem sets, and exams on MIT OCW; download package available."
+
   - n: 119
     title: 16.485 – Visual Navigation for Autonomous Vehicles (VNAV)
     university: MIT
