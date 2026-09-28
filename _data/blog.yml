@@ -1,4 +1,10 @@
 posts:
+  - title: "10 Free Courses I Would Study Before a Robotics MSc"
+    author: "Akshet Patel"
+    date: 2026-09-25
+    description: "A curated free-course prep list for a robotics Master's — linear algebra, probability, signals, control, ROS, convex optimisation, SLAM, and underactuated robotics."
+    url: "https://www.linkedin.com/posts/akshetpatel_robotics-roboticsengineering-mastersdegree-share-7506694566155321344-bDOU/"
+    source: "LinkedIn"
   - title: "ROS 2 and Self-Driving Cars: The Software Framework Connecting Autonomous Systems"
     author: "The Auto Journey"
     date: 2026-08-30
