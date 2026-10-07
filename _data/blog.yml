@@ -1,4 +1,10 @@
 posts:
+  - title: "Inside the Tiny, Unfixable Eye: iPhone 18 Pro and Pro Max Teardown"
+    author: "Elizabeth Chamberlain, Carsten Frauenheim (iFixit)"
+    date: 2026-09-20
+    description: "iFixit's teardown of the iPhone 18 Pro: a hair-thin six-blade magnetic variable aperture, electrically releasable battery adhesive, and a provisional 7/10 repairability score."
+    url: "https://www.ifixit.com/News/119329/inside-the-tiny-unfixable-eye-iphone-18-pro-and-pro-max-teardown"
+    source: "iFixit"
   - title: "7 Free Control Theory Courses for Robotics"
     author: "Akshet Patel"
     date: 2026-09-28
