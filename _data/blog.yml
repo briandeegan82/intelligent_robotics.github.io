@@ -1,4 +1,10 @@
 posts:
+  - title: "PhoneBot: Humanoid Open-Source Robot Based on an Old Smartphone"
+    author: "Oliver Bünte (heise online)"
+    date: 2026-10-09
+    description: "UCLA's PhoneBot: a 48 cm, 1.8 kg open-source humanoid that uses a retired Android phone for compute and sensing, built from about $400 in parts."
+    url: "https://www.heise.de/en/news/PhoneBot-Humanoid-open-source-robot-based-on-an-old-smartphone-11481931.html"
+    source: "heise online"
   - title: "Inside the Tiny, Unfixable Eye: iPhone 18 Pro and Pro Max Teardown"
     author: "Elizabeth Chamberlain, Carsten Frauenheim (iFixit)"
     date: 2026-09-20
