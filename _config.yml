@@ -5,7 +5,7 @@ description: Research lab in robotics and AI
 url: https://briandeegan82.github.io
 baseurl: /intelligent_robotics.github.io
 
-remote_theme: academicpages/academicpages.github.io
+remote_theme: academicpages/academicpages.github.io@a962ac052faf0679e7ce551fdcb6ea1b968a8ea6
 
 # Privacy-friendly analytics via GoatCounter (https://www.goatcounter.com/).
 # Dashboard: https://intelligentrobotics.goatcounter.com
