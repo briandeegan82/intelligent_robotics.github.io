@@ -1,0 +1,1555 @@
+---
+layout: null
+title: "Stereo Depth from First Principles"
+permalink: /explainers/stereo-depth/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stereo Depth from First Principles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<script>
+window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+<style>
+:root {
+  /* Layout: one 68ch reading column; figures, videos and labs break out to a wider 1080px measure. */
+  --bg: #f3f3ef;
+  --surface: #ffffff;
+  --ink: #1b1d22;
+  --muted: #5f6470;
+  --rule: #d9dad3;
+  --accent: #2f5cd6;      /* camera 1, first singular direction */
+  --accent-2: #d75a22;    /* camera 2, the smallest singular value */
+  --epi: #1f8a61;         /* epipolar lines and planes */
+  --violet: #7445c0;
+  --code-bg: #eceee8;
+  --font-display: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14161b; --surface: #1c1f26; --ink: #e8e9ec; --muted: #9aa0ad; --rule: #2f333d;
+    --accent: #7c9cff; --accent-2: #ff8a52; --epi: #4cc38f; --violet: #b18cff; --code-bg: #20242c;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14161b; --surface: #1c1f26; --ink: #e8e9ec; --muted: #9aa0ad; --rule: #2f333d;
+  --accent: #7c9cff; --accent-2: #ff8a52; --epi: #4cc38f; --violet: #b18cff; --code-bg: #20242c;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.62 var(--font-body); }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+.col { max-width: 68ch; margin: 0 auto; }
+header.hero { padding: 56px 0 28px; border-bottom: 1px solid var(--rule); }
+.kicker { font: 500 13px/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; line-height: 1.15; }
+h1 { font-size: clamp(34px, 5vw, 52px); font-weight: 700; margin: 14px 0 14px; letter-spacing: -.01em; }
+h2 { font-size: 30px; font-weight: 600; margin: 0 0 14px; }
+h3 { font-size: 21px; font-weight: 600; margin: 30px 0 8px; }
+.lede { font-size: 19px; color: var(--muted); margin: 0; }
+nav.toc { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 24px; font-size: 14px; }
+nav.toc a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--rule); }
+nav.toc a:hover, nav.toc a:focus-visible { border-color: var(--accent); color: var(--accent); }
+nav.toc span { font-family: var(--font-mono); color: var(--muted); margin-right: 4px; }
+section { padding: 52px 0 12px; }
+section > .col > h2 .num { font-family: var(--font-mono); font-size: 15px; color: var(--muted); display: block; margin-bottom: 6px; font-weight: 500; }
+p { margin: 0 0 14px; }
+a { color: var(--accent); }
+strong { font-weight: 600; }
+.c1 { color: var(--accent); font-weight: 600; } .c2 { color: var(--accent-2); font-weight: 600; } .ce { color: var(--epi); font-weight: 600; }
+figure { margin: 26px 0; }
+figure.wide { max-width: 1080px; }
+figcaption { font-size: 14px; color: var(--muted); margin-top: 10px; max-width: 75ch; }
+figcaption b { color: var(--ink); font-weight: 600; }
+video { width: 100%; height: auto; display: block; border-radius: 6px; border: 1px solid var(--rule); background: #f6f4ef; }
+.svgbox { overflow-x: auto; }
+.svgbox svg { display: block; max-width: 100%; height: auto; margin: 0 auto; color: var(--ink); }
+.callout { border-left: 3px solid var(--accent); background: var(--surface); padding: 14px 18px; margin: 20px 0; border-radius: 0 6px 6px 0; }
+.callout.warn { border-left-color: var(--accent-2); }
+.callout p:last-child { margin-bottom: 0; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin: 22px 0; }
+.fact { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 14px 16px; font-size: 15px; }
+.fact h4 { font: 600 15px/1.3 var(--font-display); margin: 0 0 6px; letter-spacing: .01em; }
+.fact p { margin: 0; }
+.math-block { overflow-x: auto; overflow-y: hidden; padding: 4px 0; }
+code, pre { font-family: var(--font-mono); font-size: 14px; }
+:not(pre) > code { background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+.codewrap { position: relative; margin: 18px 0; }
+pre { background: var(--code-bg); border: 1px solid var(--rule); border-radius: 8px; padding: 16px 18px; overflow-x: auto; line-height: 1.5; margin: 0; }
+pre .cm { color: var(--muted); }
+.copy { position: absolute; top: 10px; right: 10px; font: 500 12px var(--font-body); background: var(--surface); color: var(--ink); border: 1px solid var(--rule); border-radius: 5px; padding: 4px 10px; cursor: pointer; }
+.copy:hover, .copy:focus-visible { border-color: var(--accent); }
+/* labs */
+.lab { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 20px; margin: 26px 0; }
+.lab-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.lab-head h3 { margin: 0; }
+.tag { font: 500 12px var(--font-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--accent); border: 1px solid currentColor; border-radius: 99px; padding: 2px 9px; }
+.lab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.lab-grid3 { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+@media (max-width: 760px) { .lab-grid, .lab-grid3 { grid-template-columns: 1fr; } }
+.panel-title { font: 500 13px var(--font-mono); color: var(--muted); margin: 0 0 6px; }
+.lab svg.plot { width: 100%; height: auto; display: block; background: var(--bg); border-radius: 6px; color: var(--ink); }
+.controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px 18px; margin: 16px 0 6px; }
+.ctl label { display: flex; justify-content: space-between; font-size: 14px; color: var(--muted); }
+.ctl label output { font-family: var(--font-mono); color: var(--ink); font-variant-numeric: tabular-nums; }
+input[type="range"] { width: 100%; accent-color: var(--accent); }
+select, button.btn { font: 500 14px var(--font-body); padding: 6px 12px; border-radius: 6px; border: 1px solid var(--rule); background: var(--bg); color: var(--ink); cursor: pointer; }
+button.btn:hover, select:hover { border-color: var(--accent); }
+input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.check { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.mats { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; font: 14px/1.35 var(--font-mono); font-variant-numeric: tabular-nums; margin-top: 12px; }
+.mat { display: inline-grid; grid-template-columns: repeat(2, auto); gap: 0 12px; padding: 2px 8px; border-left: 2px solid currentColor; border-right: 2px solid currentColor; border-radius: 4px; text-align: right; }
+.mat.m3 { grid-template-columns: repeat(3, auto); }
+.mlab { font-weight: 500; }
+table.res { width: 100%; border-collapse: collapse; font-size: 14px; font-variant-numeric: tabular-nums; margin-top: 10px; }
+table.res th, table.res td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--rule); }
+table.res th { font-weight: 500; color: var(--muted); font-size: 13px; }
+table.res td.num { font-family: var(--font-mono); text-align: right; }
+table.res tr.win td { background: color-mix(in srgb, var(--epi) 14%, transparent); }
+.pill { display: inline-block; font: 500 12px var(--font-mono); padding: 1px 8px; border-radius: 99px; background: color-mix(in srgb, var(--epi) 18%, transparent); color: var(--epi); }
+.pill.bad { background: color-mix(in srgb, var(--accent-2) 16%, transparent); color: var(--accent-2); }
+.stats { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+.stat { background: var(--bg); border-radius: 6px; padding: 8px 12px; min-width: 120px; }
+.stat .k { font-size: 12px; color: var(--muted); } .stat .v { font: 500 18px var(--font-mono); font-variant-numeric: tabular-nums; }
+canvas#img2 { width: 100%; aspect-ratio: 1; display: block; background: var(--bg); border-radius: 6px; }
+ol.steps { padding-left: 22px; } ol.steps li { margin-bottom: 8px; }
+footer { border-top: 1px solid var(--rule); margin-top: 50px; padding: 26px 0 50px; font-size: 14px; color: var(--muted); }
+footer ul { padding-left: 18px; margin: 6px 0 0; }
+
+.part { margin: 64px 0 0; padding: 18px 0 0; border-top: 2px solid var(--ink); }
+.part .col { font: 600 22px/1.2 var(--font-display); }
+.part span { display: block; font: 500 12px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+.roadmap { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin-top: 22px; }
+.roadmap div { border-top: 3px solid var(--accent); background: var(--surface); padding: 8px 10px; border-radius: 0 0 6px 6px; font-size: 13px; }
+.roadmap b { display: block; font: 600 14px var(--font-display); }
+.roadmap span { color: var(--muted); }
+@media (max-width: 640px) { .roadmap { grid-template-columns: 1fr 1fr; } }
+.col ul { padding-left: 22px; } .col ul li { margin-bottom: 6px; }
+.bm-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px; }
+@media (min-width: 900px) { .bm-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+canvas.bm { width: 100%; height: auto; image-rendering: pixelated; display: block; border-radius: 4px; cursor: crosshair; border: 1px solid var(--rule); }
+.cbar { display: flex; align-items: center; gap: 8px; font: 12px var(--font-mono); color: var(--muted); margin-top: 8px; justify-content: flex-end; }
+.cbar-ramp { width: 160px; height: 10px; border-radius: 3px; background: linear-gradient(90deg, rgb(68,1,84), rgb(59,82,139), rgb(33,145,140), rgb(94,201,98), rgb(253,231,37)); }
+.presets { display: flex; flex-wrap: wrap; gap: 8px; }
+.roadmap { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+@media (max-width: 640px) { .roadmap { grid-template-columns: 1fr 1fr; } }
+.plain { background: color-mix(in srgb, var(--epi) 9%, var(--surface)); border: 1px solid color-mix(in srgb, var(--epi) 35%, transparent); border-radius: 8px; padding: 12px 16px; margin: 4px 0 18px; font-size: 16px; }
+.plain b { color: var(--epi); }
+details.deeper { border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); margin: 16px 0; }
+details.deeper summary { cursor: pointer; padding: 10px 14px; font: 500 14px var(--font-body); color: var(--muted); list-style: none; }
+details.deeper summary::-webkit-details-marker { display: none; }
+details.deeper summary::before { content: "+"; display: inline-block; width: 18px; font-family: var(--font-mono); color: var(--accent); }
+details.deeper[open] summary::before { content: "−"; }
+details.deeper summary:hover, details.deeper summary:focus-visible { color: var(--ink); }
+.deeper-body { padding: 0 16px 12px; font-size: 15px; }
+dl.terms { margin: 10px 0 20px; display: grid; grid-template-columns: minmax(130px, max-content) 1fr; gap: 10px 18px; }
+dl.terms dt { font-weight: 600; padding-top: 1px; }
+dl.terms dd { margin: 0; font-size: 16px; }
+@media (max-width: 600px) { dl.terms { grid-template-columns: 1fr; gap: 2px; } dl.terms dd { margin-bottom: 10px; } }
+.sym { font-family: var(--font-mono); font-size: 15px; }
+.tablewrap { overflow-x: auto; max-width: 860px; margin: 0 auto; }
+table.notation td:first-child { white-space: nowrap; }
+table.notation td:last-child { white-space: nowrap; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap"><div class="col">
+    <div class="kicker">Multiple-view geometry · explainer</div>
+    <h1>Stereo Depth from First Principles</h1>
+    <p class="lede">How two cameras measure distance, built up one layer at a time, starting from a short linear-algebra refresher: image formation, the SVD, epipolar geometry and the essential matrix, rectification, matching, triangulation, and how accurate the result can be.</p>
+    <nav class="toc" aria-label="Sections">
+      <a href="#primer"><span>00</span>Refresher</a>
+      <a href="#pinhole"><span>01</span>One camera</a>
+      <a href="#svd"><span>02</span>The SVD</a>
+      <a href="#essential"><span>03</span>Epipolar geometry</a>
+      <a href="#estimate"><span>04</span>Estimating E</a>
+      <a href="#decompose"><span>05</span>Recovering R and t</a>
+      <a href="#rectify"><span>06</span>Rectification</a>
+      <a href="#match"><span>07</span>Matching</a>
+      <a href="#triangulate"><span>08</span>Depth from disparity</a>
+      <a href="#accuracy"><span>09</span>Accuracy</a>
+      <a href="#pipeline"><span>10</span>Pipeline and code</a>
+      <a href="#practice"><span>11</span>Failure modes</a>
+    </nav>
+    <div class="roadmap" aria-label="How the parts build on each other">
+      <div><b>0 · Refresher</b><span>six linear-algebra ideas</span></div>
+      <div><b>I · One camera</b><span>projection, and why depth is lost</span></div>
+      <div><b>II · Tools</b><span>the SVD</span></div>
+      <div><b>III · Two views</b><span>E, and the rig's R and t</span></div>
+      <div><b>IV · Depth</b><span>rectify, match, triangulate</span></div>
+      <div><b>V · Practice</b><span>pipeline, code, failure modes</span></div>
+    </div>
+  </div></div>
+</header>
+
+<main class="wrap">
+
+<div class="part"><div class="col"><span>Part 0</span>A linear algebra refresher</div></div>
+<section id="primer">
+  <div class="col">
+    <h2><span class="num">00</span>Six ideas you'll need</h2>
+    <p>Stereo vision is geometry, and the language of that geometry is linear algebra. Six ideas are enough to follow every step of this explainer. If you're comfortable with all of them, skip ahead to <a href="#pinhole">section 01</a>. Otherwise, each takes a minute, and later sections point back here when they use one.</p>
+
+    <h3>1 · Vectors, length and the dot product</h3>
+    <p>A vector is a list of numbers, such as \(\mathbf a = (3, 4)\), which you can picture as an arrow. Its length is \(\lVert\mathbf a\rVert = \sqrt{3^2 + 4^2} = 5\). A <strong>unit vector</strong> has length 1 and just indicates a direction.</p>
+    <p>The <strong>dot product</strong> multiplies matching entries and adds them: \(\mathbf a\cdot\mathbf b = a_1b_1 + a_2b_2 + \dots\). It also equals \(\lVert\mathbf a\rVert\,\lVert\mathbf b\rVert\cos\theta\), where \(\theta\) is the angle between the vectors. So <strong>a dot product of zero means the vectors are perpendicular</strong>. Example: \((3,4)\cdot(4,-3) = 12 - 12 = 0\).</p>
+
+    <h3>2 · A matrix is a transformation</h3>
+    <p>Multiplying a vector by a matrix, \(A\mathbf x\), produces a new vector. Think of \(A\) as a machine that moves points around: it can rotate, stretch, shear or flatten space. A handy way to read any matrix is that <strong>its columns show where the axes end up</strong>.</p>
+    <div class="math-block">\[ \begin{bmatrix}2&0\\0&1\end{bmatrix}\begin{bmatrix}x\\y\end{bmatrix} = \begin{bmatrix}2x\\y\end{bmatrix} \qquad\text{(stretch by 2 along } x\text{)} \]</div>
+    <p>Applying two transformations in a row is a matrix product, \(B(A\mathbf x) = (BA)\mathbf x\). Mind the order: the matrix nearest the vector acts first. The <strong>transpose</strong> \(A^\top\) swaps rows and columns.</p>
+
+    <h3>3 · Rotation matrices</h3>
+    <p>A rotation matrix \(R\) turns vectors without changing their lengths or the angles between them. In 2D:</p>
+    <div class="math-block">\[ R(\theta) = \begin{bmatrix}\cos\theta & -\sin\theta\\ \sin\theta & \cos\theta\end{bmatrix}. \]</div>
+    <p>Its columns are perpendicular unit vectors. That gives a very useful shortcut: <strong>undoing a rotation is just the transpose</strong>, \(R^{-1} = R^\top\), because \(R^\top R = I\) (the identity matrix, which leaves every vector unchanged). A rotation also has determinant \(\det R = +1\). A matrix with perpendicular unit columns but determinant \(-1\) is a mirror reflection, which no real camera motion can produce. Section 05 has to guard against it.</p>
+    <p>In 3D, \(R\) is a 3×3 matrix with the same properties. A camera's orientation is a 3D rotation, and so is the relative turn between the two cameras of a stereo rig.</p>
+
+    <h3>4 · The cross product, and writing it as a matrix</h3>
+    <p>For 3D vectors, the <strong>cross product</strong> \(\mathbf a\times\mathbf b\) is a new vector <em>perpendicular to both</em>, with length equal to the area of the parallelogram they span. Example: \((1,0,0)\times(0,1,0) = (0,0,1)\). Two facts get used later:</p>
+    <ul>
+      <li>\(\mathbf a\times\mathbf a = \mathbf 0\): a vector crossed with itself gives nothing.</li>
+      <li><strong>Three vectors lie in one plane exactly when \(\mathbf c\cdot(\mathbf a\times\mathbf b) = 0\).</strong> The vector \(\mathbf a\times\mathbf b\) sticks straight out of the plane of \(\mathbf a\) and \(\mathbf b\), and \(\mathbf c\) is perpendicular to it only if \(\mathbf c\) lies in that plane. This "triple product" test is the whole idea behind the epipolar constraint in section 03.</li>
+    </ul>
+  </div>
+  <figure class="wide">
+    <div class="svgbox">
+      <svg viewBox="0 0 800 230" width="800" role="img" aria-label="Left: the cross product of a and b is perpendicular to both and its length is the parallelogram area. Right: a vector c in the plane of a and b has zero dot product with a cross b, while a vector out of the plane does not.">
+        <defs>
+          <marker id="pa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
+          <marker id="pb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2f5cd6"/></marker>
+          <marker id="pg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1f8a61"/></marker>
+          <marker id="po" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#d75a22"/></marker>
+        </defs>
+        <g font-size="14" fill="currentColor">
+          <polygon points="110,170 250,185 310,135 170,120" fill="#2f5cd6" fill-opacity=".12" stroke="#2f5cd6" stroke-opacity=".4"/>
+          <line x1="110" y1="170" x2="248" y2="185" stroke="#2f5cd6" stroke-width="2.2" marker-end="url(#pb)"/>
+          <line x1="110" y1="170" x2="168" y2="121" stroke="#2f5cd6" stroke-width="2.2" marker-end="url(#pb)"/>
+          <line x1="110" y1="170" x2="110" y2="42" stroke="currentColor" stroke-width="2.4" marker-end="url(#pa)"/>
+          <polyline points="110,152 120,153 120,171" fill="none" stroke="currentColor" stroke-opacity=".6"/>
+          <text x="255" y="202" fill="#2f5cd6" font-style="italic">a</text>
+          <text x="160" y="112" fill="#2f5cd6" font-style="italic">b</text>
+          <text x="118" y="46" font-style="italic">a × b</text>
+          <text x="210" y="160" font-size="12" fill="#2f5cd6" opacity=".8">area = ‖a × b‖</text>
+          <text x="170" y="222" text-anchor="middle" font-size="13" opacity=".8">perpendicular to both a and b</text>
+
+          <polygon points="400,180 590,180 650,115 460,115" fill="#1f8a61" fill-opacity=".1" stroke="#1f8a61" stroke-opacity=".4"/>
+          <line x1="450" y1="165" x2="538" y2="172" stroke="#2f5cd6" stroke-width="2" marker-end="url(#pb)"/>
+          <line x1="450" y1="165" x2="490" y2="128" stroke="#2f5cd6" stroke-width="2" marker-end="url(#pb)"/>
+          <line x1="450" y1="165" x2="596" y2="140" stroke="#1f8a61" stroke-width="2.4" marker-end="url(#pg)"/>
+          <line x1="450" y1="165" x2="450" y2="45" stroke="currentColor" stroke-width="2" marker-end="url(#pa)"/>
+          <line x1="450" y1="165" x2="560" y2="62" stroke="#d75a22" stroke-width="2.2" stroke-dasharray="5 3" marker-end="url(#po)"/>
+          <text x="545" y="186" fill="#2f5cd6" font-style="italic" font-size="13">a</text>
+          <text x="482" y="122" fill="#2f5cd6" font-style="italic" font-size="13">b</text>
+          <text x="458" y="48" font-style="italic" font-size="13">a × b</text>
+          <text x="602" y="146" fill="#1f8a61" font-size="13">c in the plane: c·(a×b) = 0</text>
+          <text x="566" y="60" fill="#d75a22" font-size="13">c′ out of it: c′·(a×b) ≠ 0</text>
+          <text x="525" y="222" text-anchor="middle" font-size="13" opacity=".8">the triple-product test for "same plane"</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figure 0.</b> The two cross-product facts this explainer relies on. The right panel is exactly the situation of section 03, where the two camera rays and the baseline must lie in one plane.</figcaption>
+  </figure>
+  <div class="col">
+    <p>Crossing with a fixed vector \(\mathbf t\) is a linear operation, so it can be written as an ordinary matrix multiplication:</p>
+    <div class="math-block">\[ \mathbf t\times\mathbf a = [\mathbf t]_\times\,\mathbf a,\qquad [\mathbf t]_\times = \begin{bmatrix}0&-t_3&t_2\\t_3&0&-t_1\\-t_2&t_1&0\end{bmatrix}. \]</div>
+    <p>Multiply out \([\mathbf t]_\times\mathbf a\) and you get the usual cross-product formula. This small matrix sits inside the essential matrix.</p>
+
+    <h3>5 · Rank, flattening and \(A\mathbf x = \mathbf 0\)</h3>
+    <p>Some matrices <strong>flatten</strong> space: they squash a whole direction down to zero. For example</p>
+    <div class="math-block">\[ \begin{bmatrix}1&2\\2&4\end{bmatrix}\begin{bmatrix}2\\-1\end{bmatrix} = \begin{bmatrix}0\\0\end{bmatrix}. \]</div>
+    <p>The second row is just twice the first, so the matrix only carries one row's worth of information. Its <strong>rank</strong> (the number of independent directions it can output) is 1 rather than 2, its determinant is 0, and it cannot be undone. Such a matrix is called <strong>singular</strong>, and the directions it sends to zero form its <strong>null space</strong>.</p>
+    <p>Many steps in this explainer come down to the same task: <em>find a nonzero \(\mathbf x\) with \(A\mathbf x = \mathbf 0\)</em>, that is, find the direction \(A\) flattens. The SVD (section 02) answers it, and also gives the best compromise when noise means no \(\mathbf x\) makes \(A\mathbf x\) exactly zero.</p>
+
+    <h3>6 · Homogeneous coordinates and "up to scale"</h3>
+    <p>A trick used throughout computer vision is to write a 2D image point \((x, y)\) as the 3-vector \((x, y, 1)\). Any multiple, such as \((2x, 2y, 2)\), stands for the same point; to get back, divide by the last entry. This suits cameras, because a pixel really represents a ray from the camera, and every point along a ray has the same image.</p>
+    <p>There are two payoffs. First, perspective projection (dividing by depth) and shifting points (adding \(\mathbf t\)) both become plain matrix multiplications. Second, equations of the form \(A\mathbf x = \mathbf 0\) only ever pin \(\mathbf x\) down <strong>up to scale</strong>: if \(\mathbf x\) is a solution, so is \(5\mathbf x\), so we usually pick the solution of length 1. That's why the essential matrix and the translation direction are only known up to scale, and why a stereo rig needs its baseline measured to give distances in metres.</p>
+
+    <h3>Notation used on this page</h3>
+  </div>
+  <div class="tablewrap">
+    <table class="res notation">
+      <thead><tr><th>symbol</th><th>meaning</th><th>first used</th></tr></thead>
+      <tbody>
+        <tr><td>\(\mathbf x,\ \mathbf x'\)</td><td>a point in the left / right image, in normalised coordinates (\(K^{-1}\) applied)</td><td>§01, §03</td></tr>
+        <tr><td>\(K\)</td><td>camera intrinsics: focal length and image centre, in pixels</td><td>§01</td></tr>
+        <tr><td>\(R,\ \mathbf t\)</td><td>rotation and translation taking camera-1 coordinates to camera-2 coordinates</td><td>§01, §03</td></tr>
+        <tr><td>\([\mathbf t]_\times\)</td><td>the cross-product matrix of \(\mathbf t\)</td><td>§00, §03</td></tr>
+        <tr><td>\(U,\ \Sigma,\ V\)</td><td>the three factors of an SVD: rotate, stretch, rotate</td><td>§02</td></tr>
+        <tr><td>\(\sigma_i\)</td><td>singular values: the stretch factors, largest first</td><td>§02</td></tr>
+        <tr><td>\(E,\ F\)</td><td>essential matrix \(E = [\mathbf t]_\times R\); fundamental matrix (the same idea in pixel units)</td><td>§03</td></tr>
+        <tr><td>\(\hat E,\ \tilde E\)</td><td>E estimated from matches; E after clean-up</td><td>§04</td></tr>
+        <tr><td>\(f,\ B\)</td><td>focal length (pixels); baseline between the cameras (metres)</td><td>§01, §08</td></tr>
+        <tr><td>\(d,\ Z\)</td><td>disparity (pixels); depth (metres)</td><td>§07–§09</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="part"><div class="col"><span>Part I</span>One camera, and why it can't see depth</div></div>
+<section id="pinhole">
+  <div class="col">
+    <h2><span class="num">01</span>Pinhole image formation</h2>
+    <p>An ideal camera is a pinhole: every scene point sends one ray through the optical centre, and the image is where those rays cross a plane at distance \(f\) (the focal length). Put the camera at the origin, looking down its \(Z\) axis. By similar triangles a point \((X, Y, Z)\) lands at</p>
+    <div class="math-block">\[ x = f\,\frac{X}{Z}, \qquad y = f\,\frac{Y}{Z}. \]</div>
+    <p>The division by \(Z\) is perspective: far things look small. It is also where depth goes missing. Scale \((X,Y,Z)\) by any \(\lambda>0\) and the image point does not move. A single image fixes the <em>ray</em> through each pixel, but not where along the ray the surface is.</p>
+  </div>
+  <figure class="wide">
+    <video src="v0_pinhole.mp4" controls muted loop playsinline preload="metadata" aria-label="Animation: a point slides along a camera ray and its image stays fixed. A second camera is added and the two image positions differ by a disparity that shrinks as the point moves away."></video>
+    <figcaption><b>Video 1.</b> With one camera, \(x\) stays at 176 px wherever the point sits on its ray. Add a second camera a baseline \(B\) away and the two images disagree. The gap, called the <b>disparity</b>, shrinks as the point recedes. That gap is the depth measurement stereo is built on.</figcaption>
+  </figure>
+  <div class="col">
+    <h3>The full camera model</h3>
+    <p>Real cameras measure in pixels rather than millimetres, and the camera usually isn't sitting at the world origin. Both corrections are matrix multiplications, and homogeneous coordinates (section 00) chain them into one formula. Read it right to left. A world point, with a 1 appended, is moved into the camera's frame by \([R\,|\,\mathbf t]\), then converted to pixels by \(K\). The left side is only known up to a scale factor \(\lambda\), which is the point's depth: that's the lost depth again.</p>
+    <div class="math-block">\[ \lambda\begin{bmatrix}u\\v\\1\end{bmatrix} = \underbrace{\begin{bmatrix} f_x & s & c_x\\ 0 & f_y & c_y\\ 0&0&1\end{bmatrix}}_{K\ \text{(intrinsics)}}\;\underbrace{\begin{bmatrix} R & \mathbf t\end{bmatrix}}_{\text{extrinsics}}\begin{bmatrix}X_w\\Y_w\\Z_w\\1\end{bmatrix} = P\,\mathbf X_w . \]</div>
+    <ul>
+      <li><strong>Extrinsics</strong> \([R\,|\,\mathbf t]\) move a world point into the camera frame. For a stereo rig, the extrinsics between the two cameras are the quantity sections 03–05 are about.</li>
+      <li><strong>Intrinsics</strong> \(K\) hold the focal lengths in pixels \(f_x, f_y\), the principal point \((c_x, c_y)\) and a skew \(s\) that is zero on modern sensors.</li>
+      <li><strong>Normalised coordinates</strong> \(\mathbf x = K^{-1}(u, v, 1)^\top\) undo the intrinsics. They are ray directions with \(z = 1\), and the two-view geometry is cleanest in them.</li>
+    </ul>
+    <p>Real lenses also bend rays, so straight lines in the world look curved, especially near the image edges. Calibration measures this distortion so it can be removed.</p>
+    <details class="deeper"><summary>Going deeper: the lens distortion model</summary><div class="deeper-body"><p>The Brown–Conrady model used by OpenCV adds radial terms \(k_1, k_2, k_3\) and tangential terms \(p_1, p_2\) to normalised coordinates, with \(r^2 = x^2 + y^2\):</p>
+    <div class="math-block">\[ x_d = x\,(1 + k_1 r^2 + k_2 r^4 + k_3 r^6) + 2p_1xy + p_2(r^2 + 2x^2) \]</div>
+    <div class="math-block">\[ y_d = y\,(1 + k_1 r^2 + k_2 r^4 + k_3 r^6) + p_1(r^2 + 2y^2) + 2p_2xy \]</div></div></details>
+    <p>\(K\) and the distortion coefficients come from calibration, usually Zhang's method with a checkerboard seen in several poses. Everything that follows assumes images have been undistorted, so that straight lines stay straight and the pinhole equations hold.</p>
+    <div class="callout">
+      <p><strong>The plan.</strong> One camera gives a ray per pixel. Two cameras give two rays, and where they cross is the 3D point. To use that, we need (1) the geometry linking the two cameras, (2) a cheap way to find which pixel in one image matches which in the other, and (3) the formula from that match to depth. The SVD is the tool used throughout, and Part II covers it. If matrices, cross products or "up to scale" feel rusty, <a href="#primer">section 00</a> is a short refresher.</p>
+    </div>
+  </div>
+</section>
+<div class="part"><div class="col"><span>Part II</span>The tool used throughout</div></div>
+<section id="svd">
+  <div class="col">
+    <h2><span class="num">02</span>The singular value decomposition</h2>
+    <p>Almost every step from here to a depth map ends in the same move: a small matrix problem solved with the SVD. Estimating the essential matrix, cleaning it up, splitting it into rotation and translation, and triangulating points all use it. This section builds the intuition once.</p>
+    <div class="plain"><b>In plain words.</b> Any matrix, however messy, does just three simple things to a vector: it <em>rotates</em> it, <em>stretches</em> it along the axes, then <em>rotates</em> it again. The SVD tells you exactly which rotations and how much stretch. The stretch factors, called singular values, say how strongly the matrix acts in each direction. A stretch of zero means some direction is flattened away completely.</div>
+    <p>As a formula, every matrix \(A\) factors as</p>
+    <div class="math-block">\[ A = U\,\Sigma\,V^\top \]</div>
+    <ul>
+      <li>\(V^\top\) is a rotation. The columns \(\mathbf v_1, \mathbf v_2, \dots\) of \(V\) are special <em>input</em> directions, the <strong>right singular vectors</strong>.</li>
+      <li>\(\Sigma\) is diagonal: it stretches along the axes by \(\sigma_1 \ge \sigma_2 \ge \dots \ge 0\), the <strong>singular values</strong>, sorted largest first.</li>
+      <li>\(U\) is another rotation. Its columns \(\mathbf u_1, \mathbf u_2, \dots\) are the matching <em>output</em> directions, the <strong>left singular vectors</strong>.</li>
+    </ul>
+    <p>Put together, \(A\mathbf v_i = \sigma_i\mathbf u_i\): feed in the special direction \(\mathbf v_i\) and you get out the direction \(\mathbf u_i\), stretched by \(\sigma_i\). In 2D this means a circle always becomes an ellipse, with axes \(\sigma_1\mathbf u_1\) and \(\sigma_2\mathbf u_2\). (Strictly, \(U\) or \(V\) may also include a mirror flip; see rotation matrices in section 00.)</p>
+  </div>
+  <figure class="wide">
+    <video src="v1_svd.mp4" controls muted loop playsinline preload="metadata" aria-label="Animation: the unit circle is rotated by V transpose, stretched by Sigma, then rotated by U, landing on the ellipse A times the circle."></video>
+    <figcaption><b>Video 2.</b> \(A = U\Sigma V^\top\) applied to the unit circle one factor at a time. The dashed outline at the end is \(A\) applied in a single step; the three moves land exactly on it.</figcaption>
+  </figure>
+
+  <div class="lab" id="svd2lab">
+    <div class="lab-head"><h3>Try it: SVD of a 2×2 matrix</h3><span class="tag">interactive</span></div>
+    <div class="lab-grid">
+      <div><p class="panel-title">input space · unit circle and \(\mathbf v_1, \mathbf v_2\)</p><svg class="plot" id="svdIn" viewBox="-160 -160 320 320" role="img" aria-label="Input space showing the unit circle and right singular vectors"></svg></div>
+      <div><p class="panel-title">output space · ellipse \(A\mathbf x\) and \(\sigma_i\mathbf u_i\)</p><svg class="plot" id="svdOut" viewBox="-160 -160 320 320" role="img" aria-label="Output space showing the image ellipse and scaled left singular vectors"></svg></div>
+    </div>
+    <div class="controls">
+      <div class="ctl"><label for="a11">a₁₁ <output id="o11"></output></label><input type="range" id="a11" min="-2" max="2" step="0.05" value="1.35"></div>
+      <div class="ctl"><label for="a12">a₁₂ <output id="o12"></output></label><input type="range" id="a12" min="-2" max="2" step="0.05" value="0.85"></div>
+      <div class="ctl"><label for="a21">a₂₁ <output id="o21"></output></label><input type="range" id="a21" min="-2" max="2" step="0.05" value="0.15"></div>
+      <div class="ctl"><label for="a22">a₂₂ <output id="o22"></output></label><input type="range" id="a22" min="-2" max="2" step="0.05" value="0.95"></div>
+    </div>
+    <div class="mats" id="svdMats" aria-live="polite"></div>
+    <p style="font-size:14px;color:var(--muted);margin:10px 0 0">Drag \(a_{22}\) until \(\det A = 0\): \(\sigma_2\) hits zero, the ellipse collapses to a segment, and \(\mathbf v_2\) becomes the direction \(A\) sends to zero. That collapse is exactly what the essential matrix needs in section 04.</p>
+  </div>
+
+  <div class="col">
+    <h3>Three SVD facts that do all the work</h3>
+    <p>You don't need to know how the SVD is computed: every numerical library has it (<code>np.linalg.svd</code>). You do need these three facts, because each one is a step in the stereo pipeline.</p>
+  </div>
+  <div class="facts">
+    <div class="fact"><h4>① Best answer to \(A\mathbf x \approx \mathbf 0\)</h4><p>Among all vectors of length 1, the one \(A\) shrinks the most is the last right singular vector \(\mathbf v_n\). It shrinks by \(\sigma_n\), the smallest singular value. If \(\sigma_n = 0\), then \(A\mathbf v_n = \mathbf 0\) exactly. <em>Used for: estimating E (§04) and triangulating points (§08).</em></p></div>
+    <div class="fact"><h4>② Nearest cleaned-up matrix</h4><p>Change the singular values but keep \(U\) and \(V\), and you get the closest matrix that has the new singular values. Setting the smallest to zero gives the closest matrix that flattens a direction. <em>Used for: turning a noisy E into a valid one (§04).</em></p></div>
+    <div class="fact"><h4>③ The flattened directions</h4><p>If \(\sigma_n = 0\), then \(\mathbf v_n\) is the input direction \(A\) flattens to zero, and \(\mathbf u_n\) is the output direction \(A\) can never produce. <em>Used for: finding the epipoles and the translation direction (§05).</em></p></div>
+  </div>
+  <div class="col">
+    <div class="callout derive">
+      <p><strong>Where does the SVD come from?</strong> Here is a five-step construction that shows every matrix has one. The key question is <em>which input directions does \(A\) keep perpendicular?</em> Those are the \(\mathbf v_i\).</p>
+      <ol class="steps">
+        <li><strong>Look at \(A^\top A\).</strong> It is square and symmetric (it equals its own transpose). It also never gives a negative "energy": \(\mathbf x^\top A^\top A\mathbf x = \lVert A\mathbf x\rVert^2 \ge 0\).</li>
+        <li><strong>Take its eigenvectors.</strong> A standard theorem (the spectral theorem) says a symmetric matrix has a full set of <em>perpendicular</em> unit eigenvectors \(\mathbf v_1, \mathbf v_2, \dots\), with \(A^\top A\,\mathbf v_i = \lambda_i\mathbf v_i\). By step 1 the eigenvalues satisfy \(\lambda_i \ge 0\). Sort them largest first.</li>
+        <li><strong>Read off the stretch.</strong> \(\lVert A\mathbf v_i\rVert^2 = \mathbf v_i^\top A^\top A\,\mathbf v_i = \lambda_i\), so \(A\) stretches \(\mathbf v_i\) by \(\sigma_i = \sqrt{\lambda_i}\). Those are the singular values.</li>
+        <li><strong>Find where each direction goes.</strong> Set \(\mathbf u_i = A\mathbf v_i / \sigma_i\), a unit vector. These outputs are perpendicular too: for \(i \ne j\), \(\ \mathbf u_i\cdot\mathbf u_j = \mathbf v_i^\top A^\top A\,\mathbf v_j / (\sigma_i\sigma_j) = \lambda_j\,(\mathbf v_i\cdot\mathbf v_j)/(\sigma_i\sigma_j) = 0\). So \(A\) maps one set of perpendicular directions onto another set of perpendicular directions. (If some \(\sigma_i = 0\), complete the \(\mathbf u\)'s with any perpendicular unit vectors.)</li>
+        <li><strong>Stack the columns.</strong> \(A\mathbf v_i = \sigma_i\mathbf u_i\) for every \(i\) reads \(AV = U\Sigma\) in matrix form. \(V\) is a rotation, so \(V^{-1} = V^\top\) (section 00), and multiplying both sides by \(V^\top\) gives \(A = U\Sigma V^\top\). ∎</li>
+      </ol>
+      <p><strong>Worked example.</strong> \(A = \begin{bmatrix}3&0\\4&5\end{bmatrix}\) gives \(A^\top A = \begin{bmatrix}25&20\\20&25\end{bmatrix}\), with eigenvalues 45 and 5 and eigenvectors \(\mathbf v_1 = \tfrac{1}{\sqrt2}(1, 1)\), \(\mathbf v_2 = \tfrac{1}{\sqrt2}(1, -1)\). So \(\sigma_1 = \sqrt{45} \approx 6.71\) and \(\sigma_2 = \sqrt5 \approx 2.24\). Then \(\mathbf u_1 = A\mathbf v_1/\sigma_1 = \tfrac{1}{\sqrt{10}}(1, 3)\) and \(\mathbf u_2 = A\mathbf v_2/\sigma_2 = \tfrac{1}{\sqrt{10}}(3, -1)\), which are perpendicular, as promised. To see it in the playground above (its sliders stop at ±2), enter \(A/5\): \(a_{11} = 0.6,\ a_{12} = 0,\ a_{21} = 0.8,\ a_{22} = 1\). The directions are the same and the singular values are divided by 5, giving 1.34 and 0.45.</p>
+      <p style="font-size:14px;color:var(--muted)">Libraries such as <code>np.linalg.svd</code> don't actually form \(A^\top A\), because squaring the matrix squares its rounding errors. They use more stable algorithms (Golub–Kahan bidiagonalisation) that give the same factors. For the tiny 3×3 and 9×9 matrices in stereo, the route above is accurate enough, and it is what the demos on this page use. The same reasoning applied to \(AA^\top\) shows that its eigenvectors are the \(\mathbf u_i\).</p>
+    </div>
+
+    <h3>Why "singular"?</h3>
+    <p>Here "singular" has its older meaning of <em>special</em> or <em>distinguished</em>. It does not mean "single", and a singular value is not the same thing as a singular matrix. The name comes from early-1900s work on integral equations. It belongs to the same family as <em>eigenvalue</em> (German <em>eigen</em>, "own" or "characteristic"): a number that belongs to the operator and describes how it acts. G. W. Stewart's <em>On the Early History of the Singular Value Decomposition</em> (1993) traces where the term came from.</p>
+    <p>Singular values are still closely tied to singular, non-invertible matrices:</p>
+    <ul>
+      <li>\(\sigma\) is a singular value of \(A\) exactly when \(A^\top A - \sigma^2 I\) is singular. The singular values are the values of \(\sigma\) that make that matrix singular.</li>
+      <li>\(A\) is singular exactly when its smallest singular value is zero. The matching \(\mathbf v_n\) is then the direction that \(A\) sends to \(\mathbf 0\). You can see this in the playground above by dragging \(a_{22}\) until \(\det A = 0\).</li>
+      <li>\(\sigma_{\min}\) is the distance, in the 2-norm, from \(A\) to the nearest singular matrix. A small \(\sigma_{\min}\) means \(A\) is nearly singular and badly conditioned.</li>
+    </ul>
+    <div class="callout">
+      <p><strong>Both meanings in this pipeline.</strong> With noise-free matches, the data matrix \(A\) is singular: \(A\mathbf e = \mathbf 0\) has a nonzero solution, the right singular vector for \(\sigma_9 = 0\). The essential matrix must also be singular, since rank 2 means \(\sigma_3 = 0\). Noise makes the estimate \(\hat E\) invertible, and setting \(\sigma_3 = 0\) (section 04) snaps it back to the nearest singular matrix. The directions \(E\) then sends to zero, \(\mathbf v_3\) and \(\mathbf u_3\), are the two epipoles, and \(\mathbf u_3\) is also the direction of \(\mathbf t\).</p>
+    </div>
+  </div>
+</section>
+<div class="part"><div class="col"><span>Part III</span>Two views: the geometry linking the cameras</div></div>
+<section id="essential">
+  <div class="col">
+    <h2><span class="num">03</span>Epipolar geometry and the essential matrix</h2>
+    <div class="plain"><b>In plain words.</b> A pixel in the left image is a ray in 3D. Seen from the right camera, that ray appears as a line. So the matching pixel can't be just anywhere: it must lie on that line. The <strong>essential matrix</strong> \(E\) is a 3×3 matrix that takes a left pixel and gives you that line. It is built entirely from how the two cameras are positioned relative to each other.</div>
+    <p>Take two <em>calibrated</em> cameras, so we know their \(K\) and can work in normalised coordinates \(\mathbf x = K^{-1}\mathbf p\): each image point becomes a ray direction \((x, y, 1)\). Describe camera 2's pose relative to camera 1 by a rotation \(R\) and a translation \(\mathbf t\), so a 3D point with coordinates \(\mathbf X\) in camera 1 has coordinates \(\mathbf X' = R\mathbf X + \mathbf t\) in camera 2.</p>
+    <p>The two camera centres and \(\mathbf X\) define a plane, the <span class="ce">epipolar plane</span>. Its intersection with each image is an <span class="ce">epipolar line</span>, and all epipolar lines in one image pass through the <strong>epipole</strong>, the image of the other camera's centre.</p>
+  </div>
+  <figure class="wide">
+    <video src="v2_epipolar.mp4" controls muted loop playsinline preload="metadata" aria-label="Animation: a 3D point slides along the ray from camera 1; its image in camera 2 traces a straight epipolar line. The epipolar plane pivots about the baseline and all epipolar lines meet at the epipole."></video>
+    <figcaption><b>Video 3.</b> A point \(\mathbf x\) in image 1 fixes a ray, not a depth. Wherever \(\mathbf X\) sits on that ray, its match \(\mathbf x'\) stays on one line \(\mathbf l' = E\mathbf x\). The printed residual \(\mathbf x'^\top E\mathbf x\) stays at machine precision throughout.</figcaption>
+  </figure>
+  <div class="col">
+    <h3>Deriving \(E\) from coplanarity</h3>
+    <p>Express everything in camera 2's frame. Three vectors lie in the epipolar plane: the ray to the point in image 2, \(\mathbf x'\); the baseline \(\mathbf t\) (camera 1's centre, since \(\mathbf X=\mathbf 0\mapsto\mathbf t\)); and the ray from camera 1, rotated into frame 2, \(R\mathbf x\). Three coplanar vectors have zero triple product:</p>
+  </div>
+  <figure class="wide">
+    <div class="svgbox">
+      <svg viewBox="0 0 720 300" width="720" role="img" aria-label="The vectors x prime, t and R x all lie in the epipolar plane spanned by the two camera centres and the point X, so their triple product is zero.">
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
+          <marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2f5cd6"/></marker>
+          <marker id="aho" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#d75a22"/></marker>
+        </defs>
+        <polygon points="120,240 560,240 330,50" fill="#1f8a61" fill-opacity="0.12" stroke="#1f8a61" stroke-opacity="0.5"/>
+        <text x="330" y="226" text-anchor="middle" font-size="13" fill="#1f8a61">epipolar plane</text>
+        <line x1="560" y1="240" x2="128" y2="240" stroke="currentColor" stroke-width="2.2" marker-end="url(#ah)"/>
+        <text x="330" y="262" text-anchor="middle" font-size="15" fill="currentColor" font-style="italic">t  (baseline: camera 1 centre, seen from camera 2)</text>
+        <line x1="120" y1="240" x2="326" y2="56" stroke="#2f5cd6" stroke-width="2.4" marker-end="url(#ahb)"/>
+        <text x="190" y="140" font-size="15" fill="#2f5cd6" text-anchor="end">λ R x</text>
+        <line x1="560" y1="240" x2="334" y2="56" stroke="#d75a22" stroke-width="2.4" marker-end="url(#aho)"/>
+        <text x="470" y="140" font-size="15" fill="#d75a22">μ x′</text>
+        <circle cx="330" cy="50" r="6" fill="currentColor"/><text x="330" y="34" text-anchor="middle" font-size="16" font-weight="600" fill="currentColor">X</text>
+        <circle cx="120" cy="240" r="6" fill="#2f5cd6"/><text x="104" y="246" text-anchor="end" font-size="16" fill="#2f5cd6">C</text>
+        <circle cx="560" cy="240" r="6" fill="#d75a22"/><text x="576" y="246" font-size="16" fill="#d75a22">C′</text>
+        <text x="600" y="80" font-size="14" fill="currentColor">μ x′ = λ R x + t</text>
+        <text x="600" y="102" font-size="14" fill="currentColor">⇒ x′ · (t × R x) = 0</text>
+      </svg>
+    </div>
+    <figcaption><b>Figure 1.</b> In camera 2's frame the point is both \(\mu\mathbf x'\) and \(\lambda R\mathbf x + \mathbf t\). So \(\mathbf x'\) lies in the span of \(\mathbf t\) and \(R\mathbf x\), and is orthogonal to their cross product.</figcaption>
+  </figure>
+  <div class="col">
+    <h3>Reading Figure 1, term by term</h3>
+    <dl class="terms">
+      <dt><span class="sym c1">C</span> and <span class="sym c2">C′</span></dt>
+      <dd>The <strong>camera centres</strong> (the pinholes) of the left and right cameras. Every ray a camera records passes through its centre. All the vectors in the figure are measured in <em>camera 2's</em> axes, because that is the frame the right image lives in.</dd>
+      <dt><span class="sym">X</span></dt>
+      <dd>The <strong>3D point</strong> in the scene that both cameras see. We don't know where it is; that is what stereo will eventually find.</dd>
+      <dt><span class="sym c1">x</span></dt>
+      <dd>Where \(\mathbf X\) appears in the <strong>left image</strong>, in normalised coordinates \((x, y, 1)\) (section 01). Read it as a <em>direction</em>: the ray from \(C\) towards \(\mathbf X\), expressed in camera 1's axes. In camera 1's frame the point is \(\lambda\mathbf x\) for some unknown number \(\lambda\).</dd>
+      <dt><span class="sym">λ</span> (lambda)</dt>
+      <dd>The <strong>depth of X seen from camera 1</strong>: how far along the left ray the point sits. This is exactly the number a single image cannot tell us.</dd>
+      <dt><span class="sym c1">R x</span></dt>
+      <dd>The same left-camera ray direction, <strong>rewritten in camera 2's axes</strong>. The two cameras are turned relative to each other by the rotation \(R\), so to compare directions we must rotate one into the other's frame. Rotating a direction needs only \(R\); position doesn't matter for a direction.</dd>
+      <dt><span class="sym">t</span> (the baseline vector)</dt>
+      <dd>The arrow from \(C'\) to \(C\): <strong>where camera 1's centre sits, as seen from camera 2</strong>. That follows from \(\mathbf X' = R\mathbf X + \mathbf t\): camera 1's centre is \(\mathbf X = \mathbf 0\) in its own frame, which lands at \(\mathbf X' = \mathbf t\) in camera 2's frame. Its length is the baseline \(B\), the distance between the cameras.</dd>
+      <dt><span class="sym c2">x′</span> and <span class="sym">μ</span> (mu)</dt>
+      <dd>\(\mathbf x'\) is where \(\mathbf X\) appears in the <strong>right image</strong>: the ray direction from \(C'\) towards \(\mathbf X\), in camera 2's axes. \(\mu\) is the depth of \(\mathbf X\) along that ray, also unknown. So, seen from camera 2, the point is at \(\mu\mathbf x'\).</dd>
+      <dt><span class="sym">μ x′ = λ R x + t</span></dt>
+      <dd>Two routes from \(C'\) to the same point. Go <em>directly</em> along the right ray (\(\mu\mathbf x'\)), or first walk to the left camera's centre (\(\mathbf t\)) and then along the left ray (\(\lambda R\mathbf x\)). Both end at \(\mathbf X\), so they are equal. This is just \(\mathbf X' = R\mathbf X + \mathbf t\) with \(\mathbf X = \lambda\mathbf x\) and \(\mathbf X' = \mu\mathbf x'\).</dd>
+      <dt><span class="sym ce">epipolar plane</span></dt>
+      <dd>The flat plane through the three points \(C\), \(C'\) and \(\mathbf X\) (any three points define a plane). The three arrows \(\mathbf t\), \(R\mathbf x\) and \(\mathbf x'\) all lie in it. Where this plane slices through each image is that image's <em>epipolar line</em>, which is why a match must lie on a line.</dd>
+      <dt><span class="sym">t × R x</span></dt>
+      <dd>The cross product of the two arrows leaving \(C\) and \(C'\) along the plane. By section 00 it points <strong>straight out of the epipolar plane</strong>: it is the plane's normal.</dd>
+      <dt><span class="sym">x′ · (t × R x) = 0</span></dt>
+      <dd>The dot product with the normal is zero, so \(\mathbf x'\) lies in the plane. This is the triple-product test from section 00. Notice that the unknown depths \(\lambda\) and \(\mu\) have <strong>disappeared</strong>: scaling a vector doesn't change which plane it lies in. That is what makes the constraint usable before we know any depths.</dd>
+    </dl>
+    <div class="callout">
+      <p><strong>Worked example.</strong> Take two cameras facing the same way (\(R = I\), no rotation), with camera 2 one metre to the right of camera 1. Seen from camera 2, camera 1's centre is one metre to the left, so \(\mathbf t = (-1, 0, 0)\). Put a point at \(\mathbf X = (0.5,\ 0.4,\ 2)\) in camera 1's frame.</p>
+      <ul>
+        <li>Left image: \(\mathbf x = \mathbf X / 2 = (0.25,\ 0.2,\ 1)\), so \(\lambda = 2\).</li>
+        <li>In camera 2: \(\mathbf X' = \mathbf X + \mathbf t = (-0.5,\ 0.4,\ 2)\), so \(\mathbf x' = (-0.25,\ 0.2,\ 1)\) and \(\mu = 2\).</li>
+        <li>Two routes: \(\lambda R\mathbf x + \mathbf t = (0.5, 0.4, 2) + (-1, 0, 0) = (-0.5, 0.4, 2) = \mu\mathbf x'\). ✓</li>
+        <li>Plane normal: \(\mathbf t\times R\mathbf x = (-1,0,0)\times(0.25,0.2,1) = (0,\ 1,\ -0.2)\).</li>
+        <li>Test: \(\mathbf x'\cdot(0, 1, -0.2) = 0 + 0.2 - 0.2 = 0\). ✓ The match lies in the epipolar plane.</li>
+      </ul>
+      <p>Also note that \(\mathbf x\) and \(\mathbf x'\) have the same \(y\) value, 0.2. With parallel cameras side by side, a match always sits on the same row. Section 06 (rectification) makes any stereo pair behave like this.</p>
+    </div>
+    <p>That is the triple-product test from section 00: three vectors in one plane. Now write the cross product as a matrix, \(\mathbf t\times\mathbf a = [\mathbf t]_\times\mathbf a\), and the condition becomes a single matrix equation:</p>
+    <div class="math-block">\[ [\mathbf t]_\times = \begin{bmatrix} 0 & -t_3 & t_2\\ t_3 & 0 & -t_1\\ -t_2 & t_1 & 0\end{bmatrix}, \qquad \boxed{\;\mathbf x'^\top E\,\mathbf x = 0,\qquad E = [\mathbf t]_\times R\;} \]</div>
+    <p>This is the <strong>epipolar constraint</strong> (Longuet-Higgins, 1981). It is bilinear in the two image points and linear in the nine entries of \(E\), which is what makes linear estimation possible.</p>
+
+    <h3>What makes a matrix "essential"</h3>
+    <p>Two properties of \(E\) matter later, and both follow from \(E = [\mathbf t]_\times R\):</p>
+    <ul>
+      <li><strong>E flattens one direction.</strong> \([\mathbf t]_\times\) sends \(\mathbf t\) itself to zero, because \(\mathbf t\times\mathbf t = \mathbf 0\). So \(E\) is singular (rank 2), and its smallest singular value is 0.</li>
+      <li><strong>Its other two singular values are equal.</strong> The rotation \(R\) doesn't stretch anything, so all of \(E\)'s stretching comes from \([\mathbf t]_\times\). That matrix stretches every direction perpendicular to \(\mathbf t\) by the same amount, \(\lVert\mathbf t\rVert\).</li>
+    </ul>
+    <div class="callout">
+      <p><strong>Key fact.</strong> The singular values of every essential matrix have the pattern \((\sigma, \sigma, 0)\). Any 3×3 matrix with that pattern is a valid essential matrix.</p>
+    </div>
+    <details class="deeper"><summary>Going deeper: the formal statement</summary><div class="deeper-body"><p>Huang &amp; Faugeras (1989): a real \(3\times3\) matrix is an essential matrix if and only if its singular values are \((\sigma, \sigma, 0)\) with \(\sigma > 0\). Equivalently, \(\det E = 0\) and \(2EE^\top E - \operatorname{tr}(EE^\top)\,E = 0\). These cubic constraints are what Nistér's 5-point solver uses directly. The singular values of \([\mathbf t]_\times\) are \((\lVert\mathbf t\rVert, \lVert\mathbf t\rVert, 0)\) because it is skew-symmetric with eigenvalues \(0, \pm i\lVert\mathbf t\rVert\), and multiplying by an orthogonal \(R\) leaves singular values unchanged.</p></div></details>
+    <p>Because \(E\) is only defined up to scale (doubling \(E\) still gives \(\mathbf x'^\top E\mathbf x = 0\), and images alone cannot tell a large distant scene from a small near one), it has <strong>5 degrees of freedom</strong>: 3 for rotation and 2 for the translation <em>direction</em>. The SVD is the natural language here, because the defining property of \(E\) is a statement about its singular values.</p>
+    <p>For uncalibrated cameras, the same constraint holds in pixels with the <strong>fundamental matrix</strong> \(F = K'^{-\top} E K^{-1}\), which only needs rank 2 (7 DoF). The machinery below is the same except for the final projection step.</p>
+  </div>
+</section>
+<section id="estimate">
+  <div class="col">
+    <h2><span class="num">04</span>Estimating E: the 8-point algorithm</h2>
+    <p>For a stereo rig, \(R\) and \(\mathbf t\) are the extrinsics between the two cameras, the one geometric fact the rest of the pipeline needs. They are normally measured once with a calibration target: OpenCV's <code>stereoCalibrate</code> minimises checkerboard reprojection error and returns \(R\), \(\mathbf t\), \(E\) and \(F\) together. Estimating \(E\) from ordinary scene matches is what you do when there is no target. That covers structure from motion and visual odometry, and also online recalibration of a rig whose extrinsics have drifted. It is also the clearest view of what calibration recovers.</p>
+    <div class="plain"><b>In plain words.</b> Each matched pair of points gives one equation that \(E\) must satisfy. \(E\) has 9 numbers, but its overall scale doesn't matter, so 8 matches are enough to pin it down. Stack the equations, and the SVD finds the \(E\) that comes closest to satisfying all of them. Noise means that \(E\) won't be quite valid, so a second SVD tidies it up.</div>
+    <p>Expand \(\mathbf x'^\top E\mathbf x = 0\) for one match \(\mathbf x=(x,y,1)\), \(\mathbf x'=(x',y',1)\). With \(\mathbf e\) the 9 entries of \(E\) read row by row:</p>
+    <div class="math-block">\[ \underbrace{\begin{bmatrix} x'x & x'y & x' & y'x & y'y & y' & x & y & 1 \end{bmatrix}}_{(\mathbf x'\otimes\mathbf x)^\top}\;\mathbf e = 0 . \]</div>
+    <p>For example, the match \(\mathbf x = (0.1, 0.2, 1)\), \(\mathbf x' = (0.15, 0.18, 1)\) gives the row \((0.015,\ 0.03,\ 0.15,\ 0.018,\ 0.036,\ 0.18,\ 0.1,\ 0.2,\ 1)\). Every match contributes one row of known numbers, and the nine entries of \(E\) are the unknowns.</p>
+    <p>Stack one row per match to get a system \(A\mathbf e = \mathbf 0\), where \(A\) has \(n\) rows and 9 columns. There are two snags:</p>
+    <ul>
+      <li>\(\mathbf e = \mathbf 0\) always solves it, which is useless. So we insist that \(\mathbf e\) has length 1. That costs nothing, because the scale of \(E\) doesn't matter anyway ("up to scale", section 00).</li>
+      <li>With noisy matches no \(\mathbf e\) makes every row exactly zero. So we look for the one that makes \(A\mathbf e\) as small as possible.</li>
+    </ul>
+    <p>That is exactly <strong>SVD fact ①</strong>: the answer is \(\mathbf v_9\), the last right singular vector of \(A\). Reshape its nine numbers into a 3×3 matrix and you have the estimate \(\hat E\) (the hat means "estimated").</p>
+  </div>
+  <figure class="wide">
+    <div class="svgbox">
+      <svg viewBox="0 0 900 270" width="900" role="img" aria-label="Block diagram of the SVD of the n by 9 data matrix A. The last row of V transpose, v9, is the null vector and gives the nine entries of E.">
+        <g font-size="14" fill="currentColor">
+          <rect x="20" y="30" width="90" height="200" fill="none" stroke="currentColor" stroke-width="1.6"/>
+          <text x="65" y="135" text-anchor="middle" font-size="20" font-style="italic">A</text>
+          <text x="65" y="252" text-anchor="middle" fill="currentColor" opacity=".7">n × 9</text>
+          <text x="140" y="138" text-anchor="middle" font-size="22">=</text>
+          <rect x="170" y="30" width="200" height="200" fill="none" stroke="#7445c0" stroke-width="1.6"/>
+          <text x="270" y="135" text-anchor="middle" font-size="20" font-style="italic" fill="#7445c0">U</text>
+          <text x="270" y="252" text-anchor="middle" opacity=".7">n × n, orthonormal</text>
+          <rect x="400" y="30" width="90" height="200" fill="none" stroke="#1f8a61" stroke-width="1.6"/>
+          <line x1="400" y1="30" x2="490" y2="120" stroke="#1f8a61" stroke-width="3"/>
+          <text x="420" y="64" font-size="12" fill="#1f8a61">σ₁</text>
+          <text x="476" y="112" font-size="12" fill="#d75a22" font-weight="600">σ₉</text>
+          <text x="445" y="185" text-anchor="middle" opacity=".7" font-size="13">zeros</text>
+          <text x="445" y="252" text-anchor="middle" opacity=".7">n × 9</text>
+          <rect x="520" y="30" width="200" height="200" fill="none" stroke="currentColor" stroke-width="1.6"/>
+          <rect x="520" y="208" width="200" height="22" fill="#d75a22" fill-opacity=".25" stroke="#d75a22" stroke-width="1.6"/>
+          <text x="620" y="125" text-anchor="middle" font-size="20" font-style="italic">Vᵀ</text>
+          <text x="620" y="224" text-anchor="middle" font-size="13" fill="#d75a22" font-weight="600">v₉ᵀ  (last row)</text>
+          <text x="620" y="252" text-anchor="middle" opacity=".7">9 × 9, orthonormal</text>
+          <line x1="724" y1="219" x2="770" y2="160" stroke="#d75a22" stroke-width="1.6" marker-end="url(#aho2)"/>
+          <defs><marker id="aho2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#d75a22"/></marker></defs>
+          <g transform="translate(780,90)">
+            <rect x="0" y="0" width="96" height="66" fill="none" stroke="#d75a22" stroke-width="1.6"/>
+            <g font-size="11" fill="#d75a22" text-anchor="middle">
+              <text x="16" y="18">e₁</text><text x="48" y="18">e₂</text><text x="80" y="18">e₃</text>
+              <text x="16" y="38">e₄</text><text x="48" y="38">e₅</text><text x="80" y="38">e₆</text>
+              <text x="16" y="58">e₇</text><text x="48" y="58">e₈</text><text x="80" y="58">e₉</text>
+            </g>
+            <text x="48" y="88" text-anchor="middle" font-size="16" font-style="italic">Ê</text>
+            <text x="48" y="108" text-anchor="middle" font-size="12" opacity=".7">reshape 9 → 3×3</text>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figure 2.</b> The data matrix \(A\) holds one row per match. Its smallest singular value \(\sigma_9\) measures how badly the best \(E\) fits (zero for noise-free data). The matching right singular vector \(\mathbf v_9\), reshaped row-major, is the linear estimate \(\hat E\).</figcaption>
+  </figure>
+  <div class="col">
+    <h3>Snapping onto the essential space</h3>
+    <p>\(\hat E\) was found without being told what a valid \(E\) looks like. With noisy data its singular values come out as something like \((1.05, 0.95, 0.08)\) rather than the required \((\sigma, \sigma, 0)\). The fix is <strong>SVD fact ②</strong>: take the SVD \(\hat E = U\,\operatorname{diag}(\sigma_1,\sigma_2,\sigma_3)\,V^\top\), keep \(U\) and \(V\), and overwrite the singular values with the correct pattern.</p>
+    <div class="math-block">\[ \tilde E = U\,\operatorname{diag}(1,1,0)\,V^\top \qquad\Big(\text{or } \operatorname{diag}\big(\tfrac{\sigma_1+\sigma_2}{2}, \tfrac{\sigma_1+\sigma_2}{2}, 0\big)\Big) \]</div>
+    <p>\(\tilde E\) is the valid essential matrix closest to \(\hat E\), measured entry by entry (the Frobenius norm). Because the overall scale of \(E\) is arbitrary, \(\operatorname{diag}(1,1,0)\) is the usual choice. A visible side effect: with rank 3, the epipolar lines in image 2 have no common point. After projection they all pass through the epipole \(\mathbf e' \propto \mathbf u_3\).</p>
+    <div class="callout">
+      <p><strong>What is the Frobenius norm?</strong> It measures the size of a matrix the same way you measure the length of a vector: square every entry, add them all up, and take the square root.</p>
+      <div class="math-block">\[ \lVert A\rVert_F = \sqrt{\sum_{i,j} a_{ij}^2}, \qquad \text{e.g.}\quad \left\lVert\begin{bmatrix}1&2\\2&4\end{bmatrix}\right\rVert_F = \sqrt{1 + 4 + 4 + 16} = 5. \]</div>
+      <p>Think of it as unrolling the matrix into one long vector (9 numbers for a 3×3) and taking its ordinary length. The distance between two matrices is then \(\lVert A - B\rVert_F\), the "size" of their entry-by-entry difference. So "the closest valid \(E\)" means the valid matrix whose nine entries differ least from \(\hat E\)'s, in this total-squared-difference sense.</p>
+      <p>It links neatly to the SVD: the Frobenius norm also equals \(\sqrt{\sigma_1^2 + \sigma_2^2 + \dots}\). In the example above that's \(\sqrt{5^2 + 0^2} = 5\), the same answer. Rotations don't change it, so when two matrices share \(U\) and \(V\), their distance depends only on how their singular values differ. That is why simply overwriting the singular values gives the closest match. For \(\hat E\) with singular values \((1.05, 0.95, 0.08)\), the distance to \(\tilde E\) is \(\sqrt{0.05^2 + 0.05^2 + 0.08^2} \approx 0.11\).</p>
+    </div>
+  </div>
+  <figure class="wide">
+    <video src="v3_project.mp4" controls muted loop playsinline preload="metadata" aria-label="Animation: a noisy full-rank estimate produces epipolar lines with scattered intersections. As the singular values are morphed to 1, 1, 0 the lines converge to a single epipole."></video>
+    <figcaption><b>Video 4.</b> Continuously morphing the singular values of a noisy \(\hat E\) to \((1,1,0)\) while keeping \(U\) and \(V\). Grey dots are pairwise intersections of the epipolar lines. They collapse onto a single epipole exactly when \(\sigma_3\) reaches zero. The noise is exaggerated here so the effect is visible.</figcaption>
+  </figure>
+  <div class="col">
+    <div class="callout warn">
+      <p><strong>Practical tip: rescale before you solve.</strong> In pixel units the columns of \(A\) mix huge and tiny numbers (\(x'x\) can be around 100,000 while the last column is 1), which makes the SVD answer very sensitive to noise. Hartley (1997) gave the fix: shift each image's points so their average sits at the origin, scale them so their average distance from it is \(\sqrt2\), solve, then undo the scaling with \(E = T'^\top \tilde E_n T\) and clean up again. Normalised camera coordinates are already well scaled, which is why the code on this page skips this step.</p>
+    </div>
+  </div>
+</section>
+<section id="decompose">
+  <div class="col">
+    <h2><span class="num">05</span>Recovering R and t from E</h2>
+    <div class="plain"><b>In plain words.</b> \(E\) was built as "translation-cross times rotation". Now we run that backwards. The SVD of \(E\) hands us both pieces almost directly, apart from two sign choices, which leave four candidate answers. A simple physical test then picks the right one.</div>
+    <p>The recipe:</p>
+    <ol class="steps">
+      <li>Take the SVD \(\tilde E = U\operatorname{diag}(1,1,0)V^\top\). If \(\det U\) or \(\det V\) is \(-1\), multiply that matrix by \(-1\). This keeps them proper rotations rather than mirror flips (section 00) and doesn't change \(\tilde E\) except possibly its sign, which doesn't matter.</li>
+      <li><strong>Translation:</strong> \(\mathbf t = \pm\mathbf u_3\), the last column of \(U\). This is SVD fact ③: \(\mathbf t\) is the direction that gets flattened, since \(\mathbf t\times\mathbf t = \mathbf 0\). Its length can't be recovered, so we set it to 1.</li>
+      <li><strong>Rotation:</strong> \(R = UWV^\top\) or \(R = UW^\top V^\top\), where \(W\) is a fixed matrix, a 90° turn about the \(z\)-axis:</li>
+    </ol>
+    <div class="math-block">\[ W = \begin{bmatrix}0&-1&0\\1&0&0\\0&0&1\end{bmatrix},\qquad R \in \{\,UWV^\top,\; UW^\top V^\top\,\},\qquad \mathbf t \in \{\,+\mathbf u_3,\; -\mathbf u_3\,\}. \]</div>
+    <details class="deeper"><summary>Going deeper: why the matrix W appears</summary><div class="deeper-body"><p>Define \(Z = \begin{bmatrix}0&1&0\\-1&0&0\\0&0&0\end{bmatrix}\), which is skew-symmetric, and note that \(ZW = \operatorname{diag}(1,1,0)\). Then</p>
+      <div class="math-block">\[ \tilde E = U\operatorname{diag}(1,1,0)V^\top = (UZU^\top)(UWV^\top). \]</div>
+      <p>The first factor is skew-symmetric, so it is \([\mathbf t]_\times\) for some \(\mathbf t\) (and that \(\mathbf t\) is \(\pm\mathbf u_3\)). The second is a rotation. That is exactly the form \([\mathbf t]_\times R\). Working through the other ways of splitting the product gives the alternative \(UW^\top V^\top\) (Hartley &amp; Zisserman, Result 9.19).</p></div></details>
+    <h3>Four candidates, one physical answer</h3>
+    <p>All four \((R,\mathbf t)\) pairs satisfy the epipolar constraint equally well. They differ in where the triangulated points land. Only one places the scene <strong>in front of both cameras</strong> (positive depth, or <em>cheirality</em>).</p>
+  </div>
+  <figure class="wide">
+    <div class="svgbox">
+      <svg viewBox="0 0 1000 250" width="1000" role="img" aria-label="Four top-down configurations from decomposing E. Only configuration (a) places the triangulated point in front of both cameras.">
+        <g id="fourpanels" font-size="13" fill="currentColor"></g>
+      </svg>
+    </div>
+    <figcaption><b>Figure 3.</b> The fourfold ambiguity, top-down (schematic). Flipping the sign of \(\mathbf t\) swaps (a)↔(b) and (c)↔(d). Swapping \(W\) for \(W^\top\) gives the "twisted pair", camera 2 rotated 180° about the baseline, which moves between the top and bottom rows. The test: triangulate the matches (another \(\min\lVert M\mathbf X\rVert\) problem, solved by SVD) and keep the candidate with the most points at positive depth in both views.</figcaption>
+  </figure>
+  <div class="col">
+    <h3>The whole pipeline</h3>
+  </div>
+  <figure class="wide">
+    <div class="svgbox">
+      <svg viewBox="0 0 1040 150" width="1040" role="img" aria-label="Pipeline: matches, build A, SVD of A gives E hat, SVD of E hat and set singular values to 1 1 0, decompose with W into four candidates, cheirality test gives R and t. SVD is used three times.">
+        <defs><marker id="ahp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+        <g font-size="13" fill="currentColor" text-anchor="middle">
+          <g><rect x="10" y="40" width="130" height="56" rx="6" fill="none" stroke="currentColor"/><text x="75" y="64">n ≥ 8 matches</text><text x="75" y="83" opacity=".7">(xᵢ, x′ᵢ), normalised</text></g>
+          <g><rect x="190" y="40" width="130" height="56" rx="6" fill="none" stroke="currentColor"/><text x="255" y="64">A  (n × 9)</text><text x="255" y="83" opacity=".7">rows x′ᵢ ⊗ xᵢ</text></g>
+          <g><rect x="370" y="40" width="130" height="56" rx="6" fill="none" stroke="currentColor"/><text x="435" y="64">Ê = reshape(v₉)</text><text x="435" y="83" opacity=".7">rank 3 if noisy</text></g>
+          <g><rect x="550" y="40" width="130" height="56" rx="6" fill="none" stroke="currentColor"/><text x="615" y="64">Ẽ = U diag(1,1,0) Vᵀ</text><text x="615" y="83" opacity=".7">valid essential</text></g>
+          <g><rect x="730" y="40" width="130" height="56" rx="6" fill="none" stroke="currentColor"/><text x="795" y="64">4 × (R, t)</text><text x="795" y="83" opacity=".7">UWVᵀ, UWᵀVᵀ, ±u₃</text></g>
+          <g><rect x="910" y="40" width="120" height="56" rx="6" fill="none" stroke="#1f8a61" stroke-width="2"/><text x="970" y="64" fill="#1f8a61" font-weight="600">(R, t̂)</text><text x="970" y="83" opacity=".7">‖t‖ unknown</text></g>
+          <line x1="140" y1="68" x2="188" y2="68" stroke="currentColor" marker-end="url(#ahp)"/><text x="165" y="58" font-size="11" opacity=".75">stack</text>
+          <line x1="320" y1="68" x2="368" y2="68" stroke="#d75a22" stroke-width="2" marker-end="url(#ahp)"/><text x="345" y="58" font-size="11" fill="#d75a22" font-weight="600">SVD ①</text>
+          <line x1="500" y1="68" x2="548" y2="68" stroke="#d75a22" stroke-width="2" marker-end="url(#ahp)"/><text x="525" y="58" font-size="11" fill="#d75a22" font-weight="600">SVD ②</text>
+          <line x1="680" y1="68" x2="728" y2="68" stroke="#d75a22" stroke-width="2" marker-end="url(#ahp)"/><text x="705" y="58" font-size="11" fill="#d75a22" font-weight="600">reuse ③</text>
+          <line x1="860" y1="68" x2="908" y2="68" stroke="#d75a22" stroke-width="2" marker-end="url(#ahp)"/><text x="885" y="58" font-size="11" fill="#d75a22" font-weight="600">SVD ④</text>
+          <text x="525" y="128" font-size="12" opacity=".75">① null vector of A  ·  ② nearest essential matrix  ·  ③ U, V of Ẽ give R and t = ±u₃  ·  ④ triangulation (null vector of a 4×4) for the depth test</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figure 4.</b> From matches to pose. Orange arrows are SVD steps.</figcaption>
+  </figure>
+  <div class="col">
+    <p>The lab below runs this whole pipeline in your browser on a synthetic scene: random 3D points, a known camera motion, Gaussian noise on the normalised image coordinates. Watch \(\sigma_3\) of \(\hat E\) grow with noise and the epipolar lines lose their common point, and check which of the four decompositions the depth test picks.</p>
+  </div>
+<div class="lab">
+    <div class="lab-head"><h3>Try it: estimate E, then recover R and t</h3><span class="tag">runs locally</span></div>
+    <div class="lab-grid3">
+      <div>
+        <p class="panel-title">image 2 · matches x′ᵢ and epipolar lines Exᵢ</p>
+        <canvas id="img2" width="560" height="560" role="img" aria-label="Image 2 with matched points and their epipolar lines"></canvas>
+        <p style="font-size:13px;color:var(--muted);margin:8px 0 0">Orange dots: matches \(\mathbf x'_i\). Green: epipolar lines. Grey: pairwise line intersections. ✕: epipole \(\mathbf u_3\) of the matrix shown.</p>
+      </div>
+      <div>
+        <div class="controls" style="margin-top:0">
+          <div class="ctl"><label for="noise">noise <output id="noiseOut"></output></label><input type="range" id="noise" min="0" max="0.012" step="0.0005" value="0.008"></div>
+          <div class="ctl"><label for="npts">matches n <output id="nOut"></output></label><input type="range" id="npts" min="8" max="120" step="1" value="12"></div>
+          <div class="ctl"><label for="motion">camera motion</label><select id="motion"><option value="side">sideways, converging</option><option value="fwd" selected>mostly forward</option></select></div>
+          <div class="ctl" style="display:flex;flex-direction:column;gap:8px;justify-content:flex-end">
+            <label class="check" for="enforce"><input type="checkbox" id="enforce"> draw lines from Ẽ (σ = 1, 1, 0)</label>
+            <button class="btn" id="reseed" type="button">New random scene</button>
+          </div>
+        </div>
+        <p class="panel-title" style="margin-top:14px">singular values of Ê (scaled so (σ₁+σ₂)/2 = 1)</p>
+        <svg class="plot" id="bars" viewBox="0 0 360 150" role="img" aria-label="Bar chart of the three singular values of the linear estimate"></svg>
+        <div class="stats">
+          <div class="stat"><div class="k">σ₉ of A</div><div class="v" id="sA"></div></div>
+          <div class="stat"><div class="k">rotation error</div><div class="v" id="rErr"></div></div>
+          <div class="stat"><div class="k">translation dir. error</div><div class="v" id="tErr"></div></div>
+        </div>
+      </div>
+    </div>
+    <table class="res" aria-label="The four candidate poses and how many triangulated points are in front of both cameras">
+      <thead><tr><th>candidate</th><th style="text-align:right">points in front of both</th><th style="text-align:right">rotation error</th><th style="text-align:right">t direction error</th><th></th></tr></thead>
+      <tbody id="candBody"></tbody>
+    </table>
+  </div>
+</section>
+
+<div class="part"><div class="col"><span>Part IV</span>From geometry to depth</div></div>
+<section id="rectify">
+  <div class="col">
+    <h2><span class="num">06</span>Rectification</h2>
+    <p>The epipolar constraint already turns matching from a 2D search into a 1D one: the match for \(\mathbf x\) lies on the line \(\mathbf l' = F\mathbf x\). But those lines are slanted, differ for every pixel and converge on the epipole, which makes dense matching awkward and slow. <strong>Rectification</strong> warps both images so that every epipolar line becomes the <em>same horizontal row</em> in both views. Matching then becomes a scan along \(x\) at fixed \(y\).</p>
+    <h3>How it works</h3>
+    <p>Turning a camera on the spot, without moving it, doesn't change what it can see, only how the picture is laid out. The old and new images are related by a fixed 3×3 warp called a <strong>homography</strong>, and computing it needs no depth. So we can virtually turn both cameras into an ideal pose: facing the same way, with their \(x\) axes along the line joining them. With \(\mathbf X' = R\mathbf X + \mathbf t\), camera 2's centre in camera 1's frame is \(\mathbf c = -R^\top\mathbf t\). Build a new orientation whose \(x\) axis points along the baseline:</p>
+    <div class="math-block">\[ \mathbf r_1 = \frac{\mathbf c}{\lVert\mathbf c\rVert},\qquad \mathbf r_2 = \frac{\hat{\mathbf z}\times\mathbf r_1}{\lVert\hat{\mathbf z}\times\mathbf r_1\rVert},\qquad \mathbf r_3 = \mathbf r_1\times\mathbf r_2,\qquad R_{\text{rect}} = \begin{bmatrix}\mathbf r_1^\top\\ \mathbf r_2^\top\\ \mathbf r_3^\top\end{bmatrix}. \]</div>
+    <p>In words: \(\mathbf r_1\) points along the baseline. \(\mathbf r_2\) is perpendicular to both the baseline and the old viewing direction \(\hat{\mathbf z}\), which is exactly what a cross product gives. \(\mathbf r_3\), the new viewing direction, is perpendicular to both. Three perpendicular unit vectors stacked as rows make a rotation matrix (section 00). Each image is then warped by its homography, with one shared intrinsic matrix \(K_n\):</p>
+    <div class="math-block">\[ H_L = K_n\,R_{\text{rect}}\,K_L^{-1}, \qquad H_R = K_n\,R_{\text{rect}}\,R^\top K_R^{-1}. \]</div>
+    <p>In the rectified frame the cameras differ only by a shift \(B\) along \(x\), so \(\mathbf t = (-B, 0, 0)\) and the epipolar constraint collapses to</p>
+    <div class="math-block">\[ \mathbf x'^\top\,[\mathbf t]_\times\,\mathbf x = B\,(y' - y) = 0 \quad\Longleftrightarrow\quad y' = y . \]</div>
+    <p>The epipoles have moved to infinity along \(x\), and matched points share a row.</p>
+  </div>
+  <figure class="wide">
+    <video src="v4_rectify.mp4" controls muted loop playsinline preload="metadata" aria-label="Animation: two images with slanted epipolar lines are warped by rectifying homographies until all epipolar lines are horizontal and each match lies on the same row in both images."></video>
+    <figcaption><b>Video 5.</b> Rectifying a convergent pair. Each colour is one match and its epipolar lines. Interpolating the rotation from identity to \(R_{\text{rect}}\) straightens and aligns the lines. At the end, the dashed rows run straight across both images: a matched pair now differs only in \(x\).</figcaption>
+  </figure>
+  <div class="col">
+    <p>In practice, OpenCV's <code>stereoRectify</code> uses Bouguet's variant, which splits the rotation so each camera turns half way. That keeps the warps, and the resampling blur, as small as possible. <code>initUndistortRectifyMap</code> then folds undistortion and rectification into a single lookup table per camera, applied every frame with <code>remap</code>. Errors in \(R\) and \(\mathbf t\) show up here as vertical misalignment between rows. Even a pixel of it degrades matching, which is why calibration quality matters so much in stereo.</p>
+  </div>
+</section>
+
+<section id="match">
+  <div class="col">
+    <h2><span class="num">07</span>Correspondence and disparity</h2>
+    <p>After rectification, a pixel at \((x, y)\) in the left image matches some \((x - d, y)\) in the right, where \(d \ge 0\) is the <strong>disparity</strong>. Finding \(d\) for every pixel produces a disparity map. Most methods follow the same four steps (Scharstein &amp; Szeliski's taxonomy):</p>
+    <ol class="steps">
+      <li><strong>Matching cost</strong> \(C(x, y, d)\): how different the left pixel looks from the right pixel \(d\) to the left. Common choices are absolute difference, normalised cross-correlation (robust to gain and offset changes between cameras) and the <em>census</em> transform (compares each pixel only to its neighbours, so it ignores brightness differences).</li>
+      <li><strong>Aggregation</strong>: sum the cost over a window, since a single pixel is ambiguous. Big windows are less noisy but blur depth edges.</li>
+      <li><strong>Optimisation</strong>: winner-takes-all simply picks the disparity with the lowest cost at each pixel. Semi-global matching (SGM) also prefers neighbouring pixels to have similar disparities: small changes pay a small penalty \(P_1\), big jumps a larger penalty \(P_2\). It is the default dense method in OpenCV (<code>StereoSGBM</code>).</li>
+      <li><strong>Refinement</strong>: a <em>left-right consistency check</em> (match right-to-left too and reject pixels that disagree, which removes most occlusions), sub-pixel interpolation by fitting a parabola through the costs at \(d-1, d, d+1\), and speckle filtering.</li>
+    </ol>
+    <details class="deeper"><summary>Going deeper: the SGM recurrence</summary><div class="deeper-body"><p>Along each of 8 or 16 scan directions \(\mathbf r\), SGM accumulates a path cost</p>
+      <div class="math-block">\[ L_r(\mathbf p, d) = C(\mathbf p, d) + \min\big(L_r(\mathbf p - \mathbf r, d),\; L_r(\mathbf p - \mathbf r, d\pm1) + P_1,\; \min_k L_r(\mathbf p - \mathbf r, k) + P_2\big) - \min_k L_r(\mathbf p - \mathbf r, k). \]</div>
+      <p>The path costs are summed over directions and the disparity with the lowest total is chosen. The final subtraction just stops the numbers growing along the path. Hirschmüller (2008) gives the details.</p></div></details>
+    <p>The cost volume \(C(x,y,d)\) is the central data structure. Learned stereo networks build and filter the same volume, with features and aggregation learned from data rather than hand-designed.</p>
+  </div>
+
+  <div class="lab" id="bmlab">
+    <div class="lab-head"><h3>Try it: block matching on a random-dot stereo pair</h3><span class="tag">runs locally</span></div>
+    <p style="font-size:15px;margin-top:-4px">The scene is a slanted background plane, a near box and a disc at middle depth. One patch is deliberately textureless. The right image is rendered from the left with exact disparities, so the true answer is known. <strong>Click any pixel</strong> in the left image or the result to see its matching-cost curve.</p>
+    <div class="bm-grid">
+      <div><p class="panel-title">left image</p><canvas id="bmL" width="256" height="192" class="bm"></canvas></div>
+      <div><p class="panel-title">right image</p><canvas id="bmR" width="256" height="192" class="bm"></canvas></div>
+      <div><p class="panel-title">true disparity (grey = occluded in right view)</p><canvas id="bmGT" width="256" height="192" class="bm"></canvas></div>
+      <div><p class="panel-title">estimated disparity (black = rejected)</p><canvas id="bmD" width="256" height="192" class="bm"></canvas></div>
+    </div>
+    <div class="cbar"><span>0 px</span><div class="cbar-ramp" aria-hidden="true"></div><span id="cbarMax">40 px</span></div>
+    <div class="controls">
+      <div class="ctl"><label for="bmWin">window <output id="bmWinOut"></output></label><input type="range" id="bmWin" min="0" max="7" step="1" value="3"></div>
+      <div class="ctl"><label for="bmCost">matching cost</label><select id="bmCost"><option value="sad">SAD (absolute difference)</option><option value="census">Census (5×5, Hamming)</option></select></div>
+      <div class="ctl"><label for="bmGain">right camera gain <output id="bmGainOut"></output></label><input type="range" id="bmGain" min="0.5" max="1.5" step="0.05" value="1"></div>
+      <div class="ctl" style="display:flex;flex-direction:column;gap:8px;justify-content:flex-end">
+        <label class="check" for="bmLR"><input type="checkbox" id="bmLR"> left-right consistency check</label>
+        <button class="btn" id="bmNew" type="button">New random texture</button>
+      </div>
+    </div>
+    <div class="lab-grid3" style="margin-top:6px">
+      <div>
+        <p class="panel-title" id="curveTitle">matching cost vs disparity</p>
+        <svg class="plot" id="bmCurve" viewBox="0 0 420 170" role="img" aria-label="Matching cost against disparity for the selected pixel"></svg>
+      </div>
+      <div>
+        <div class="stats" style="margin-top:22px">
+          <div class="stat"><div class="k">bad pixels (&gt;1 px error)</div><div class="v" id="bmBad"></div></div>
+          <div class="stat"><div class="k">pixels kept</div><div class="v" id="bmCov"></div></div>
+          <div class="stat"><div class="k">compute time</div><div class="v" id="bmTime"></div></div>
+        </div>
+        <p style="font-size:14px;color:var(--muted);margin:12px 0 0">Things to try: shrink the window to 3×3 and the map dissolves into noise. Grow it to 15×15 and the error rate drops, but the box's edges smear outwards, because a big window straddles two depths. Set the gain to 1.3: SAD falls apart while census barely changes. Turn on the left-right check to blank out the occluded strips beside the box and disc. The textureless patch stays wrong whatever you do, because there is nothing to match.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="triangulate">
+  <div class="col">
+    <h2><span class="num">08</span>Depth from disparity</h2>
+    <p>With a rectified pair the triangulation is just similar triangles. Both image planes sit at distance \(f\) in front of the camera centres, which are a baseline \(B\) apart.</p>
+  </div>
+  <figure class="wide">
+    <div class="svgbox">
+      <svg viewBox="0 0 690 320" width="690" role="img" aria-label="Top-down view of a rectified stereo pair. The triangle formed by the point and the two camera centres is similar to the triangle formed by the point and its two image points, which gives Z equals f B over d.">
+        <polygon points="150,280 450,280 230,50" fill="#1f8a61" fill-opacity="0.08" stroke="none"/>
+        <line x1="90" y1="216" x2="250" y2="216" stroke="#2f5cd6" stroke-width="4" stroke-opacity=".35"/>
+        <line x1="390" y1="216" x2="550" y2="216" stroke="#d75a22" stroke-width="4" stroke-opacity=".35"/>
+        <line x1="150" y1="280" x2="230" y2="50" stroke="#2f5cd6" stroke-width="2"/>
+        <line x1="450" y1="280" x2="230" y2="50" stroke="#d75a22" stroke-width="2"/>
+        <line x1="150" y1="280" x2="150" y2="40" stroke="currentColor" stroke-opacity=".25" stroke-dasharray="3 4"/>
+        <line x1="450" y1="280" x2="450" y2="40" stroke="currentColor" stroke-opacity=".25" stroke-dasharray="3 4"/>
+        <circle cx="150" cy="280" r="6" fill="#2f5cd6"/><circle cx="450" cy="280" r="6" fill="#d75a22"/>
+        <circle cx="230" cy="50" r="6" fill="currentColor"/>
+        <circle cx="172.3" cy="216" r="4.5" fill="#2f5cd6"/><circle cx="388.8" cy="216" r="4.5" fill="#d75a22"/>
+        <g font-size="14" fill="currentColor">
+          <text x="242" y="44" font-weight="600">X = (X, Y, Z)</text>
+          <text x="150" y="304" text-anchor="middle" fill="#2f5cd6">left centre</text>
+          <text x="450" y="304" text-anchor="middle" fill="#d75a22">right centre</text>
+          <line x1="150" y1="292" x2="450" y2="292" stroke="currentColor" stroke-width="1"/>
+          <text x="300" y="288" text-anchor="middle">B</text>
+          <line x1="70" y1="216" x2="70" y2="280" stroke="currentColor"/><text x="62" y="252" text-anchor="end">f</text>
+          <line x1="40" y1="50" x2="40" y2="280" stroke="currentColor"/><text x="32" y="170" text-anchor="end">Z</text>
+          <text x="161" y="206" text-anchor="middle" fill="#2f5cd6" font-size="13">x</text>
+          <line x1="150" y1="211" x2="172" y2="211" stroke="#2f5cd6"/>
+          <text x="420" y="206" text-anchor="middle" fill="#d75a22" font-size="13">x′ (negative)</text>
+          <line x1="389" y1="211" x2="450" y2="211" stroke="#d75a22"/>
+          <text x="560" y="200" font-size="13">image planes</text>
+          <text x="560" y="218" font-size="13">at distance f</text>
+          <text x="470" y="110" font-size="14">d = x − x′</text>
+          <text x="470" y="132" font-size="14">(B − d) / (Z − f) = B / Z</text>
+          <text x="470" y="154" font-size="14" font-weight="600">⇒ Z = f B / d</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figure 5.</b> The triangle formed by \(\mathbf X\) and the two camera centres (base \(B\), height \(Z\)) is similar to the triangle formed by \(\mathbf X\) and its two image points (base \(B - d\), height \(Z - f\)). Equating the ratios gives the stereo depth equation.</figcaption>
+  </figure>
+  <div class="col">
+    <div class="math-block">\[ \boxed{\;Z = \frac{f\,B}{d}\;},\qquad X = \frac{(x - c_x)\,Z}{f},\qquad Y = \frac{(y - c_y)\,Z}{f}. \]</div>
+    <p>With \(f\) in pixels and \(B\) in metres, \(Z\) comes out in metres. <strong>Example:</strong> \(f = 800\) px, \(B = 0.12\) m and a measured disparity of \(d = 24\) px give \(Z = 800 \times 0.12 / 24 = 4\) m. Depth is inversely proportional to disparity: halve the disparity and the depth doubles. That one fact drives everything in the next section.</p>
+  </div>
+  <figure class="wide">
+    <video src="v5_disparity.mp4" controls muted loop playsinline preload="metadata" aria-label="Animation: a point recedes from a rectified stereo rig while a plot traces disparity against depth along a 1 over Z curve. Shaded bands show that one pixel of disparity spans 4 centimetres at 2 metres but 3.2 metres at 16 metres."></video>
+    <figcaption><b>Video 6.</b> \(d = fB/Z\) for a 12 cm, 800 px rig. The highlighted bands show the depth interval covered by a single pixel of disparity: 4 cm around 2 m, 3.2 m between 16 and 19 m.</figcaption>
+  </figure>
+  <div class="col">
+    <details class="deeper"><summary>Going deeper: the reprojection matrix Q</summary><div class="deeper-body"><p>The three equations above are one \(4\times4\) homogeneous map, which <code>stereoRectify</code> returns as \(Q\) and <code>reprojectImageTo3D</code> applies to the whole disparity image. For rectified cameras with a common principal point and right camera at \(T_x = -B\):</p>
+    <div class="math-block">\[ \begin{bmatrix}X\\Y\\Z\\W\end{bmatrix} = \underbrace{\begin{bmatrix}1&0&0&-c_x\\0&1&0&-c_y\\0&0&0&f\\0&0&-1/T_x&0\end{bmatrix}}_{Q}\begin{bmatrix}x\\y\\d\\1\end{bmatrix},\qquad (X, Y, Z)/W . \]</div>
+    <p>Here \(W = d/B\), so \(Z/W = fB/d\) as required. (If the rectified principal points differ, the last entry becomes \((c_x - c_x')/T_x\).)</p></div></details>
+    <details class="deeper"><summary>Going deeper: triangulating when the images are not rectified</summary><div class="deeper-body"><p>For a general pair \(P = K[I\,|\,\mathbf 0]\), \(P' = K'[R\,|\,\mathbf t]\), the two rays rarely meet exactly because of noise. The standard linear method writes \(\mathbf x\times P\mathbf X = \mathbf 0\) and \(\mathbf x'\times P'\mathbf X = \mathbf 0\), stacks two rows from each view into a \(4\times4\) matrix \(M\), and solves \(\min_{\lVert\mathbf X\rVert=1}\lVert M\mathbf X\rVert\). That is SVD fact ① again, the same routine the cheirality test in section 05 uses. Rectification turns this into the closed form above for every pixel at once.</p></div></details>
+  </div>
+</section>
+
+<section id="accuracy">
+  <div class="col">
+    <h2><span class="num">09</span>How accurate is stereo depth?</h2>
+    <p>Differentiate \(Z = fB/d\) with respect to \(d\) and substitute \(d = fB/Z\):</p>
+    <div class="math-block">\[ \left|\frac{\partial Z}{\partial d}\right| = \frac{fB}{d^2} = \frac{Z^2}{fB} \qquad\Longrightarrow\qquad \delta Z \approx \frac{Z^2}{f\,B}\,\delta d . \]</div>
+    <p><strong>Example:</strong> the 12 cm, 800 px rig above has \(fB = 96\) px·m. With a matching error of a quarter pixel, the error at 4 m is about \(16 \times 0.25 / 96 \approx 4\) cm. At 20 m it is about \(400 \times 0.25 / 96 \approx 1\) m.</p>
+    <p>So depth error grows with the <strong>square of range</strong>. Doubling the distance quadruples the error, and relative error \(\delta Z / Z\) grows linearly. The levers are:</p>
+    <ul>
+      <li><strong>Baseline \(B\)</strong>: error falls as \(1/B\). Wider rigs see further but have a larger minimum range \(Z_{\min} = fB/d_{\max}\) and more occlusion, and are harder to keep calibrated.</li>
+      <li><strong>Focal length \(f\)</strong> in pixels: more resolution or a narrower field of view gives a larger \(f\). Doubling sensor width at the same field of view halves the error, at four times the pixels.</li>
+      <li><strong>Matching precision \(\delta d\)</strong>: sub-pixel interpolation reaches a fraction of a pixel on well-textured surfaces. That precision assumes rectification is accurate to a similar level.</li>
+    </ul>
+    <p>The linear formula is a first-order approximation. The true interval is asymmetric: an error of \(-\delta d\) moves the estimate further away than \(+\delta d\) brings it closer, and the gap widens as \(d\) approaches \(\delta d\).</p>
+  </div>
+  <div class="lab" id="calc">
+    <div class="lab-head"><h3>Depth-error calculator</h3><span class="tag">interactive</span></div>
+    <div class="presets" role="group" aria-label="Presets">
+      <button class="btn" type="button" data-preset="indoor">Compact depth camera</button>
+      <button class="btn" type="button" data-preset="robot">Robot stereo head</button>
+      <button class="btn" type="button" data-preset="auto">Automotive, wide baseline</button>
+    </div>
+    <div class="controls">
+      <div class="ctl"><label for="cW">image width <output id="cWOut"></output></label><input type="range" id="cW" min="320" max="3840" step="32" value="1920"></div>
+      <div class="ctl"><label for="cFov">horizontal field of view <output id="cFovOut"></output></label><input type="range" id="cFov" min="20" max="120" step="1" value="60"></div>
+      <div class="ctl"><label for="cB">baseline <output id="cBOut"></output></label><input type="range" id="cB" min="2" max="60" step="0.5" value="30"></div>
+      <div class="ctl"><label for="cDd">matching error δd <output id="cDdOut"></output></label><input type="range" id="cDd" min="0.05" max="1" step="0.05" value="0.25"></div>
+      <div class="ctl"><label for="cZ">plot range <output id="cZOut"></output></label><input type="range" id="cZ" min="2" max="200" step="1" value="80"></div>
+      <div class="ctl"><label for="cDmax">disparity search range <output id="cDmaxOut"></output></label><input type="range" id="cDmax" min="32" max="512" step="16" value="256"></div>
+    </div>
+    <svg class="plot" id="calcPlot" viewBox="0 0 760 300" role="img" aria-label="Plot of depth error against range"></svg>
+    <div class="stats" id="calcStats"></div>
+  </div>
+</section>
+
+<div class="part"><div class="col"><span>Part V</span>Putting it together</div></div>
+<section id="pipeline">
+  <div class="col">
+    <h2><span class="num">10</span>The end-to-end pipeline</h2>
+    <p>Calibration runs once, and again whenever the rig drifts. Everything else runs per frame.</p>
+  </div>
+  <figure class="wide">
+    <div class="svgbox">
+      <svg viewBox="0 0 1040 190" width="1040" role="img" aria-label="Stereo pipeline: calibrate once, then per frame undistort and rectify, match along rows, filter the disparity, and reproject with Q to get 3D points.">
+        <defs><marker id="ahq" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+        <g font-size="13" fill="currentColor" text-anchor="middle">
+          <rect x="10" y="40" width="170" height="74" rx="6" fill="none" stroke="currentColor" stroke-dasharray="5 3"/>
+          <text x="95" y="62" font-weight="600">Calibrate (once)</text><text x="95" y="82" opacity=".75">K, distortion per camera</text><text x="95" y="100" opacity=".75">R, t · §01, 03–05</text>
+          <rect x="220" y="40" width="170" height="74" rx="6" fill="none" stroke="currentColor"/>
+          <text x="305" y="62" font-weight="600">Undistort + rectify</text><text x="305" y="82" opacity=".75">one remap per camera</text><text x="305" y="100" opacity=".75">rows now aligned · §06</text>
+          <rect x="430" y="40" width="170" height="74" rx="6" fill="none" stroke="currentColor"/>
+          <text x="515" y="62" font-weight="600">Match along rows</text><text x="515" y="82" opacity=".75">cost volume + SGM</text><text x="515" y="100" opacity=".75">disparity d(x, y) · §07</text>
+          <rect x="640" y="40" width="170" height="74" rx="6" fill="none" stroke="currentColor"/>
+          <text x="725" y="62" font-weight="600">Filter</text><text x="725" y="82" opacity=".75">LR check, sub-pixel,</text><text x="725" y="100" opacity=".75">speckle removal · §07</text>
+          <rect x="850" y="40" width="180" height="74" rx="6" fill="none" stroke="#1f8a61" stroke-width="2"/>
+          <text x="940" y="62" font-weight="600" fill="#1f8a61">Reproject with Q</text><text x="940" y="82" opacity=".75">Z = fB/d per pixel</text><text x="940" y="100" opacity=".75">point cloud · §08–09</text>
+          <line x1="180" y1="77" x2="218" y2="77" stroke="currentColor" marker-end="url(#ahq)"/>
+          <line x1="390" y1="77" x2="428" y2="77" stroke="currentColor" marker-end="url(#ahq)"/>
+          <line x1="600" y1="77" x2="638" y2="77" stroke="currentColor" marker-end="url(#ahq)"/>
+          <line x1="810" y1="77" x2="848" y2="77" stroke="currentColor" marker-end="url(#ahq)"/>
+          <path d="M 515 114 C 515 160, 95 160, 95 118" fill="none" stroke="#d75a22" stroke-width="1.6" stroke-dasharray="4 3" marker-end="url(#ahq)"/>
+          <text x="305" y="170" font-size="12" fill="#d75a22">rows misaligned or matches drifting? re-estimate E from live matches (online recalibration)</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figure 6.</b> Stereo depth in five stages, with the sections that cover each. The dashed loop is what keeps a deployed rig honest: the same E estimation from section 04 can detect and correct extrinsic drift without a calibration target.</figcaption>
+  </figure>
+  <div class="col">
+    <h3>In OpenCV</h3>
+    <p>Calibrate each camera with <code>calibrateCamera</code> first, then:</p>
+  </div>
+  <div class="codewrap">
+<button class="copy" type="button" data-target="cvpipe">Copy</button>
+<pre id="cvpipe"><code>import cv2
+import numpy as np
+
+# 1. Stereo calibration from checkerboard corners seen by both cameras (intrinsics already known).
+#    R, T map points from the left camera frame to the right: X_R = R X_L + T. E = [T]x R.
+rms, K1, D1, K2, D2, R, T, E, F = cv2.stereoCalibrate(
+    obj_pts, img_pts_left, img_pts_right, K1, D1, K2, D2, image_size,
+    flags=cv2.CALIB_FIX_INTRINSIC)
+
+# 2. Rectification: rotations R1, R2, new projections P1, P2 and the reprojection matrix Q.
+R1, R2, P1, P2, Q, roi1, roi2 = cv2.stereoRectify(K1, D1, K2, D2, image_size, R, T, alpha=0)
+map_lx, map_ly = cv2.initUndistortRectifyMap(K1, D1, R1, P1, image_size, cv2.CV_32FC1)
+map_rx, map_ry = cv2.initUndistortRectifyMap(K2, D2, R2, P2, image_size, cv2.CV_32FC1)
+
+# --- per frame ---
+rect_l = cv2.remap(img_left, map_lx, map_ly, cv2.INTER_LINEAR)
+rect_r = cv2.remap(img_right, map_rx, map_ry, cv2.INTER_LINEAR)
+
+# 3. Semi-global matching. P1/P2 are the small/large disparity-change penalties.
+block = 5
+sgbm = cv2.StereoSGBM_create(minDisparity=0, numDisparities=128, blockSize=block,
+                             P1=8 * 3 * block**2, P2=32 * 3 * block**2,
+                             uniquenessRatio=10, speckleWindowSize=100, speckleRange=2,
+                             mode=cv2.STEREO_SGBM_MODE_SGBM_3WAY)
+disp = sgbm.compute(rect_l, rect_r).astype(np.float32) / 16.0   # fixed point, 4 fractional bits
+
+# 4. Depth and point cloud (units of T).
+points = cv2.reprojectImageTo3D(disp, Q)
+valid = disp > 0
+depth = points[..., 2][valid]</code></pre>
+  </div>
+  <div class="col">
+    <h3>Estimating E yourself</h3>
+    <p>A compact NumPy version of sections 04–05, for natural-feature matches. Inputs are \(n\times 3\) arrays of normalised homogeneous coordinates.</p>
+  </div>
+<div class="codewrap">
+<button class="copy" type="button" data-target="pycode">Copy</button>
+<pre id="pycode"><code>import numpy as np
+
+def estimate_essential(x1, x2):
+    """Linear 8-point + projection onto the essential space. x1, x2: (n,3), n >= 8."""
+    A = np.einsum("ni,nj->nij", x2, x1).reshape(-1, 9)   # rows: kron(x2_i, x1_i)
+    _, _, Vt = np.linalg.svd(A)                           # SVD 1
+    E_hat = Vt[-1].reshape(3, 3)                          # null vector -> 3x3
+    U, S, Vt = np.linalg.svd(E_hat)                       # SVD 2
+    return U @ np.diag([1.0, 1.0, 0.0]) @ Vt              # nearest essential matrix
+
+def triangulate(P1, P2, a, b):
+    M = np.stack([a[0]*P1[2] - P1[0], a[1]*P1[2] - P1[1],
+                  b[0]*P2[2] - P2[0], b[1]*P2[2] - P2[1]])
+    X = np.linalg.svd(M)[2][-1]                           # SVD 4
+    return X[:3] / X[3]
+
+def decompose_essential(E, x1, x2):
+    """Return the (R, t) with the most points in front of both cameras; |t| = 1."""
+    U, _, Vt = np.linalg.svd(E)                           # SVD 3
+    if np.linalg.det(U) &lt; 0:  U  = -U
+    if np.linalg.det(Vt) &lt; 0: Vt = -Vt
+    W = np.array([[0, -1, 0], [1, 0, 0], [0, 0, 1]])
+    P1 = np.hstack([np.eye(3), np.zeros((3, 1))])
+    best = None
+    for R in (U @ W @ Vt, U @ W.T @ Vt):
+        for t in (U[:, 2], -U[:, 2]):
+            P2 = np.hstack([R, t[:, None]])
+            Xs = np.array([triangulate(P1, P2, a, b) for a, b in zip(x1, x2)])
+            n_front = np.sum((Xs[:, 2] &gt; 0) &amp; ((Xs @ R.T + t)[:, 2] &gt; 0))
+            if best is None or n_front &gt; best[0]:
+                best = (n_front, R, t)
+    return best[1], best[2]</code></pre>
+  </div>
+  <div class="col">
+    <p>In production you would rarely write this yourself. OpenCV wraps the robust version: <code>cv2.findEssentialMat</code> runs Nistér's 5-point solver inside RANSAC, and <code>cv2.recoverPose</code> performs exactly the decomposition and cheirality test above.</p>
+  </div>
+  <div class="codewrap">
+<button class="copy" type="button" data-target="cvcode">Copy</button>
+<pre id="cvcode"><code>import cv2
+E, inliers = cv2.findEssentialMat(pts1, pts2, K, method=cv2.RANSAC, prob=0.999, threshold=1.0)
+n_good, R, t, mask = cv2.recoverPose(E, pts1, pts2, K, mask=inliers)   # pts in pixels, K = intrinsics</code></pre>
+  </div>
+</section>
+
+<section id="practice">
+  <div class="col">
+    <h2><span class="num">11</span>Failure modes and practical notes</h2>
+    <h3>Where matching breaks</h3>
+    <ul>
+      <li><strong>Textureless surfaces</strong> (white walls, sky, smooth road): every disparity costs the same. Active stereo adds texture by projecting an infrared dot pattern. Otherwise, smoothness priors such as SGM fill the gap with a guess.</li>
+      <li><strong>Occlusions</strong>: pixels beside a depth edge are visible in one camera only. The left-right check detects them; it cannot recover them.</li>
+      <li><strong>Repetitive patterns</strong> (fences, tiles, windows): several disparities fit equally well, which gives confident wrong answers. The uniqueness ratio test in SGBM rejects pixels whose best and second-best costs are too close.</li>
+      <li><strong>Non-Lambertian surfaces</strong>: specular highlights and reflections move with the viewpoint, and transparent surfaces show two depths at once.</li>
+      <li><strong>Radiometric differences</strong>: different exposure, gain or vignetting between the cameras. Use census or NCC costs, or match on gradients.</li>
+    </ul>
+    <h3>Where the geometry breaks</h3>
+    <ul>
+      <li><strong>Calibration drift.</strong> Temperature changes, vibration and mounting stress shift the extrinsics by tiny angles. Because \(\delta Z \propto Z^2\), a small rotation error is a large depth bias at range. Online recalibration estimates \(E\) from live feature matches, with RANSAC to reject outliers, and corrects \(R\) and \(\mathbf t\). The baseline length is held at its calibrated value, since \(E\) cannot recover scale.</li>
+      <li><strong>Synchronisation and rolling shutter.</strong> If the two exposures are not simultaneous, or rows are read at different times, motion creates false disparity. Hardware triggering and global-shutter sensors avoid it.</li>
+      <li><strong>Degenerate motion for E.</strong> Pure rotation makes \(E\) vanish; use a homography instead. Planar scenes are degenerate for the 8-point algorithm, though not for Nistér's 5-point solver. Forward motion with small rotation is poorly conditioned: try "mostly forward" in the section 05 lab with high noise.</li>
+      <li><strong>Sign hygiene.</strong> Always force \(\det U = \det V = +1\) before building \(R\). Otherwise you can produce a reflection with \(\det R = -1\) that still satisfies the epipolar constraint.</li>
+    </ul>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap"><div class="col">
+    <strong style="color:var(--ink)">Further reading</strong>
+    <ul>
+      <li>R. Hartley, A. Zisserman, <em>Multiple View Geometry in Computer Vision</em>, 2nd ed., Cambridge University Press, 2004. Ch. 6, 9–12.</li>
+      <li>Z. Zhang, "A flexible new technique for camera calibration," <em>IEEE TPAMI</em> 22(11), 2000.</li>
+      <li>H. C. Longuet-Higgins, "A computer algorithm for reconstructing a scene from two projections," <em>Nature</em> 293, 1981.</li>
+      <li>R. Hartley, "In defense of the eight-point algorithm," <em>IEEE TPAMI</em> 19(6), 1997.</li>
+      <li>D. Nistér, "An efficient solution to the five-point relative pose problem," <em>IEEE TPAMI</em> 26(6), 2004.</li>
+      <li>A. Fusiello, E. Trucco, A. Verri, "A compact algorithm for rectification of stereo pairs," <em>Machine Vision and Applications</em> 12, 2000.</li>
+      <li>D. Scharstein, R. Szeliski, "A taxonomy and evaluation of dense two-frame stereo correspondence algorithms," <em>IJCV</em> 47, 2002.</li>
+      <li>R. Zabih, J. Woodfill, "Non-parametric local transforms for computing visual correspondence," <em>ECCV</em>, 1994.</li>
+      <li>H. Hirschmüller, "Stereo processing by semiglobal matching and mutual information," <em>IEEE TPAMI</em> 30(2), 2008.</li>
+      <li>G. W. Stewart, "On the early history of the singular value decomposition," <em>SIAM Review</em> 35(4), 1993.</li>
+    </ul>
+  </div></div>
+</footer>
+
+<script>
+// Small dense linear algebra for the demos: Jacobi eigen-solver, 3x3 / 2x2 SVD, 8-point algorithm.
+const LA = (() => {
+  const zeros = (r, c) => Array.from({ length: r }, () => new Array(c).fill(0));
+  const eye = n => { const I = zeros(n, n); for (let i = 0; i < n; i++) I[i][i] = 1; return I; };
+  const T = A => A[0].map((_, j) => A.map(r => r[j]));
+  const mul = (A, B) => A.map(r => B[0].map((_, j) => r.reduce((s, a, k) => s + a * B[k][j], 0)));
+  const mv = (A, v) => A.map(r => r.reduce((s, a, k) => s + a * v[k], 0));
+  const dot = (a, b) => a.reduce((s, x, i) => s + x * b[i], 0);
+  const norm = a => Math.sqrt(dot(a, a));
+  const scale = (a, s) => a.map(x => x * s);
+  const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+  const det3 = M => dot(M[0], cross(M[1], M[2]));
+  const col = (A, j) => A.map(r => r[j]);
+  const fromCols = cs => cs[0].map((_, i) => cs.map(c => c[i]));
+  const skew = t => [[0, -t[2], t[1]], [t[2], 0, -t[0]], [-t[1], t[0], 0]];
+
+  // Symmetric eigen-decomposition (cyclic Jacobi). Returns {vals, vecs} sorted descending; vecs are columns.
+  function eigSym(S) {
+    const n = S.length, A = S.map(r => r.slice()), V = eye(n);
+    for (let sweep = 0; sweep < 60; sweep++) {
+      let off = 0;
+      for (let p = 0; p < n; p++) for (let q = p + 1; q < n; q++) off += A[p][q] * A[p][q];
+      if (off < 1e-30) break;
+      for (let p = 0; p < n; p++) for (let q = p + 1; q < n; q++) {
+        const apq = A[p][q];
+        if (Math.abs(apq) < 1e-300) continue;
+        const theta = (A[q][q] - A[p][p]) / (2 * apq);
+        const t = Math.sign(theta || 1) / (Math.abs(theta) + Math.sqrt(theta * theta + 1));
+        const c = 1 / Math.sqrt(t * t + 1), s = t * c;
+        for (let k = 0; k < n; k++) { const akp = A[k][p], akq = A[k][q]; A[k][p] = c * akp - s * akq; A[k][q] = s * akp + c * akq; }
+        for (let k = 0; k < n; k++) { const apk = A[p][k], aqk = A[q][k]; A[p][k] = c * apk - s * aqk; A[q][k] = s * apk + c * aqk; }
+        for (let k = 0; k < n; k++) { const vkp = V[k][p], vkq = V[k][q]; V[k][p] = c * vkp - s * vkq; V[k][q] = s * vkp + c * vkq; }
+      }
+    }
+    const idx = [...Array(n).keys()].sort((i, j) => A[j][j] - A[i][i]);
+    return { vals: idx.map(i => A[i][i]), vecs: fromCols(idx.map(i => col(V, i))) };
+  }
+
+  // SVD of a 3x3 matrix with det(U) = +1 enforced via u3 = u1 x u2.
+  function svd3(M) {
+    const { vals, vecs } = eigSym(mul(T(M), M));
+    const S = vals.map(l => Math.sqrt(Math.max(l, 0)));
+    const v = [0, 1, 2].map(i => col(vecs, i));
+    let u1 = mv(M, v[0]); u1 = scale(u1, 1 / norm(u1));
+    let u2 = mv(M, v[1]); u2 = u2.map((x, i) => x - dot(u2, u1) * u1[i]); u2 = scale(u2, 1 / norm(u2));
+    const u3 = cross(u1, u2);
+    if (dot(u3, mv(M, v[2])) < 0) v[2] = scale(v[2], -1);
+    return { U: fromCols([u1, u2, u3]), S, V: fromCols(v) };
+  }
+
+  // SVD of a 2x2 matrix, both U and V proper rotations when det(A) > 0.
+  function svd2(A) {
+    const { vals, vecs } = eigSym(mul(T(A), A));
+    const S = vals.map(l => Math.sqrt(Math.max(l, 0)));
+    const v1 = col(vecs, 0); let v2 = col(vecs, 1);
+    if (v1[0] * v2[1] - v1[1] * v2[0] < 0) v2 = scale(v2, -1);
+    let u1 = mv(A, v1); const n1 = norm(u1); u1 = n1 > 1e-12 ? scale(u1, 1 / n1) : [1, 0];
+    let u2 = mv(A, v2); const n2 = norm(u2);
+    u2 = n2 > 1e-9 ? scale(u2, 1 / n2) : [-u1[1], u1[0]];
+    return { U: fromCols([u1, u2]), S, V: fromCols([v1, v2]) };
+  }
+
+  // Linear 8-point: rows kron(x2, x1); null vector of A = smallest eigenvector of A^T A.
+  function eightPoint(x1, x2) {
+    const A = x1.map((a, i) => { const b = x2[i]; const r = []; for (let p = 0; p < 3; p++) for (let q = 0; q < 3; q++) r.push(b[p] * a[q]); return r; });
+    const { vals, vecs } = eigSym(mul(T(A), A));
+    const e = col(vecs, 8);
+    return { E: [e.slice(0, 3), e.slice(3, 6), e.slice(6, 9)], svA: vals.map(l => Math.sqrt(Math.max(l, 0))) };
+  }
+
+  function triangulate(P1, P2, a, b) {
+    const M = [0, 1].map(i => P1[2].map((v, k) => a[i] * v - P1[i][k]))
+      .concat([0, 1].map(i => P2[2].map((v, k) => b[i] * v - P2[i][k])));
+    const { vecs } = eigSym(mul(T(M), M));
+    const X = col(vecs, 3);
+    return [X[0] / X[3], X[1] / X[3], X[2] / X[3]];
+  }
+
+  // Full pipeline: Ehat -> project -> 4 candidates -> cheirality
+  function recoverPose(x1, x2) {
+    const { E: Ehat, svA } = eightPoint(x1, x2);
+    const d = svd3(Ehat);
+    let { U, V } = d;
+    if (det3(V) < 0) V = V.map(r => [r[0], r[1], -r[2]]);
+    const Et = mul(mul(U, [[1, 0, 0], [0, 1, 0], [0, 0, 0]]), T(V));
+    const W = [[0, -1, 0], [1, 0, 0], [0, 0, 1]];
+    const u3 = col(U, 2);
+    const P1 = [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0]];
+    const cands = [];
+    for (const [wn, Wm] of [["W", W], ["Wᵀ", T(W)]]) for (const sg of [1, -1]) {
+      const R = mul(mul(U, Wm), T(V)), t = scale(u3, sg);
+      const P2 = R.map((r, i) => [...r, t[i]]);
+      let front = 0;
+      for (let i = 0; i < x1.length; i++) {
+        const X = triangulate(P1, P2, x1[i], x2[i]);
+        const X2 = mv(R, X).map((v, k) => v + t[k]);
+        if (X[2] > 0 && X2[2] > 0) front++;
+      }
+      cands.push({ label: `R = U${wn}Vᵀ, t = ${sg > 0 ? "+" : "−"}u₃`, R, t, front });
+    }
+    return { Ehat, Et, svdEhat: d, svA, cands };
+  }
+
+  const rotAngleDeg = (Ra, Rb) => {
+    const M = mul(T(Ra), Rb); const c = (M[0][0] + M[1][1] + M[2][2] - 1) / 2;
+    return Math.acos(Math.min(1, Math.max(-1, c))) * 180 / Math.PI;
+  };
+  const vecAngleDeg = (a, b) => Math.acos(Math.min(1, Math.max(-1, dot(a, b) / norm(a) / norm(b)))) * 180 / Math.PI;
+  const rotY = d => { const a = d * Math.PI / 180, c = Math.cos(a), s = Math.sin(a); return [[c, 0, s], [0, 1, 0], [-s, 0, c]]; };
+  const rotX = d => { const a = d * Math.PI / 180, c = Math.cos(a), s = Math.sin(a); return [[1, 0, 0], [0, c, -s], [0, s, c]]; };
+
+  return { zeros, eye, T, mul, mv, dot, norm, scale, cross, det3, col, skew, eigSym, svd3, svd2, eightPoint, triangulate, recoverPose, rotAngleDeg, vecAngleDeg, rotY, rotX };
+})();
+if (typeof module !== "undefined") module.exports = LA;
+
+</script>
+<script>
+(() => {
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const NS = "http://www.w3.org/2000/svg";
+const el = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; };
+const f2 = x => (Math.abs(x) < 5e-5 ? 0 : x).toFixed(3);
+
+/* ---------- Figure 3: four solutions ---------- */
+(function drawFour() {
+  const g = document.getElementById("fourpanels");
+  const ok = "#1f8a61", bad = "#d75a22";
+  const panels = [
+    { x0: 0, title: "(a) true pose", A: [70, 150], B: [170, 150], dA: [0, -1], dB: [-0.3, -1], X: [115, 55], fA: true, fB: true },
+    { x0: 250, title: "(b) baseline reversed: t → −t", A: [160, 80], B: [60, 80], dA: [0, -1], dB: [-0.3, -1], X: [115, 170], fA: false, fB: false },
+    { x0: 500, title: "(c) twisted pair", A: [70, 150], B: [170, 150], dA: [0, -1], dB: [0.3, 1], X: [115, 55], fA: true, fB: false },
+    { x0: 750, title: "(d) twisted pair, t → −t", A: [160, 80], B: [60, 80], dA: [0, -1], dB: [0.3, 1], X: [115, 170], fA: false, fB: true },
+  ];
+  const cam = (p, d, col, pg) => {
+    const n = Math.hypot(d[0], d[1]); const u = [d[0] / n, d[1] / n]; const L = 30, h = 0.5;
+    const l = [u[0] * Math.cos(h) - u[1] * Math.sin(h), u[0] * Math.sin(h) + u[1] * Math.cos(h)];
+    const r = [u[0] * Math.cos(-h) - u[1] * Math.sin(-h), u[0] * Math.sin(-h) + u[1] * Math.cos(-h)];
+    el("polygon", { points: `${p[0]},${p[1]} ${p[0] + L * l[0]},${p[1] + L * l[1]} ${p[0] + L * r[0]},${p[1] + L * r[1]}`, fill: col, "fill-opacity": .18, stroke: col, "stroke-width": 1.5 }, pg);
+    el("circle", { cx: p[0], cy: p[1], r: 4.5, fill: col }, pg);
+  };
+  for (const P of panels) {
+    const pg = el("g", { transform: `translate(${P.x0 + 5},10)` }, g);
+    el("rect", { x: 0, y: 0, width: 238, height: 232, rx: 8, fill: "none", stroke: "currentColor", "stroke-opacity": .25 }, pg);
+    const t = el("text", { x: 119, y: 22, "text-anchor": "middle", "font-weight": 600 }, pg); t.textContent = P.title;
+    el("line", { x1: P.A[0], y1: P.A[1], x2: P.B[0], y2: P.B[1], stroke: "currentColor", "stroke-dasharray": "4 3", "stroke-opacity": .6 }, pg);
+    for (const [C, front, col] of [[P.A, P.fA, "#2f5cd6"], [P.B, P.fB, "#d75a22"]]) {
+      el("line", { x1: C[0], y1: C[1], x2: P.X[0], y2: P.X[1], stroke: col, "stroke-width": 1.8, "stroke-dasharray": front ? "" : "5 4" }, pg);
+    }
+    cam(P.A, P.dA, "#2f5cd6", pg); cam(P.B, P.dB, "#d75a22", pg);
+    const la = el("text", { x: P.A[0], y: P.A[1] + (P.A[1] > 120 ? 22 : -10), "text-anchor": "middle", fill: "#2f5cd6" }, pg); la.textContent = "C";
+    const lb = el("text", { x: P.B[0], y: P.B[1] + (P.B[1] > 120 ? 22 : -10), "text-anchor": "middle", fill: "#d75a22" }, pg); lb.textContent = "C′";
+    el("circle", { cx: P.X[0], cy: P.X[1], r: 5, fill: "currentColor" }, pg);
+    const lx = el("text", { x: P.X[0] + 10, y: P.X[1] + 4, "font-weight": 600 }, pg); lx.textContent = "X";
+    const s = el("text", { x: 119, y: 222, "text-anchor": "middle", "font-size": 12 }, pg);
+    const a1 = el("tspan", { fill: P.fA ? ok : bad }, s); a1.textContent = `in front of C ${P.fA ? "✓" : "✗"}`;
+    const a2 = el("tspan", { dx: 10, fill: P.fB ? ok : bad }, s); a2.textContent = `C′ ${P.fB ? "✓" : "✗"}`;
+  }
+})();
+
+/* ---------- 2x2 SVD playground ---------- */
+(function svdPlayground() {
+  const ids = ["a11", "a12", "a21", "a22"], outs = ["o11", "o12", "o21", "o22"];
+  const sIn = document.getElementById("svdIn"), sOut = document.getElementById("svdOut"), mats = document.getElementById("svdMats");
+  const K = 52; // px per unit
+  const P = v => [v[0] * K, -v[1] * K];
+  const axes = svg => {
+    svg.innerHTML = "";
+    const defs = el("defs", {}, svg);
+    for (const [id, c] of [["mb", css("--accent")], ["mo", css("--accent-2")]]) {
+      const m = el("marker", { id: svg.id + id, viewBox: "0 0 10 10", refX: 8, refY: 5, markerWidth: 6, markerHeight: 6, orient: "auto" }, defs);
+      el("path", { d: "M0,0 L10,5 L0,10 z", fill: c }, m);
+    }
+    for (let k = -3; k <= 3; k++) {
+      el("line", { x1: k * K, y1: -160, x2: k * K, y2: 160, stroke: "currentColor", "stroke-opacity": k ? .08 : .3 }, svg);
+      el("line", { x1: -160, y1: k * K, x2: 160, y2: k * K, stroke: "currentColor", "stroke-opacity": k ? .08 : .3 }, svg);
+    }
+  };
+  const arrow = (svg, v, col, mk, lab) => {
+    const p = P(v);
+    el("line", { x1: 0, y1: 0, x2: p[0], y2: p[1], stroke: col, "stroke-width": 3, "marker-end": `url(#${svg.id}${mk})` }, svg);
+    const n = Math.hypot(p[0], p[1]) || 1;
+    const t = el("text", { x: p[0] + p[0] / n * 16, y: p[1] + p[1] / n * 16 + 5, fill: col, "text-anchor": "middle", "font-size": 14, "font-weight": 600 }, svg);
+    t.textContent = lab;
+  };
+  const mat = (name, M, color) => `<span class="mlab" style="color:${color}">${name}</span><span class="mat" style="color:${color}">${M.flat().map(x => `<span>${f2(x)}</span>`).join("")}</span>`;
+  function update() {
+    const v = ids.map(i => parseFloat(document.getElementById(i).value));
+    outs.forEach((o, k) => document.getElementById(o).textContent = v[k].toFixed(2));
+    const A = [[v[0], v[1]], [v[2], v[3]]];
+    const { U, S, V } = LA.svd2(A);
+    const v1 = LA.col(V, 0), v2 = LA.col(V, 1), u1 = LA.col(U, 0), u2 = LA.col(U, 1);
+    const blue = css("--accent"), orange = css("--accent-2");
+    axes(sIn); axes(sOut);
+    const circ = [], ell = [];
+    for (let k = 0; k <= 120; k++) { const a = k / 120 * 2 * Math.PI, c = [Math.cos(a), Math.sin(a)]; circ.push(P(c)); ell.push(P(LA.mv(A, c))); }
+    el("polygon", { points: circ.map(p => p.join(",")).join(" "), fill: blue, "fill-opacity": .08, stroke: blue, "stroke-width": 2 }, sIn);
+    el("polygon", { points: ell.map(p => p.join(",")).join(" "), fill: blue, "fill-opacity": .08, stroke: blue, "stroke-width": 2 }, sOut);
+    arrow(sIn, v1, blue, "mb", "v₁"); arrow(sIn, v2, orange, "mo", "v₂");
+    arrow(sOut, LA.scale(u1, S[0]), blue, "mb", "σ₁u₁");
+    if (S[1] > 0.04) arrow(sOut, LA.scale(u2, S[1]), orange, "mo", "σ₂u₂");
+    const det = v[0] * v[3] - v[1] * v[2];
+    mats.innerHTML = mat("A =", A, css("--ink")) + mat("U =", U, css("--violet")) + mat("Σ =", [[S[0], 0], [0, S[1]]], css("--epi")) + mat("Vᵀ =", LA.T(V), css("--accent-2")) +
+      `<span style="color:var(--muted)">det A = ${f2(det)} = ${det < 0 ? "−" : ""}σ₁σ₂${det < 0 ? " (reflection: det U = −1)" : ""}</span>`;
+  }
+  ids.forEach(i => document.getElementById(i).addEventListener("input", update));
+  window.addEventListener("themechange", update);
+  update();
+  window.__svdUpdate = update;
+})();
+
+/* ---------- 8-point lab ---------- */
+(function lab() {
+  let seed = 7;
+  const rand = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+  const gauss = () => { let u = 0, v = 0; while (u === 0) u = rand(); v = rand(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
+  const $ = id => document.getElementById(id);
+  const cv = $("img2"), ctx = cv.getContext("2d");
+  let scene = null;
+  function makeScene() {
+    const motion = $("motion").value;
+    let R, C2;
+    if (motion === "side") { R = LA.mul(LA.rotY(-9), LA.rotX(2)); C2 = [1.0, 0.05, 0.1]; }
+    else { R = LA.mul(LA.rotY(3), LA.rotX(-2)); C2 = [0.25, 0.08, 1.0]; }
+    const t = LA.scale(LA.mv(R, C2), -1);
+    const pts = [];
+    let guard = 0;
+    while (pts.length < 120 && guard++ < 5000) {
+      const X = [rand() * 7 - 3.5, rand() * 5 - 2.5, 4 + rand() * 8];
+      const Y = LA.mv(R, X).map((v, k) => v + t[k]);
+      if (Y[2] < 1) continue;
+      const a = [X[0] / X[2], X[1] / X[2]], b = [Y[0] / Y[2], Y[1] / Y[2]];
+      if (Math.max(Math.abs(a[0]), Math.abs(a[1]), Math.abs(b[0]), Math.abs(b[1])) > 0.85) continue;
+      pts.push({ a, b, na: [gauss(), gauss()], nb: [gauss(), gauss()] });
+    }
+    const tn = LA.scale(t, 1 / LA.norm(t));
+    scene = { R, t: tn, pts };
+  }
+  function lineSeg(l, L) {
+    const [a, b, c] = l, P = [];
+    if (Math.abs(b) > 1e-12) for (const u of [-L, L]) { const v = -(a * u + c) / b; if (v >= -L && v <= L) P.push([u, v]); }
+    if (Math.abs(a) > 1e-12) for (const v of [-L, L]) { const u = -(b * v + c) / a; if (u >= -L && u <= L) P.push([u, v]); }
+    return P.length >= 2 ? [P[0], P[1]] : null;
+  }
+  function run() {
+    const sig = parseFloat($("noise").value), n = parseInt($("npts").value, 10);
+    $("noiseOut").textContent = `${sig.toFixed(4)} (≈${(sig * 800).toFixed(1)} px)`;
+    $("nOut").textContent = n;
+    const use = scene.pts.slice(0, n);
+    const x1 = use.map(p => [p.a[0] + sig * p.na[0], p.a[1] + sig * p.na[1], 1]);
+    const x2 = use.map(p => [p.b[0] + sig * p.nb[0], p.b[1] + sig * p.nb[1], 1]);
+    const out = LA.recoverPose(x1, x2);
+    const S = out.svdEhat.S, m = (S[0] + S[1]) / 2, Sn = S.map(s => s / m);
+    const enforce = $("enforce").checked;
+    const E = enforce ? out.Et : out.Ehat;
+    // ---- canvas
+    const dpr = window.devicePixelRatio || 1, W = cv.clientWidth || 400;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(W * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const L = 1.0, sc = W / (2 * L), toPx = p => [(p[0] + L) * sc, (p[1] + L) * sc];
+    ctx.clearRect(0, 0, W, W);
+    ctx.strokeStyle = css("--rule"); ctx.lineWidth = 1;
+    ctx.strokeRect(0.5, 0.5, W - 1, W - 1);
+    const lines = x1.slice(0, 30).map(a => LA.mv(E, a));
+    ctx.strokeStyle = css("--epi"); ctx.globalAlpha = 0.75; ctx.lineWidth = 1.2;
+    for (const l of lines) { const s = lineSeg(l, L); if (!s) continue; const p = toPx(s[0]), q = toPx(s[1]); ctx.beginPath(); ctx.moveTo(...p); ctx.lineTo(...q); ctx.stroke(); }
+    ctx.globalAlpha = 0.5; ctx.fillStyle = css("--ink");
+    for (let i = 0; i < lines.length; i++) for (let j = i + 1; j < lines.length; j++) {
+      const p = LA.cross(lines[i], lines[j]); if (Math.abs(p[2]) < 1e-12) continue;
+      const q = [p[0] / p[2], p[1] / p[2]]; if (Math.abs(q[0]) > L || Math.abs(q[1]) > L) continue;
+      const r = toPx(q); ctx.fillRect(r[0] - 1.2, r[1] - 1.2, 2.4, 2.4);
+    }
+    ctx.globalAlpha = 1; ctx.fillStyle = css("--accent-2"); ctx.strokeStyle = css("--ink"); ctx.lineWidth = 0.8;
+    for (const b of x2) { const r = toPx(b); ctx.beginPath(); ctx.arc(r[0], r[1], 3.6, 0, 2 * Math.PI); ctx.fill(); ctx.stroke(); }
+    const u3 = LA.col(LA.svd3(E).U, 2);
+    if (Math.abs(u3[2]) > 1e-9) {
+      const e = [u3[0] / u3[2], u3[1] / u3[2]];
+      if (Math.abs(e[0]) < L && Math.abs(e[1]) < L) {
+        const r = toPx(e); ctx.strokeStyle = css("--ink"); ctx.lineWidth = 2.5; ctx.beginPath();
+        ctx.moveTo(r[0] - 7, r[1] - 7); ctx.lineTo(r[0] + 7, r[1] + 7); ctx.moveTo(r[0] + 7, r[1] - 7); ctx.lineTo(r[0] - 7, r[1] + 7); ctx.stroke();
+      }
+    }
+    // ---- bars
+    const bars = $("bars"); bars.innerHTML = "";
+    const H = 110, base = 125, cols = [css("--accent"), css("--accent"), css("--accent-2")], ymax = 1.3;
+    for (const y of [0, 0.5, 1]) {
+      el("line", { x1: 40, x2: 350, y1: base - y / ymax * H, y2: base - y / ymax * H, stroke: "currentColor", "stroke-opacity": y === 0 ? .4 : .12 }, bars);
+      const tx = el("text", { x: 34, y: base - y / ymax * H + 4, "text-anchor": "end", "font-size": 11, fill: css("--muted") }, bars); tx.textContent = y;
+    }
+    Sn.forEach((s, i) => {
+      const x = 70 + i * 100, h = Math.min(s, ymax) / ymax * H;
+      el("rect", { x, y: base - h, width: 60, height: Math.max(h, 0.5), fill: cols[i], rx: 2 }, bars);
+      el("rect", { x, y: base - (i < 2 ? 1 : 0) / ymax * H, width: 60, height: (i < 2 ? 1 : 0) / ymax * H, fill: "none", stroke: "currentColor", "stroke-dasharray": "4 3" }, bars);
+      const tv = el("text", { x: x + 30, y: base - h - 6, "text-anchor": "middle", "font-size": 12, "font-family": "IBM Plex Mono, monospace", fill: "currentColor" }, bars); tv.textContent = s.toFixed(3);
+      const tl = el("text", { x: x + 30, y: base + 18, "text-anchor": "middle", "font-size": 13, fill: "currentColor" }, bars); tl.textContent = ["σ₁", "σ₂", "σ₃"][i];
+    });
+    // ---- results
+    $("sA").textContent = out.svA[8].toExponential(2);
+    let best = out.cands[0]; for (const c of out.cands) if (c.front > best.front) best = c;
+    const rE = LA.rotAngleDeg(best.R, scene.R), tE = LA.vecAngleDeg(best.t, scene.t);
+    $("rErr").textContent = rE.toFixed(2) + "°"; $("tErr").textContent = tE.toFixed(2) + "°";
+    $("candBody").innerHTML = out.cands.map(c => {
+      const win = c === best;
+      return `<tr class="${win ? "win" : ""}"><td>${c.label}</td><td class="num">${c.front} / ${x1.length}</td><td class="num">${LA.rotAngleDeg(c.R, scene.R).toFixed(2)}°</td><td class="num">${LA.vecAngleDeg(c.t, scene.t).toFixed(2)}°</td><td>${win ? '<span class="pill">chosen</span>' : '<span class="pill bad">rejected</span>'}</td></tr>`;
+    }).join("");
+  }
+  ["noise", "npts", "enforce"].forEach(id => $(id).addEventListener("input", run));
+  $("motion").addEventListener("change", () => { makeScene(); run(); });
+  $("reseed").addEventListener("click", () => { seed = 1 + Math.floor(Math.random() * 2147483000); makeScene(); run(); });
+  window.addEventListener("resize", run);
+  makeScene(); run();
+  window.__labRun = run;
+})();
+
+/* theme changes redraw */
+const mo = new MutationObserver(() => { window.__svdUpdate && window.__svdUpdate(); window.__labRun && window.__labRun(); });
+mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", () => { window.__svdUpdate(); window.__labRun(); });
+
+/* copy buttons */
+document.querySelectorAll(".copy").forEach(b => b.addEventListener("click", async () => {
+  const txt = document.getElementById(b.dataset.target).innerText;
+  try { await navigator.clipboard.writeText(txt); b.textContent = "Copied"; }
+  catch { const r = document.createRange(); r.selectNodeContents(document.getElementById(b.dataset.target)); const s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = "Selected: press Ctrl/⌘+C"; }
+  setTimeout(() => b.textContent = "Copy", 2200);
+}));
+})();
+</script>
+<script>
+/* ---------- Block-matching lab ---------- */
+(function bmLab() {
+  const W = 256, H = 192, DMAX = 40, N = W * H;
+  const $ = id => document.getElementById(id);
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  let seed = 11;
+  const rand = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+  const VIR = [[68, 1, 84], [59, 82, 139], [33, 145, 140], [94, 201, 98], [253, 231, 37]];
+  const cmap = v => { v = Math.min(1, Math.max(0, v)) * 4; const i = Math.min(3, Math.floor(v)), f = v - i; return VIR[i].map((c, k) => c + f * (VIR[i + 1][k] - c)); };
+
+  let L, R0, GT, OCC, cost, dispL, valid, sel = [100, 165];
+
+  function noiseTex() {
+    const a = new Float32Array(N); for (let i = 0; i < N; i++) a[i] = rand();
+    const b = new Float32Array(N);
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      let s = 0, n = 0;
+      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+        const xx = x + dx, yy = y + dy; if (xx < 0 || yy < 0 || xx >= W || yy >= H) continue; s += a[yy * W + xx]; n++;
+      }
+      b[y * W + x] = 0.3 + 0.4 * (0.35 * a[y * W + x] + 0.65 * s / n);
+    }
+    return b;
+  }
+  function makeScene() {
+    GT = new Float32Array(N);
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      let d = 5 + 7 * y / H;                                            // slanted ground plane
+      const cx = 185, cy = 120; if ((x - cx) ** 2 + (y - cy) ** 2 < 38 * 38) d = 17; // disc
+      if (x >= 45 && x < 120 && y >= 55 && y < 140) d = 30;             // near box
+      GT[y * W + x] = d;
+    }
+    L = noiseTex();
+    for (let y = 20; y < 48; y++) for (let x = 160; x < 230; x++) L[y * W + x] = 0.5;   // textureless patch
+    // forward-warp left -> right with a z-buffer (larger disparity = nearer wins)
+    R0 = new Float32Array(N).fill(-1); const zb = new Float32Array(N).fill(-1);
+    const owner = new Int32Array(N).fill(-1);
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const i = y * W + x, d = GT[i], xr = Math.round(x - d);
+      if (xr < 0) continue;
+      const j = y * W + xr;
+      if (d > zb[j]) { zb[j] = d; R0[j] = L[i]; owner[j] = i; }
+    }
+    const fill = noiseTex();
+    for (let j = 0; j < N; j++) if (R0[j] < 0) R0[j] = fill[j];
+    // independent sensor noise in each camera (Box-Muller)
+    const gn = () => Math.sqrt(-2 * Math.log(rand() + 1e-12)) * Math.cos(2 * Math.PI * rand());
+    for (let j = 0; j < N; j++) { L[j] = Math.min(1, Math.max(0, L[j] + 0.05 * gn())); R0[j] = Math.min(1, Math.max(0, R0[j] + 0.05 * gn())); }
+    OCC = new Uint8Array(N);
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const i = y * W + x, xr = Math.round(x - GT[i]);
+      if (xr < 0 || owner[y * W + xr] !== i) OCC[i] = 1;
+    }
+  }
+  function census(img) {
+    const c = new Int32Array(N);
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const v = img[y * W + x]; let bits = 0;
+      for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) {
+        if (!dx && !dy) continue;
+        const xx = Math.min(W - 1, Math.max(0, x + dx)), yy = Math.min(H - 1, Math.max(0, y + dy));
+        bits = (bits << 1) | (img[yy * W + xx] < v ? 1 : 0);
+      }
+      c[y * W + x] = bits;
+    }
+    return c;
+  }
+  const pop = v => { v = v - ((v >>> 1) & 0x55555555); v = (v & 0x33333333) + ((v >>> 2) & 0x33333333); return (((v + (v >>> 4)) & 0x0F0F0F0F) * 0x01010101) >>> 24; };
+
+  function compute() {
+    const t0 = performance.now();
+    const r = parseInt($("bmWin").value, 10) + 1, win = 2 * r + 1;  // radius 1..8
+    $("bmWinOut").textContent = `${win}×${win}`;
+    const gain = parseFloat($("bmGain").value); $("bmGainOut").textContent = `×${gain.toFixed(2)}`;
+    const R = new Float32Array(N); for (let i = 0; i < N; i++) R[i] = Math.min(1, R0[i] * gain);
+    const useC = $("bmCost").value === "census";
+    const cL = useC ? census(L) : null, cR = useC ? census(R) : null;
+    cost = new Float32Array(DMAX * N);
+    const raw = new Float32Array(N), ii = new Float64Array((W + 1) * (H + 1));
+    for (let d = 0; d < DMAX; d++) {
+      for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+        const i = y * W + x, xr = x - d;
+        if (xr < 0) { raw[i] = useC ? 24 : 1; continue; }
+        const j = y * W + xr;
+        raw[i] = useC ? pop(cL[i] ^ cR[j]) : Math.abs(L[i] - R[j]);
+      }
+      for (let y = 0; y < H; y++) { let s = 0; for (let x = 0; x < W; x++) { s += raw[y * W + x]; ii[(y + 1) * (W + 1) + x + 1] = ii[y * (W + 1) + x + 1] + s; } }
+      for (let y = 0; y < H; y++) {
+        const y0 = Math.max(0, y - r), y1 = Math.min(H, y + r + 1);
+        for (let x = 0; x < W; x++) {
+          const x0 = Math.max(0, x - r), x1 = Math.min(W, x + r + 1);
+          const s = ii[y1 * (W + 1) + x1] - ii[y0 * (W + 1) + x1] - ii[y1 * (W + 1) + x0] + ii[y0 * (W + 1) + x0];
+          cost[d * N + y * W + x] = s / ((x1 - x0) * (y1 - y0));
+        }
+      }
+    }
+    dispL = new Int16Array(N);
+    for (let i = 0; i < N; i++) { let b = 0, bc = Infinity; for (let d = 0; d < DMAX; d++) { const c = cost[d * N + i]; if (c < bc) { bc = c; b = d; } } dispL[i] = b; }
+    valid = new Uint8Array(N).fill(1);
+    if ($("bmLR").checked) {
+      // right-view disparities from the same volume: C_R(x, y, d) = C_L(x + d, y, d)
+      for (let y = 0; y < H; y++) {
+        const dR = new Int16Array(W);
+        for (let x = 0; x < W; x++) { let b = 0, bc = Infinity; for (let d = 0; d < DMAX && x + d < W; d++) { const c = cost[d * N + y * W + x + d]; if (c < bc) { bc = c; b = d; } } dR[x] = b; }
+        for (let x = 0; x < W; x++) { const d = dispL[y * W + x], xr = x - d; if (xr < 0 || Math.abs(dR[xr] - d) > 1) valid[y * W + x] = 0; }
+      }
+    }
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (x < DMAX - 1 && x - dispL[y * W + x] < 0) valid[y * W + x] = 0;
+    let bad = 0, tot = 0, kept = 0;
+    for (let i = 0; i < N; i++) { if (valid[i]) kept++; if (OCC[i] || !valid[i]) continue; tot++; if (Math.abs(dispL[i] - GT[i]) > 1) bad++; }
+    $("bmBad").textContent = `${(100 * bad / Math.max(1, tot)).toFixed(1)}%`;
+    $("bmCov").textContent = `${(100 * kept / N).toFixed(1)}%`;
+    $("bmTime").textContent = `${(performance.now() - t0).toFixed(0)} ms`;
+    paint(R);
+  }
+  function putGray(id, img) {
+    const c = $(id), ctx = c.getContext("2d"), im = ctx.createImageData(W, H);
+    for (let i = 0; i < N; i++) { const v = Math.round(255 * Math.min(1, img[i])); im.data.set([v, v, v, 255], 4 * i); }
+    ctx.putImageData(im, 0, 0);
+  }
+  function putDisp(id, D, mask, maskCol) {
+    const c = $(id), ctx = c.getContext("2d"), im = ctx.createImageData(W, H);
+    for (let i = 0; i < N; i++) { const col = mask && mask(i) ? maskCol : cmap(D[i] / DMAX); im.data.set([...col, 255], 4 * i); }
+    ctx.putImageData(im, 0, 0);
+  }
+  function cross(id) {
+    const ctx = $(id).getContext("2d"); ctx.strokeStyle = "#ff3d7f"; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(sel[0] - 6, sel[1] + 0.5); ctx.lineTo(sel[0] + 7, sel[1] + 0.5); ctx.moveTo(sel[0] + 0.5, sel[1] - 6); ctx.lineTo(sel[0] + 0.5, sel[1] + 7); ctx.stroke();
+  }
+  function paint(R) {
+    putGray("bmL", L); putGray("bmR", R);
+    putDisp("bmGT", GT, i => OCC[i], [128, 128, 128]);
+    putDisp("bmD", dispL, i => !valid[i], [0, 0, 0]);
+    ["bmL", "bmD", "bmGT"].forEach(cross);
+    const g = sel[1] * W + sel[0], d = GT[g];
+    const ctx = $("bmR").getContext("2d"); ctx.strokeStyle = "#ff3d7f";
+    ctx.beginPath(); ctx.moveTo(0, sel[1] + 0.5); ctx.lineTo(W, sel[1] + 0.5); ctx.setLineDash([3, 3]); ctx.stroke(); ctx.setLineDash([]);
+    ctx.strokeRect(Math.round(sel[0] - d) - 3.5, sel[1] - 3.5, 7, 7);
+    curve();
+  }
+  function curve() {
+    const svg = $("bmCurve"); svg.innerHTML = "";
+    const NS = "http://www.w3.org/2000/svg";
+    const mk = (t, a) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); svg.appendChild(e); return e; };
+    const i = sel[1] * W + sel[0];
+    const c = Array.from({ length: DMAX }, (_, d) => cost[d * N + i]);
+    const mx = Math.max(...c) || 1, x0 = 40, x1 = 410, y0 = 140, y1 = 15;
+    const X = d => x0 + (x1 - x0) * d / (DMAX - 1), Y = v => y0 - (y0 - y1) * v / mx;
+    for (let d = 0; d < DMAX; d += 10) { mk("line", { x1: X(d), x2: X(d), y1, y2: y0, stroke: "currentColor", "stroke-opacity": .12 }); const t = mk("text", { x: X(d), y: y0 + 16, "text-anchor": "middle", "font-size": 11, fill: css("--muted") }); t.textContent = d; }
+    const tl = mk("text", { x: x1, y: y0 + 28, "text-anchor": "end", "font-size": 11, fill: css("--muted") }); tl.textContent = "disparity (px)";
+    const tc = mk("text", { x: 4, y: y1 + 4, "font-size": 11, fill: css("--muted") }); tc.textContent = "cost";
+    mk("line", { x1: x0, x2: x1, y1: y0, y2: y0, stroke: "currentColor", "stroke-opacity": .4 });
+    const gt = GT[i];
+    mk("line", { x1: X(gt), x2: X(gt), y1, y2: y0, stroke: css("--epi"), "stroke-width": 2, "stroke-dasharray": "4 3" });
+    const tg = mk("text", { x: X(gt) + 4, y: y1 + 10, "font-size": 11, fill: css("--epi") }); tg.textContent = `true d = ${gt.toFixed(1)}${OCC[i] ? " (occluded)" : ""}`;
+    mk("polyline", { points: c.map((v, d) => `${X(d)},${Y(v)}`).join(" "), fill: "none", stroke: css("--accent"), "stroke-width": 2 });
+    const b = dispL[i];
+    mk("circle", { cx: X(b), cy: Y(c[b]), r: 5, fill: css("--accent-2") });
+    const tb = mk("text", { x: X(b) + 7, y: Y(c[b]) + 14, "font-size": 11, fill: css("--accent-2") }); tb.textContent = `chosen d = ${b}${valid[i] ? "" : " (rejected)"}`;
+    $("curveTitle").textContent = `matching cost vs disparity at pixel (${sel[0]}, ${sel[1]})`;
+  }
+  function pick(ev) {
+    const c = ev.currentTarget, r = c.getBoundingClientRect();
+    sel = [Math.min(W - 1, Math.max(0, Math.floor((ev.clientX - r.left) / r.width * W))), Math.min(H - 1, Math.max(0, Math.floor((ev.clientY - r.top) / r.height * H)))];
+    paint(Array.from(R0, v => Math.min(1, v * parseFloat($("bmGain").value))));
+  }
+  ["bmL", "bmD", "bmGT"].forEach(id => $(id).addEventListener("click", pick));
+  ["bmWin", "bmGain", "bmCost", "bmLR"].forEach(id => $(id).addEventListener(id === "bmCost" ? "change" : "input", compute));
+  $("bmNew").addEventListener("click", () => { seed = 1 + Math.floor(Math.random() * 2147483000); makeScene(); compute(); });
+  makeScene(); compute();
+  window.__bmRedraw = () => curve();
+})();
+
+/* ---------- Depth-error calculator ---------- */
+(function calc() {
+  const $ = id => document.getElementById(id);
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const NS = "http://www.w3.org/2000/svg";
+  const presets = {
+    indoor: { cW: 1280, cFov: 87, cB: 5, cDd: 0.1, cZ: 6, cDmax: 128 },
+    robot: { cW: 1280, cFov: 90, cB: 12, cDd: 0.25, cZ: 20, cDmax: 128 },
+    auto: { cW: 1920, cFov: 60, cB: 30, cDd: 0.25, cZ: 80, cDmax: 256 },
+  };
+  const ids = ["cW", "cFov", "cB", "cDd", "cZ", "cDmax"];
+  const nice = (lo, hi, n) => { const s = (hi - lo) / n, p = Math.pow(10, Math.floor(Math.log10(s))), m = s / p; const st = (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; const out = []; for (let v = Math.ceil(lo / st) * st; v <= hi + 1e-9; v += st) out.push(+v.toFixed(10)); return out; };
+  const fmtLen = m => m < 0.01 ? `${(m * 1000).toFixed(1)} mm` : m < 1 ? `${(m * 100).toFixed(1)} cm` : `${m.toFixed(2)} m`;
+  function update() {
+    const v = Object.fromEntries(ids.map(i => [i, parseFloat($(i).value)]));
+    const f = (v.cW / 2) / Math.tan(v.cFov * Math.PI / 360), B = v.cB / 100, fB = f * B, dd = v.cDd;
+    $("cWOut").textContent = `${v.cW} px`; $("cFovOut").textContent = `${v.cFov}°`; $("cBOut").textContent = `${v.cB} cm`;
+    $("cDdOut").textContent = `${dd.toFixed(2)} px`; $("cZOut").textContent = `${v.cZ} m`; $("cDmaxOut").textContent = `${v.cDmax} px`;
+    const zmin = fB / v.cDmax, Zm = v.cZ;
+    const err = Z => Z * Z * dd / fB;
+    const errFar = Z => fB / (fB / Z - dd) - Z;  // asymmetric far-side error, Infinity once d <= dd
+    const svg = $("calcPlot"); svg.innerHTML = "";
+    const mk = (t, a, txt) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); if (txt != null) e.textContent = txt; svg.appendChild(e); return e; };
+    const x0 = 66, x1 = 740, y0 = 255, y1 = 18;
+    const emax = Math.max(err(Zm), 1e-6) * 1.15;
+    const unit = emax < 0.02 ? ["mm", 1000] : emax < 2 ? ["cm", 100] : ["m", 1];
+    const X = z => x0 + (x1 - x0) * z / Zm, Y = e => y0 - (y0 - y1) * Math.min(e, emax) / emax;
+    if (zmin < Zm) mk("rect", { x: x0, y: y1, width: X(zmin) - x0, height: y0 - y1, fill: css("--accent-2"), "fill-opacity": .1 });
+    for (const t of nice(0, Zm, 8)) { mk("line", { x1: X(t), x2: X(t), y1, y2: y0, stroke: "currentColor", "stroke-opacity": .1 }); mk("text", { x: X(t), y: y0 + 18, "text-anchor": "middle", "font-size": 12, fill: css("--muted") }, t); }
+    for (const t of nice(0, emax, 5)) { mk("line", { x1: x0, x2: x1, y1: Y(t), y2: Y(t), stroke: "currentColor", "stroke-opacity": .1 }); mk("text", { x: x0 - 8, y: Y(t) + 4, "text-anchor": "end", "font-size": 12, fill: css("--muted") }, +(t * unit[1]).toPrecision(3)); }
+    mk("line", { x1: x0, x2: x1, y1: y0, y2: y0, stroke: "currentColor", "stroke-opacity": .5 });
+    mk("text", { x: x1, y: y0 + 36, "text-anchor": "end", "font-size": 12, fill: css("--muted") }, "range Z (m)");
+    mk("text", { x: 12, y: y1 - 4, "font-size": 12, fill: css("--muted") }, `depth error (${unit[0]})`);
+    const pts = [], far = [];
+    for (let k = 0; k <= 200; k++) { const z = Math.max(zmin, 1e-3) + (Zm - Math.max(zmin, 1e-3)) * k / 200; if (z > Zm) break; pts.push(`${X(z)},${Y(err(z))}`); const ef = errFar(z); if (isFinite(ef) && ef > 0 && ef <= emax) far.push(`${X(z)},${Y(ef)}`); }
+    if (far.length > 1) mk("polyline", { points: far.join(" "), fill: "none", stroke: css("--accent-2"), "stroke-width": 1.6, "stroke-dasharray": "5 4" });
+    mk("polygon", { points: `${X(Math.max(zmin, 0))},${y0} ${pts.join(" ")} ${X(Zm)},${y0}`, fill: css("--accent"), "fill-opacity": .08 });
+    mk("polyline", { points: pts.join(" "), fill: "none", stroke: css("--accent"), "stroke-width": 2.5 });
+    mk("circle", { cx: X(Zm), cy: Y(err(Zm)), r: 4.5, fill: css("--accent") });
+    mk("text", { x: X(Zm) - 14, y: Y(err(Zm)) - 10, "text-anchor": "end", "font-size": 12, fill: css("--accent") }, `±${fmtLen(err(Zm))} at ${Zm} m`);
+    mk("text", { x: x0 + 10, y: y1 + 14, "font-size": 12, fill: css("--accent") }, "— δZ ≈ Z²δd / fB");
+    mk("text", { x: x0 + 10, y: y1 + 30, "font-size": 12, fill: css("--accent-2") }, "- - exact far-side error (d − δd)");
+    if (zmin < Zm) mk("text", { x: X(zmin) + 4, y: y0 - 8, "font-size": 11, fill: css("--accent-2") }, `< Z_min = ${fmtLen(zmin)}`);
+    const z5 = 0.05 * fB / dd;
+    const stats = [
+      ["focal length f", `${f.toFixed(0)} px`],
+      ["f · B", `${fB.toFixed(1)} px·m`],
+      ["disparity at plot range", `${(fB / Zm).toFixed(2)} px`],
+      ["minimum range", fmtLen(zmin)],
+      ["range for 5% error", fmtLen(z5)],
+      [`error at ${(Zm / 2).toFixed(0)} m`, `±${fmtLen(err(Zm / 2))}`],
+    ];
+    $("calcStats").innerHTML = stats.map(([k, v]) => `<div class="stat"><div class="k">${k}</div><div class="v">${v}</div></div>`).join("");
+  }
+  ids.forEach(i => $(i).addEventListener("input", update));
+  document.querySelectorAll("[data-preset]").forEach(b => b.addEventListener("click", () => { const p = presets[b.dataset.preset]; for (const k in p) $(k).value = p[k]; update(); }));
+  update();
+  window.__calcUpdate = update;
+})();
+
+new MutationObserver(() => { window.__calcUpdate && window.__calcUpdate(); window.__bmRedraw && window.__bmRedraw(); })
+  .observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+</script>
+</body>
+</html>
