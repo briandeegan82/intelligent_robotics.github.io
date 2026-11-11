@@ -1,0 +1,1107 @@
+---
+layout: null
+title: "Kalman Filtering and Sensor Fusion from First Principles"
+permalink: /explainers/kalman-filter/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kalman Filtering and Sensor Fusion from First Principles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<script>
+window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+<style>
+:root {
+  /* Layout: one 68ch reading column; figures, videos and labs break out to a wider 1080px measure. */
+  --bg: #f3f3ef;
+  --surface: #ffffff;
+  --ink: #1b1d22;
+  --muted: #5f6470;
+  --rule: #d9dad3;
+  --accent: #2f5cd6;      /* prediction / IMU */
+  --accent-2: #d75a22;    /* measurement / GNSS */
+  --epi: #1f8a61;         /* fused estimate */
+  --violet: #7445c0;
+  --code-bg: #eceee8;
+  --font-display: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14161b; --surface: #1c1f26; --ink: #e8e9ec; --muted: #9aa0ad; --rule: #2f333d;
+    --accent: #7c9cff; --accent-2: #ff8a52; --epi: #4cc38f; --violet: #b18cff; --code-bg: #20242c;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14161b; --surface: #1c1f26; --ink: #e8e9ec; --muted: #9aa0ad; --rule: #2f333d;
+  --accent: #7c9cff; --accent-2: #ff8a52; --epi: #4cc38f; --violet: #b18cff; --code-bg: #20242c;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.62 var(--font-body); }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+.col { max-width: 68ch; margin: 0 auto; }
+header.hero { padding: 56px 0 28px; border-bottom: 1px solid var(--rule); }
+.kicker { font: 500 13px/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; line-height: 1.15; }
+h1 { font-size: clamp(34px, 5vw, 52px); font-weight: 700; margin: 14px 0 14px; letter-spacing: -.01em; }
+h2 { font-size: 30px; font-weight: 600; margin: 0 0 14px; }
+h3 { font-size: 21px; font-weight: 600; margin: 30px 0 8px; }
+.lede { font-size: 19px; color: var(--muted); margin: 0; }
+nav.toc { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 24px; font-size: 14px; }
+nav.toc a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--rule); }
+nav.toc a:hover, nav.toc a:focus-visible { border-color: var(--accent); color: var(--accent); }
+nav.toc span { font-family: var(--font-mono); color: var(--muted); margin-right: 4px; }
+section { padding: 52px 0 12px; }
+section > .col > h2 .num { font-family: var(--font-mono); font-size: 15px; color: var(--muted); display: block; margin-bottom: 6px; font-weight: 500; }
+p { margin: 0 0 14px; }
+a { color: var(--accent); }
+strong { font-weight: 600; }
+.c1 { color: var(--accent); font-weight: 600; } .c2 { color: var(--accent-2); font-weight: 600; } .ce { color: var(--epi); font-weight: 600; } .cv { color: var(--violet); font-weight: 600; }
+figure { margin: 26px 0; }
+figure.wide { max-width: 1080px; }
+figcaption { font-size: 14px; color: var(--muted); margin-top: 10px; max-width: 75ch; }
+figcaption b { color: var(--ink); font-weight: 600; }
+video { width: 100%; height: auto; display: block; border-radius: 6px; border: 1px solid var(--rule); background: #f6f4ef; }
+.svgbox { overflow-x: auto; }
+.svgbox svg { display: block; max-width: 100%; height: auto; margin: 0 auto; color: var(--ink); }
+.callout { border-left: 3px solid var(--accent); background: var(--surface); padding: 14px 18px; margin: 20px 0; border-radius: 0 6px 6px 0; }
+.callout.warn { border-left-color: var(--accent-2); }
+.callout p:last-child { margin-bottom: 0; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin: 22px 0; }
+.fact { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 14px 16px; font-size: 15px; }
+.fact h4 { font: 600 15px/1.3 var(--font-display); margin: 0 0 6px; letter-spacing: .01em; }
+.fact p { margin: 0; }
+.math-block { overflow-x: auto; overflow-y: hidden; padding: 4px 0; }
+code, pre { font-family: var(--font-mono); font-size: 14px; }
+:not(pre) > code { background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+.codewrap { position: relative; margin: 18px 0; }
+pre { background: var(--code-bg); border: 1px solid var(--rule); border-radius: 8px; padding: 16px 18px; overflow-x: auto; line-height: 1.5; margin: 0; }
+pre .cm { color: var(--muted); }
+.copy { position: absolute; top: 10px; right: 10px; font: 500 12px var(--font-body); background: var(--surface); color: var(--ink); border: 1px solid var(--rule); border-radius: 5px; padding: 4px 10px; cursor: pointer; }
+.copy:hover, .copy:focus-visible { border-color: var(--accent); }
+/* labs */
+.lab { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 20px; margin: 26px 0; }
+.lab-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.lab-head h3 { margin: 0; }
+.tag { font: 500 12px var(--font-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--accent); border: 1px solid currentColor; border-radius: 99px; padding: 2px 9px; }
+.lab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.lab-grid3 { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+@media (max-width: 760px) { .lab-grid, .lab-grid3 { grid-template-columns: 1fr; } }
+.panel-title { font: 500 13px var(--font-mono); color: var(--muted); margin: 0 0 6px; }
+.lab svg.plot { width: 100%; height: auto; display: block; background: var(--bg); border-radius: 6px; color: var(--ink); }
+.controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px 18px; margin: 16px 0 6px; }
+.ctl label { display: flex; justify-content: space-between; font-size: 14px; color: var(--muted); }
+.ctl label output { font-family: var(--font-mono); color: var(--ink); font-variant-numeric: tabular-nums; }
+input[type="range"] { width: 100%; accent-color: var(--accent); }
+select, button.btn { font: 500 14px var(--font-body); padding: 6px 12px; border-radius: 6px; border: 1px solid var(--rule); background: var(--bg); color: var(--ink); cursor: pointer; }
+button.btn:hover, select:hover { border-color: var(--accent); }
+input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.check { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.mats { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; font: 14px/1.35 var(--font-mono); font-variant-numeric: tabular-nums; margin-top: 12px; }
+table.res { width: 100%; border-collapse: collapse; font-size: 14px; font-variant-numeric: tabular-nums; margin-top: 10px; }
+table.res th, table.res td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--rule); }
+table.res th { font-weight: 500; color: var(--muted); font-size: 13px; }
+table.res td.num { font-family: var(--font-mono); text-align: right; }
+.pill { display: inline-block; font: 500 12px var(--font-mono); padding: 1px 8px; border-radius: 99px; background: color-mix(in srgb, var(--epi) 18%, transparent); color: var(--epi); }
+.pill.bad { background: color-mix(in srgb, var(--accent-2) 16%, transparent); color: var(--accent-2); }
+.pill.meh { background: color-mix(in srgb, var(--violet) 16%, transparent); color: var(--violet); }
+.stats { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+.stat { background: var(--bg); border-radius: 6px; padding: 8px 12px; min-width: 120px; }
+.stat .k { font-size: 12px; color: var(--muted); } .stat .v { font: 500 18px var(--font-mono); font-variant-numeric: tabular-nums; }
+ol.steps { padding-left: 22px; } ol.steps li { margin-bottom: 8px; }
+footer { border-top: 1px solid var(--rule); margin-top: 50px; padding: 26px 0 50px; font-size: 14px; color: var(--muted); }
+footer ul { padding-left: 18px; margin: 6px 0 0; }
+
+.part { margin: 64px 0 0; padding: 18px 0 0; border-top: 2px solid var(--ink); }
+.part .col { font: 600 22px/1.2 var(--font-display); }
+.part span { display: block; font: 500 12px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+.roadmap { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin-top: 22px; }
+.roadmap div { border-top: 3px solid var(--accent); background: var(--surface); padding: 8px 10px; border-radius: 0 0 6px 6px; font-size: 13px; }
+.roadmap b { display: block; font: 600 14px var(--font-display); }
+.roadmap span { color: var(--muted); }
+@media (max-width: 640px) { .roadmap { grid-template-columns: 1fr 1fr; } }
+.col ul { padding-left: 22px; } .col ul li { margin-bottom: 6px; }
+.presets { display: flex; flex-wrap: wrap; gap: 8px; }
+.legend-row { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 13px; color: var(--muted); margin-top: 8px; }
+.legend-row i { display: inline-block; width: 18px; height: 3px; vertical-align: middle; margin-right: 6px; border-radius: 2px; }
+@media (max-width: 640px) { .roadmap { grid-template-columns: 1fr 1fr; } }
+.plain { background: color-mix(in srgb, var(--epi) 9%, var(--surface)); border: 1px solid color-mix(in srgb, var(--epi) 35%, transparent); border-radius: 8px; padding: 12px 16px; margin: 4px 0 18px; font-size: 16px; }
+.plain b { color: var(--epi); }
+details.deeper { border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); margin: 16px 0; }
+details.deeper summary { cursor: pointer; padding: 10px 14px; font: 500 14px var(--font-body); color: var(--muted); list-style: none; }
+details.deeper summary::-webkit-details-marker { display: none; }
+details.deeper summary::before { content: "+"; display: inline-block; width: 18px; font-family: var(--font-mono); color: var(--accent); }
+details.deeper[open] summary::before { content: "−"; }
+details.deeper summary:hover, details.deeper summary:focus-visible { color: var(--ink); }
+.deeper-body { padding: 0 16px 12px; font-size: 15px; }
+dl.terms { margin: 10px 0 20px; display: grid; grid-template-columns: minmax(130px, max-content) 1fr; gap: 10px 18px; }
+dl.terms dt { font-weight: 600; padding-top: 1px; }
+dl.terms dd { margin: 0; font-size: 16px; }
+@media (max-width: 600px) { dl.terms { grid-template-columns: 1fr; gap: 2px; } dl.terms dd { margin-bottom: 10px; } }
+.sym { font-family: var(--font-mono); font-size: 15px; }
+.tablewrap { overflow-x: auto; max-width: 860px; margin: 0 auto; }
+table.notation td:first-child { white-space: nowrap; }
+table.notation td:last-child { white-space: nowrap; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap"><div class="col">
+    <div class="kicker">State estimation · explainer</div>
+    <h1>Kalman Filtering and Sensor Fusion from First Principles</h1>
+    <p class="lede">How a car combines a fast IMU that drifts with a slow GNSS receiver that jumps around, built up one layer at a time, starting from a short probability refresher: fusing two numbers, the Bayes filter, the Kalman filter and its derivation, tuning and consistency, the extended and unscented filters, and a working GNSS/IMU pipeline.</p>
+    <nav class="toc" aria-label="Sections">
+      <a href="#primer"><span>00</span>Refresher</a>
+      <a href="#problem"><span>01</span>The car problem</a>
+      <a href="#fuse"><span>02</span>Fusing two numbers</a>
+      <a href="#bayes"><span>03</span>The Bayes filter</a>
+      <a href="#kf"><span>04</span>The Kalman filter</a>
+      <a href="#road"><span>05</span>Car on a road</a>
+      <a href="#tuning"><span>06</span>Tuning and consistency</a>
+      <a href="#ekf"><span>07</span>The EKF</a>
+      <a href="#ukf"><span>08</span>The UKF</a>
+      <a href="#pipeline"><span>09</span>GNSS/IMU pipeline</a>
+      <a href="#code"><span>10</span>Code</a>
+      <a href="#practice"><span>11</span>Failure modes</a>
+    </nav>
+    <div class="roadmap" aria-label="How the parts build on each other">
+      <div><b>0 · Refresher</b><span>six probability ideas</span></div>
+      <div><b>I · The problem</b><span>two flawed sensors, one fused answer</span></div>
+      <div><b>II · Linear KF</b><span>predict, update, tune</span></div>
+      <div><b>III · Nonlinear</b><span>EKF and UKF</span></div>
+      <div><b>IV · Practice</b><span>pipeline, code, failure modes</span></div>
+    </div>
+  </div></div>
+</header>
+
+<main class="wrap">
+
+<div class="part"><div class="col"><span>Part 0</span>A probability refresher</div></div>
+<section id="primer">
+  <div class="col">
+    <h2><span class="num">00</span>Six ideas you'll need</h2>
+    <p>The Kalman filter is built from a small amount of probability. If these six ideas are familiar, skip to <a href="#problem">section 01</a>; the notation table at the end of this section is worth a glance either way.</p>
+
+    <h3>1 · Mean, variance and standard deviation</h3>
+    <p>A <strong>random variable</strong> is a quantity whose value we are unsure of: the car's true position, or the next GNSS reading. Its <strong>mean</strong> \(\mu = \mathbb E[x]\) is the average value over many repeats. Its <strong>variance</strong> \(\sigma^2 = \mathbb E[(x-\mu)^2]\) is the average squared distance from the mean. The <strong>standard deviation</strong> \(\sigma\) is the square root of the variance, in the same units as \(x\). A GNSS receiver quoted as "3 m accurate" usually means \(\sigma \approx 3\) m per axis, so \(\sigma^2 = 9\ \text{m}^2\).</p>
+    <p>Variance is the quantity that adds nicely, so the filter works with it. Standard deviation is the one that makes sense to people, so this page quotes it.</p>
+
+    <h3>2 · The Gaussian</h3>
+    <p>The Gaussian (normal) distribution \(\mathcal N(\mu, \sigma^2)\) has density</p>
+    <div class="math-block">\[ p(x) = \frac{1}{\sqrt{2\pi\sigma^2}}\exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right). \]</div>
+    <p>About 68 % of the probability lies within \(\pm1\sigma\) of the mean, 95 % within \(\pm2\sigma\) and 99.7 % within \(\pm3\sigma\). The Kalman filter assumes everything is Gaussian. That sounds restrictive, but it is often close to true (sums of many small independent errors tend to Gaussian), and Gaussians have two properties that make the filter exact and cheap: ideas 4 and 6 below.</p>
+
+    <h3>3 · Covariance matrices and the uncertainty ellipse</h3>
+    <p>With several unknowns at once, say position and velocity, stack them into a vector \(\mathbf x\). Its uncertainty is a <strong>covariance matrix</strong></p>
+    <div class="math-block">\[ P = \mathbb E\big[(\mathbf x-\boldsymbol\mu)(\mathbf x-\boldsymbol\mu)^\top\big] = \begin{bmatrix} \sigma_p^2 & \rho\,\sigma_p\sigma_v \\ \rho\,\sigma_p\sigma_v & \sigma_v^2\end{bmatrix}. \]</div>
+    <p>The diagonal holds each variable's own variance. The off-diagonal holds the <strong>covariance</strong>, how the two errors move together, with correlation \(\rho\) between −1 and 1. \(P\) is always symmetric and never gives a negative variance in any direction (it is <em>positive semi-definite</em>).</p>
+    <p>The picture to keep in mind is an <strong>ellipse</strong>. The set of points a fixed number of standard deviations from the mean is an ellipse whose axes point along the eigenvectors of \(P\), with half-lengths \(\sqrt{\lambda_i}\) times that number. For a symmetric positive semi-definite matrix the eigen-decomposition and the SVD coincide, so this is the same "rotate, stretch, rotate" picture as the SVD of a unit circle.</p>
+  </div>
+  <figure class="wide">
+    <div class="svgbox">
+      <svg viewBox="0 0 760 290" width="760" role="img" aria-label="Left: an uncorrelated covariance gives an axis-aligned ellipse. Right: a positive correlation tilts the ellipse; its axes are the eigenvectors of P with half-lengths the square roots of the eigenvalues.">
+        <defs>
+          <marker id="ahk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
+          <marker id="ahb0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2f5cd6"/></marker>
+          <marker id="aho0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#d75a22"/></marker>
+        </defs>
+        <g font-size="14" fill="currentColor">
+          <g transform="translate(180,145)">
+            <line x1="-150" y1="0" x2="150" y2="0" stroke="currentColor" opacity=".3" marker-end="url(#ahk)"/>
+            <line x1="0" y1="115" x2="0" y2="-120" stroke="currentColor" opacity=".3" marker-end="url(#ahk)"/>
+            <text x="146" y="18" text-anchor="end" opacity=".7">position error</text>
+            <text x="8" y="-108" opacity=".7">velocity error</text>
+            <ellipse cx="0" cy="0" rx="105" ry="60" fill="#2f5cd6" fill-opacity=".1" stroke="#2f5cd6" stroke-width="2"/>
+            <text x="0" y="96" text-anchor="middle">ρ = 0: errors unrelated</text>
+            <text x="0" y="116" text-anchor="middle" font-size="12" opacity=".7">P = diag(σ²ₚ, σ²ᵥ)</text>
+          </g>
+          <g transform="translate(560,145)">
+            <line x1="-150" y1="0" x2="150" y2="0" stroke="currentColor" opacity=".3" marker-end="url(#ahk)"/>
+            <line x1="0" y1="115" x2="0" y2="-120" stroke="currentColor" opacity=".3" marker-end="url(#ahk)"/>
+            <g transform="rotate(-28)">
+              <ellipse cx="0" cy="0" rx="118" ry="38" fill="#1f8a61" fill-opacity=".12" stroke="#1f8a61" stroke-width="2"/>
+              <line x1="0" y1="0" x2="114" y2="0" stroke="#2f5cd6" stroke-width="2.4" marker-end="url(#ahb0)"/>
+              <line x1="0" y1="0" x2="0" y2="-35" stroke="#d75a22" stroke-width="2.4" marker-end="url(#aho0)"/>
+            </g>
+            <text x="96" y="-80" fill="#2f5cd6">√λ₁ u₁</text>
+            <text x="-62" y="-36" fill="#d75a22">√λ₂ u₂</text>
+            <text x="0" y="96" text-anchor="middle">ρ &gt; 0: errors move together</text>
+            <text x="0" y="116" text-anchor="middle" font-size="12" opacity=".7">axes = eigenvectors of P, lengths √λᵢ</text>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figure 1.</b> The 1σ ellipse of a two-variable Gaussian. Correlation tilts it. In section 04 a tilted ellipse is what lets a position measurement also improve the velocity estimate.</figcaption>
+  </figure>
+  <div class="col">
+    <h3>4 · Linear maps of Gaussians stay Gaussian</h3>
+    <p>If \(\mathbf x \sim \mathcal N(\boldsymbol\mu, P)\) and \(\mathbf y = A\mathbf x + \mathbf b\), then</p>
+    <div class="math-block">\[ \mathbf y \sim \mathcal N\big(A\boldsymbol\mu + \mathbf b,\; A P A^\top\big). \]</div>
+    <p>The mean goes through the map as you'd expect. The covariance is sandwiched: \(APA^\top\). And if you add an independent Gaussian error \(\mathbf w \sim \mathcal N(\mathbf 0, Q)\), the covariances simply add: \(APA^\top + Q\). That one line is the Kalman filter's <em>predict</em> step.</p>
+    <details class="deeper"><summary>Going deeper: why \(APA^\top\)?</summary><div class="deeper-body"><p>\(\operatorname{Cov}(\mathbf y) = \mathbb E[(A\mathbf x - A\boldsymbol\mu)(A\mathbf x - A\boldsymbol\mu)^\top] = A\,\mathbb E[(\mathbf x-\boldsymbol\mu)(\mathbf x-\boldsymbol\mu)^\top]A^\top = APA^\top\). The constant \(\mathbf b\) shifts everything equally and cancels. For a sum of independent vectors the cross terms \(\mathbb E[(\mathbf x-\boldsymbol\mu)\mathbf w^\top]\) are zero, which is why covariances add. In one dimension with \(A = a\) this is the familiar \(\operatorname{Var}(ax) = a^2\operatorname{Var}(x)\).</p></div></details>
+
+    <h3>5 · Bayes' rule</h3>
+    <p>Bayes' rule updates a belief when evidence arrives:</p>
+    <div class="math-block">\[ \underbrace{p(x \mid z)}_{\text{posterior}} = \frac{\overbrace{p(z \mid x)}^{\text{likelihood}}\;\overbrace{p(x)}^{\text{prior}}}{p(z)} \;\propto\; p(z\mid x)\,p(x). \]</div>
+    <p>The <strong>prior</strong> is what we believed before the measurement. The <strong>likelihood</strong> says how probable the reading \(z\) would be if the truth were \(x\); for a GNSS fix it is a Gaussian bump centred on the reading. The <strong>posterior</strong> is the product, rescaled so it integrates to one. The denominator \(p(z)\) is just that rescaling factor.</p>
+
+    <h3>6 · The product of two Gaussians is a Gaussian</h3>
+    <p>Multiply \(\mathcal N(\mu_1, \sigma_1^2)\) by \(\mathcal N(\mu_2, \sigma_2^2)\) as functions of \(x\) and renormalise. The exponents add, a sum of two quadratics in \(x\) is another quadratic, and the result is Gaussian with</p>
+    <div class="math-block">\[ \frac{1}{\sigma^2} = \frac{1}{\sigma_1^2} + \frac{1}{\sigma_2^2}, \qquad \mu = \sigma^2\left(\frac{\mu_1}{\sigma_1^2} + \frac{\mu_2}{\sigma_2^2}\right). \]</div>
+    <p><strong>Inverse variances</strong> (also called <em>precisions</em> or <em>information</em>) add, so the result is always narrower than either input. The mean is a weighted average, weighted by precision. That is the Kalman filter's <em>update</em> step, and section 02 builds it up slowly.</p>
+
+    <h3>Notation used on this page</h3>
+  </div>
+  <div class="tablewrap">
+    <table class="res notation">
+      <thead><tr><th>Symbol</th><th>Meaning</th><th>Car example</th></tr></thead>
+      <tbody>
+        <tr><td>\(\mathbf x_k\), \(n\)</td><td>State vector at time step \(k\), and its length</td><td>position, velocity, heading, bias</td></tr>
+        <tr><td>\(\hat{\mathbf x}_k^-\), \(P_k^-\)</td><td>Predicted estimate and covariance (before the measurement)</td><td>after integrating the IMU</td></tr>
+        <tr><td>\(\hat{\mathbf x}_k^+\), \(P_k^+\)</td><td>Updated estimate and covariance (after the measurement)</td><td>after a GNSS fix</td></tr>
+        <tr><td>\(F\), \(B\), \(\mathbf u_k\)</td><td>State-transition matrix, input matrix, known input</td><td>\(\mathbf u\) = IMU readings</td></tr>
+        <tr><td>\(Q\)</td><td>Process noise covariance: what the motion model gets wrong per step</td><td>IMU noise, unmodelled motion</td></tr>
+        <tr><td>\(\mathbf z_k\), \(H\), \(R\)</td><td>Measurement, measurement matrix, measurement noise covariance</td><td>GNSS position, picks out \(p_x, p_y\), \(\sigma^2 = 9\ \text{m}^2\)</td></tr>
+        <tr><td>\(\mathbf y_k\), \(S_k\)</td><td>Innovation \(\mathbf z - H\hat{\mathbf x}^-\) and its covariance</td><td>GNSS minus prediction</td></tr>
+        <tr><td>\(K_k\)</td><td>Kalman gain: how far to move toward the measurement</td><td>0 = ignore GNSS, 1 = trust it fully</td></tr>
+        <tr><td>\(\Delta t\)</td><td>Time step between predictions</td><td>0.01 s at 100 Hz</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="part"><div class="col"><span>Part I</span>Two flawed sensors, one fused answer</div></div>
+<section id="problem">
+  <div class="col">
+    <h2><span class="num">01</span>The car problem</h2>
+    <div class="plain"><b>In plain words.</b> The IMU tells you how the car is <em>moving</em>, a hundred times a second, very smoothly, but every small error accumulates, so your position estimate slowly wanders off. GNSS tells you where the car <em>is</em>, about once a second, with errors of a few metres that don't accumulate, and it goes silent in tunnels. Each sensor is good exactly where the other is bad. A Kalman filter combines them so you get the IMU's smoothness and the GNSS's long-term accuracy.</div>
+    <p>A car needs its position, heading and speed many times a second, for lane keeping, navigation and for placing everything its cameras and radars see onto a map. Two sensors provide the raw material:</p>
+  </div>
+  <div class="facts">
+    <div class="fact"><h4><span class="c1">IMU</span>: inertial measurement unit</h4><p>Gyroscopes measure turn rate, accelerometers measure acceleration. Fast (100–1000 Hz), smooth, works anywhere. But to get position you integrate acceleration twice, so a constant accelerometer bias \(b\) grows into a position error of \(\tfrac12 b t^2\): <strong>drift that grows without bound</strong>.</p></div>
+    <div class="fact"><h4><span class="c2">GNSS</span>: satellite positioning</h4><p>Measures absolute position directly. Slow (1–10 Hz), noisy (metres for a standard receiver), and its errors are <strong>bounded</strong>: they don't grow over time. But it disappears in tunnels and car parks, and buildings reflect signals into occasional large jumps (multipath).</p></div>
+    <div class="fact"><h4><span class="ce">Fused</span>: the Kalman filter</h4><p>Uses the IMU to predict motion between fixes, and each GNSS fix to correct the accumulated drift. It also <strong>estimates the IMU's own biases</strong> while GNSS is available, so dead reckoning through the next tunnel is better than it would otherwise be.</p></div>
+  </div>
+  <figure class="wide">
+    <video src="v1_drift.mp4" controls muted loop playsinline preload="metadata" aria-label="Animation: a car drives a loop with a tunnel. The IMU-only dead-reckoned track drifts hundreds of metres away. GNSS fixes scatter by a few metres around the road and stop in the tunnel. The fused EKF track follows the road, drifting slightly in the tunnel and snapping back at the exit."></video>
+    <figcaption><b>Video 1.</b> A simulated 2-minute drive: 100 Hz IMU (gyro with a 0.23 °/s bias, noisy accelerometer) and 1 Hz GNSS with 3 m noise, which drops out for 25 s in a tunnel. IMU alone ends 250 m off. Fused, the error is mostly below the GNSS noise, grows to about 10 m in the tunnel, and collapses at the first fix after it. Every video and number on this page comes from the same simulation.</figcaption>
+  </figure>
+  <div class="col">
+    <div class="callout">
+      <p><strong>Worked example: how fast does dead reckoning drift?</strong> Two numbers set the scale.</p>
+      <ul>
+        <li><strong>Accelerometer bias.</strong> A bias of \(b = 0.05\ \text{m/s}^2\) (about 5 milli-g, typical of a low-cost MEMS part before calibration) integrated twice for one minute gives \(\tfrac12 b t^2 = \tfrac12 \times 0.05 \times 60^2 = 90\) m.</li>
+        <li><strong>Gyro bias.</strong> A yaw-rate bias \(b_g\) makes the heading error grow as \(b_g t\). Driving at speed \(v\) with a slowly growing heading error, the sideways error is \(\int_0^t v\,b_g\,s\,ds = \tfrac12 v\,b_g\,t^2\). Through our 25 s tunnel at 15 m/s with \(b_g = 0.004\ \text{rad/s}\), that is \(\tfrac12\times 15\times 0.004\times 25^2 \approx 19\) m.</li>
+      </ul>
+      <p>Both errors grow with \(t^2\). Halve the time between corrections and the drift drops by four. This is why even a slow, noisy absolute sensor is so valuable.</p>
+    </div>
+    <h3>What we want to estimate</h3>
+    <p>The <strong>state</strong> is the smallest set of numbers that, together with the inputs, predicts the future. For the car in sections 07–09 it is</p>
+    <div class="math-block">\[ \mathbf x = \begin{bmatrix} p_x & p_y & \psi & v & b_g \end{bmatrix}^\top \]</div>
+    <p>with position \((p_x, p_y)\), heading \(\psi\), forward speed \(v\) and gyro bias \(b_g\). The bias is not something we care about for its own sake. It is in the state because leaving it out makes the predictions systematically wrong, and because the filter can estimate it from the data (section 09). Sections 02–06 strip the problem down to one dimension, a car on a straight road, so the ideas can be seen clearly.</p>
+  </div>
+</section>
+
+<section id="fuse">
+  <div class="col">
+    <h2><span class="num">02</span>Fusing two numbers</h2>
+    <div class="plain"><b>In plain words.</b> If two people measure the same thing, one carefully and one sloppily, you should trust the careful one more, but not ignore the other. The best combination is a weighted average where each measurement's weight is proportional to one over its variance. The combined estimate is better than either alone.</div>
+    <p>Suppose dead reckoning says the car is at \(x_1 = 100\) m with \(\sigma_1 = 4\) m, and a GNSS fix says \(x_2 = 106\) m with \(\sigma_2 = 3\) m. The errors are independent and unbiased. What single estimate should we report?</p>
+    <p>Try any weighted average \(\hat x = (1-w)\,x_1 + w\,x_2\). It is unbiased for every \(w\), so pick the \(w\) that makes its variance smallest. The variances of independent errors add (idea 4):</p>
+    <div class="math-block">\[ \operatorname{Var}(\hat x) = (1-w)^2\sigma_1^2 + w^2\sigma_2^2 . \]</div>
+    <p>Set the derivative with respect to \(w\) to zero: \(-2(1-w)\sigma_1^2 + 2w\sigma_2^2 = 0\), so</p>
+    <div class="math-block">\[ w = K = \frac{\sigma_1^2}{\sigma_1^2+\sigma_2^2}, \qquad \hat x = x_1 + K\,(x_2 - x_1), \qquad \sigma^2 = (1-K)\,\sigma_1^2 . \]</div>
+    <p>That is the whole Kalman filter in one dimension. Read the middle formula as "start from the prediction \(x_1\), and move a fraction \(K\) of the way toward the measurement". \(K\) is the <strong>Kalman gain</strong>. If the prediction is poor (\(\sigma_1\) large), \(K \to 1\) and we jump to the measurement. If the measurement is poor (\(\sigma_2\) large), \(K \to 0\) and we barely move.</p>
+    <p>With the numbers above: \(K = 16/25 = 0.64\), \(\hat x = 100 + 0.64\times 6 = 103.84\) m, and \(\sigma = \sqrt{0.36 \times 16} = 2.4\) m, better than either sensor. It is the same answer as multiplying the two Gaussians (idea 6): \(1/\sigma^2 = 1/16 + 1/9\) gives \(\sigma = 2.4\) m.</p>
+  </div>
+
+  <div class="lab" id="fuselab">
+    <div class="lab-head"><h3>Try it: fuse two Gaussian estimates</h3><span class="tag">interactive</span></div>
+    <svg class="plot" id="fusePlot" viewBox="0 0 760 260" role="img" aria-label="Plot of the prediction Gaussian, the measurement Gaussian and their fused product"></svg>
+    <div class="legend-row"><span><i style="background:var(--accent)"></i>prediction \(\mathcal N(x_1,\sigma_1^2)\)</span><span><i style="background:var(--accent-2)"></i>measurement \(\mathcal N(x_2,\sigma_2^2)\)</span><span><i style="background:var(--epi)"></i>fused (product, renormalised)</span></div>
+    <div class="controls">
+      <div class="ctl"><label for="fx1">x₁ (m) <output id="ofx1"></output></label><input type="range" id="fx1" min="80" max="120" step="0.5" value="100"></div>
+      <div class="ctl"><label for="fs1">σ₁ (m) <output id="ofs1"></output></label><input type="range" id="fs1" min="0.5" max="12" step="0.1" value="4"></div>
+      <div class="ctl"><label for="fx2">x₂ (m) <output id="ofx2"></output></label><input type="range" id="fx2" min="80" max="120" step="0.5" value="106"></div>
+      <div class="ctl"><label for="fs2">σ₂ (m) <output id="ofs2"></output></label><input type="range" id="fs2" min="0.5" max="12" step="0.1" value="3"></div>
+    </div>
+    <div class="stats" id="fuseStats" aria-live="polite"></div>
+    <p style="font-size:14px;color:var(--muted);margin:10px 0 0">Make \(\sigma_2\) huge: \(K\) falls toward 0 and the fused curve sits on the prediction. Make the two \(\sigma\) equal: \(K = 0.5\) and the fused \(\sigma\) is \(\sigma_1/\sqrt2\). However far apart you drag the means, the fused \(\sigma\) doesn't change. A linear filter has no idea whether two readings <em>disagree</em>; section 06 adds that check.</p>
+  </div>
+
+  <div class="col">
+    <h3>Three facts about the gain</h3>
+  </div>
+  <div class="facts">
+    <div class="fact"><h4>① Uncertainty only shrinks</h4><p>\(\sigma^2 = (1-K)\sigma_1^2\) with \(0 \le K \le 1\), so an update never makes you less certain, even if the measurement is poor. Only the <em>predict</em> step adds uncertainty. <em>Used in: every update (§04).</em></p></div>
+    <div class="fact"><h4>② The gain depends on variances, not values</h4><p>\(K\) is computed from \(\sigma_1\) and \(\sigma_2\) alone. You can work out the gains before seeing any data, and for a time-invariant system they settle to a constant. <em>Used in: steady-state filters (§06).</em></p></div>
+    <div class="fact"><h4>③ "Prediction plus correction" generalises</h4><p>With vectors and matrices, \(x_1\) becomes \(H\hat{\mathbf x}^-\), the variances become \(HP^-H^\top\) and \(R\), and the same formula comes out. <em>Used in: the full filter (§04).</em></p></div>
+  </div>
+</section>
+
+<div class="part"><div class="col"><span>Part II</span>The linear Kalman filter</div></div>
+<section id="bayes">
+  <div class="col">
+    <h2><span class="num">03</span>The Bayes filter: predict, then update</h2>
+    <div class="plain"><b>In plain words.</b> Keep a belief about where the car is: a best guess and how unsure you are. When time passes, move the belief using what you know about the motion; it gets blurrier. When a measurement arrives, combine it with the belief; it gets sharper. Repeat forever.</div>
+    <p>Section 02 fused two numbers once. A moving car needs this done over and over, with the estimate carried forward between measurements. The <strong>Bayes filter</strong> does it with two alternating steps. Write \(\mathbf z_{1:k}\) for all measurements up to time \(k\).</p>
+    <ul>
+      <li><strong>Predict</strong> (time update). Push yesterday's belief through the motion model:
+      \( p(\mathbf x_k \mid \mathbf z_{1:k-1}) = \int p(\mathbf x_k \mid \mathbf x_{k-1})\, p(\mathbf x_{k-1} \mid \mathbf z_{1:k-1})\, d\mathbf x_{k-1}. \)
+      Every possible previous state contributes, weighted by how likely it was.</li>
+      <li><strong>Update</strong> (measurement update). Apply Bayes' rule (idea 5):
+      \( p(\mathbf x_k \mid \mathbf z_{1:k}) \propto p(\mathbf z_k \mid \mathbf x_k)\, p(\mathbf x_k \mid \mathbf z_{1:k-1}). \)</li>
+    </ul>
+    <p>Two assumptions make this recursive, so we never need to store the history. The <strong>Markov</strong> assumption: given the current state, the past adds nothing to predicting the future. And each measurement depends only on the current state. If a quantity breaks these assumptions, such as a slowly varying sensor bias, the fix is to put it <em>into</em> the state.</p>
+  </div>
+  <figure class="wide">
+    <div class="svgbox">
+      <svg viewBox="0 0 900 230" width="900" role="img" aria-label="The Bayes filter loop. The belief at time k-1 goes through the predict step using the motion model and IMU, becoming a wider predicted belief. The update step combines it with the measurement likelihood from GNSS to give a narrower belief at time k, which feeds back to the start.">
+        <defs><marker id="ahq3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+        <g font-size="13" fill="currentColor" text-anchor="middle">
+          <rect x="20" y="50" width="190" height="96" rx="8" fill="none" stroke="#1f8a61" stroke-width="2"/>
+          <path d="M45,128 C80,128 95,70 115,70 C135,70 150,128 185,128" fill="#1f8a61" fill-opacity=".15" stroke="#1f8a61" stroke-width="2"/>
+          <text x="115" y="44" font-weight="600">belief at k−1</text>
+          <text x="115" y="166" opacity=".75">x̂⁺ₖ₋₁, P⁺ₖ₋₁</text>
+          <rect x="300" y="50" width="190" height="96" rx="8" fill="none" stroke="#2f5cd6" stroke-width="2"/>
+          <path d="M315,128 C355,128 370,88 395,88 C420,88 435,128 475,128" fill="#2f5cd6" fill-opacity=".12" stroke="#2f5cd6" stroke-width="2"/>
+          <text x="395" y="44" font-weight="600" fill="#2f5cd6">predicted belief</text>
+          <text x="395" y="166" opacity=".75">x̂⁻ₖ, P⁻ₖ : shifted, wider</text>
+          <rect x="580" y="50" width="190" height="96" rx="8" fill="none" stroke="#1f8a61" stroke-width="2"/>
+          <path d="M600,128 C650,128 660,64 680,64 C700,64 710,128 760,128" fill="#1f8a61" fill-opacity=".15" stroke="#1f8a61" stroke-width="2"/>
+          <text x="675" y="44" font-weight="600">belief at k</text>
+          <text x="675" y="166" opacity=".75">x̂⁺ₖ, P⁺ₖ : narrower</text>
+          <line x1="212" y1="98" x2="297" y2="98" stroke="currentColor" stroke-width="1.6" marker-end="url(#ahq3)"/>
+          <text x="255" y="88" font-weight="600">PREDICT</text>
+          <text x="255" y="118" font-size="12" opacity=".75">motion model</text>
+          <text x="255" y="133" font-size="12" fill="#2f5cd6">IMU, 100 Hz</text>
+          <line x1="492" y1="98" x2="577" y2="98" stroke="currentColor" stroke-width="1.6" marker-end="url(#ahq3)"/>
+          <text x="535" y="88" font-weight="600">UPDATE</text>
+          <text x="535" y="118" font-size="12" opacity=".75">× likelihood</text>
+          <text x="535" y="133" font-size="12" fill="#d75a22">GNSS, 1 Hz</text>
+          <path d="M770,150 C800,215 120,215 110,170" fill="none" stroke="currentColor" stroke-dasharray="5 4" stroke-width="1.4" marker-end="url(#ahq3)"/>
+          <text x="440" y="222" font-size="12" opacity=".75">k ← k + 1. No measurement this step? Skip UPDATE and predict again.</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figure 2.</b> The Bayes filter loop. Predict runs at the IMU rate; update runs whenever a measurement arrives. They don't need to alternate one-for-one: a 100 Hz IMU and 1 Hz GNSS means 100 predicts per update.</figcaption>
+  </figure>
+  <div class="col">
+    <p>For arbitrary distributions the integral and product above are intractable, and approximating them is what particle filters and grid filters do. The Kalman filter is the special case where <strong>the motion and measurement models are linear and every noise is Gaussian</strong>. Then the belief stays exactly Gaussian forever (ideas 4 and 6), and all we need to carry is a mean and a covariance.</p>
+  </div>
+  <figure class="wide">
+    <video src="v2_cycle.mp4" controls muted loop playsinline preload="metadata" aria-label="Animation: a one-dimensional Gaussian belief slides 10 metres and widens in each predict step. When a GNSS fix arrives, its likelihood is drawn and the updated belief appears narrower, between the two. In two steps with no GNSS the belief keeps widening."></video>
+    <figcaption><b>Video 2.</b> Seven steps of the one-dimensional filter, with every number shown. Predict adds \(Q = 4\ \text{m}^2\); a fix with \(R = 9\ \text{m}^2\) then pulls the variance back down. Steps 4 and 5 have no fix, so the variance grows to 12.3 m², and the next fix gets a larger gain, \(K = 0.65\), because the prediction is now less trusted.</figcaption>
+  </figure>
+</section>
+
+<section id="kf">
+  <div class="col">
+    <h2><span class="num">04</span>The Kalman filter</h2>
+    <div class="plain"><b>In plain words.</b> The Kalman filter is section 02's weighted average, done with vectors and matrices, repeated every time step. The matrices let a measurement of <em>one</em> thing (position) correct <em>other</em> things (velocity, bias) that are linked to it through the motion.</div>
+    <p>Assume a linear model. The state evolves as</p>
+    <div class="math-block">\[ \mathbf x_k = F\,\mathbf x_{k-1} + B\,\mathbf u_k + \mathbf w_k, \qquad \mathbf w_k \sim \mathcal N(\mathbf 0, Q), \]</div>
+    <p>and the sensor reports</p>
+    <div class="math-block">\[ \mathbf z_k = H\,\mathbf x_k + \mathbf v_k, \qquad \mathbf v_k \sim \mathcal N(\mathbf 0, R), \]</div>
+    <p>with \(\mathbf w\) and \(\mathbf v\) independent of each other and over time. Then the Bayes filter becomes five lines of linear algebra:</p>
+    <div class="math-block">\[ \textbf{Predict:}\qquad \hat{\mathbf x}_k^- = F\hat{\mathbf x}_{k-1}^+ + B\mathbf u_k, \qquad P_k^- = F P_{k-1}^+ F^\top + Q \]</div>
+    <div class="math-block">\[ \textbf{Update:}\qquad \begin{aligned} \mathbf y_k &= \mathbf z_k - H\hat{\mathbf x}_k^- && \text{innovation}\\ S_k &= H P_k^- H^\top + R && \text{innovation covariance}\\ K_k &= P_k^- H^\top S_k^{-1} && \text{Kalman gain}\\ \hat{\mathbf x}_k^+ &= \hat{\mathbf x}_k^- + K_k\,\mathbf y_k\\ P_k^+ &= (I - K_k H)\,P_k^- \end{aligned} \]</div>
+    <p>Compare with section 02 term by term: \(\sigma_1^2 \to HP^-H^\top\) (the prediction's uncertainty, seen through the sensor), \(\sigma_2^2 \to R\), \(\sigma_1^2+\sigma_2^2 \to S\), and the scalar gain becomes a matrix.</p>
+
+    <h3>Reading the equations, term by term</h3>
+    <dl class="terms">
+      <dt><span class="sym c1">F x̂ + B u</span></dt>
+      <dd><strong>Move the best guess forward.</strong> \(F\) encodes the physics (position changes by velocity × \(\Delta t\)); \(B\mathbf u\) adds the effect of known inputs, here the IMU's measured acceleration.</dd>
+      <dt><span class="sym c1">F P Fᵀ</span></dt>
+      <dd><strong>Move the uncertainty forward</strong> (idea 4). An uncertain velocity becomes an uncertain position one step later, so this term grows the position variance and creates correlation between position and velocity errors.</dd>
+      <dt><span class="sym c1">+ Q</span></dt>
+      <dd><strong>Admit that the model isn't perfect.</strong> IMU noise and anything the model ignores add fresh, independent uncertainty every step. Without \(Q\) the filter would become ever more certain and eventually ignore all measurements.</dd>
+      <dt><span class="sym c2">y = z − H x̂⁻</span></dt>
+      <dd>The <strong>innovation</strong>: what the sensor says minus what we expected it to say. \(H\) converts a state into a predicted reading; for GNSS it just picks out the position entries. This is the only place new information enters.</dd>
+      <dt><span class="sym c2">S = H P⁻ Hᵀ + R</span></dt>
+      <dd>How big we <strong>expect the innovation to be</strong>: our own uncertainty seen through the sensor, plus the sensor's noise. Section 06 uses it to check the filter is honest.</dd>
+      <dt><span class="sym ce">K = P⁻ Hᵀ S⁻¹</span></dt>
+      <dd>The <strong>gain</strong>. Read it right to left: \(S^{-1}\) scales the innovation by how surprising it is; \(P^-H^\top\) is the covariance between each state and the predicted reading, which decides how much each state moves. A state <em>correlated</em> with position moves even though it was never measured.</dd>
+      <dt><span class="sym ce">(I − K H) P⁻</span></dt>
+      <dd><strong>Shrink the uncertainty</strong> by the fraction the measurement explained, exactly as \((1-K)\sigma_1^2\) did in one dimension.</dd>
+    </dl>
+
+    <div class="callout derive">
+      <p><strong>Where do the update equations come from?</strong> Here is a five-step derivation. Like section 02, we look for the <em>linear</em> correction with the smallest expected squared error.</p>
+      <ol class="steps">
+        <li><strong>Choose the form.</strong> Take \(\hat{\mathbf x}^+ = \hat{\mathbf x}^- + K(\mathbf z - H\hat{\mathbf x}^-)\) for some matrix \(K\) to be chosen. If the prediction is unbiased, so is this, for any \(K\).</li>
+        <li><strong>Write the new error.</strong> With \(\mathbf e^- = \mathbf x - \hat{\mathbf x}^-\) and \(\mathbf z = H\mathbf x + \mathbf v\): \(\ \mathbf e^+ = \mathbf x - \hat{\mathbf x}^+ = (I - KH)\,\mathbf e^- - K\mathbf v\).</li>
+        <li><strong>Take its covariance.</strong> \(\mathbf e^-\) and \(\mathbf v\) are independent, so by idea 4
+        \( P^+ = (I-KH)P^-(I-KH)^\top + KRK^\top. \) This <em>Joseph form</em> holds for any \(K\), not just the optimal one.</li>
+        <li><strong>Minimise the total variance.</strong> The expected squared error is \(\operatorname{tr}P^+\), the sum of the diagonal. Expanding, \(\operatorname{tr}P^+ = \operatorname{tr}P^- - 2\operatorname{tr}(KHP^-) + \operatorname{tr}\big(K(HP^-H^\top + R)K^\top\big)\). Using \(\partial\operatorname{tr}(KA)/\partial K = A^\top\) and \(\partial\operatorname{tr}(KSK^\top)/\partial K = 2KS\) for symmetric \(S\), the derivative is \(-2P^-H^\top + 2KS\).</li>
+        <li><strong>Solve.</strong> Setting it to zero gives \(K = P^-H^\top S^{-1}\). Substitute back and the Joseph form simplifies to \(P^+ = (I - KH)P^-\). ∎</li>
+      </ol>
+      <p>Among <em>linear</em> estimators this \(K\) is optimal whatever the noise distribution. When everything is Gaussian it is also the exact Bayesian posterior (the same result as multiplying the Gaussians), and no estimator of any kind does better.</p>
+      <p style="font-size:14px;color:var(--muted)">In code, prefer the Joseph form for \(P^+\). The short form \((I-KH)P^-\) is only correct for the exact optimal \(K\), and rounding can make it lose symmetry or go slightly negative-definite after many updates. The Joseph form is a sum of symmetric positive semi-definite terms, so it can't.</p>
+    </div>
+
+    <h3>A position fix also fixes velocity</h3>
+    <p>Take the simplest moving model: state \(\mathbf x = (p, v)\), constant velocity over \(\Delta t = 1\) s, random accelerations with \(\sigma_a = 0.5\ \text{m/s}^2\), and a GNSS that measures position only (\(R = 9\ \text{m}^2\)):</p>
+    <div class="math-block">\[ F = \begin{bmatrix}1 & \Delta t\\ 0 & 1\end{bmatrix},\quad Q = \sigma_a^2\begin{bmatrix}\tfrac{\Delta t^4}{4} & \tfrac{\Delta t^3}{2}\\[2pt] \tfrac{\Delta t^3}{2} & \Delta t^2\end{bmatrix},\quad H = \begin{bmatrix}1 & 0\end{bmatrix}. \]</div>
+    <p>\(Q\) comes from asking what a random acceleration \(a\) held for one step does: it changes position by \(\tfrac12 a\Delta t^2\) and velocity by \(a\Delta t\). So \(Q = \mathbf g\mathbf g^\top\sigma_a^2\) with \(\mathbf g = (\tfrac12\Delta t^2, \Delta t)\).</p>
+  </div>
+  <figure class="wide">
+    <video src="v3_ellipse.mp4" controls muted loop playsinline preload="metadata" aria-label="Animation: the 3-sigma ellipse of position and velocity error. In each predict step it shears and tilts and grows slightly. In each update, an orange vertical band shows the GNSS measurement constraining position only; the ellipse is squeezed horizontally, and because it is tilted, its vertical extent shrinks too. After five cycles it settles to a fixed tilted ellipse."></video>
+    <figcaption><b>Video 3.</b> The covariance of \((p, v)\) over five predict/update cycles. Predict <em>shears</em> the ellipse (\(FPF^\top\)) and adds \(Q\). The GNSS fix (orange band) says nothing about velocity, yet \(\sigma_v\) falls from 2.0 to 0.95 m/s, because the shear has correlated the two errors.</figcaption>
+  </figure>
+  <div class="col">
+    <div class="callout">
+      <p><strong>Worked example: one cycle by hand.</strong> Start from \(\hat{\mathbf x} = (0\ \text{m}, 10\ \text{m/s})\) and \(P = \operatorname{diag}(9, 4)\), so \(\sigma_p = 3\) m, \(\sigma_v = 2\) m/s, no correlation.</p>
+      <ul>
+        <li><strong>Predict the mean:</strong> \(\hat{\mathbf x}^- = F\hat{\mathbf x} = (10, 10)\).</li>
+        <li><strong>Predict the covariance:</strong> \(FPF^\top = \begin{bmatrix}13 & 4\\ 4 & 4\end{bmatrix}\). The 4 in the corner is new: a velocity error of 1 m/s now comes with a position error of 1 m. Adding \(Q = \begin{bmatrix}0.0625 & 0.125\\ 0.125 & 0.25\end{bmatrix}\) gives \(P^- = \begin{bmatrix}13.06 & 4.13\\ 4.13 & 4.25\end{bmatrix}\).</li>
+        <li><strong>Innovation covariance:</strong> \(S = HP^-H^\top + R = 13.06 + 9 = 22.06\ \text{m}^2\).</li>
+        <li><strong>Gain:</strong> \(K = P^-H^\top/S = (13.06,\ 4.13)/22.06 = (0.592,\ 0.187)\). Velocity gets a nonzero gain purely through the correlation term.</li>
+        <li><strong>Update with a fix</strong> \(z = 12\) m: the innovation is \(y = 12 - 10 = 2\) m, so \(\hat{\mathbf x}^+ = (10 + 0.592\times2,\ 10 + 0.187\times2) = (11.18\ \text{m},\ 10.37\ \text{m/s})\).</li>
+        <li><strong>New covariance:</strong> \(P^+ = (I-KH)P^- = \begin{bmatrix}5.33 & 1.68\\ 1.68 & 3.48\end{bmatrix}\): \(\sigma_p\) 3.61 → 2.31 m and \(\sigma_v\) 2.06 → 1.87 m/s.</li>
+      </ul>
+      <p>The filter reasoned: "the fix says we're 2 m further on than predicted; part of that is probably because we were going faster than we thought." That inference is what lets GNSS position fixes estimate velocity, and later heading and IMU bias.</p>
+    </div>
+
+    <h3>Why "filter"? And why Kalman?</h3>
+    <p>"Filter" comes from signal processing, where the job was to separate a signal from noise. Norbert Wiener's 1940s filter did this for stationary signals in the frequency domain. Rudolf Kálmán's 1960 paper, <em>A New Approach to Linear Filtering and Prediction Problems</em>, recast the problem in state-space form: a recursive algorithm in the time domain, which handles time-varying systems and runs naturally on a computer. Peter Swerling and Ruslan Stratonovich published related ideas around the same time.</p>
+    <p>Its first major use was navigation. Stanley Schmidt's group at NASA Ames adapted it for Apollo's midcourse navigation, and in doing so developed the linearised version now called the extended Kalman filter (section 07). Combining inertial sensors with occasional external fixes has been the filter's main job ever since; a car's GNSS/IMU is a direct descendant.</p>
+  </div>
+</section>
+
+<section id="road">
+  <div class="col">
+    <h2><span class="num">05</span>The car on a straight road</h2>
+    <div class="plain"><b>In plain words.</b> Use the accelerometer as the "control input" that pushes the prediction forward, and GNSS as the measurement that corrects it. The accelerometer's noise becomes \(Q\); the GNSS noise is \(R\). If the accelerometer has a bias, add the bias to the state and the filter will learn it.</div>
+    <p>Before the full 2D car, here is the same idea along a straight road. The IMU measures forward acceleration \(a_m = a + b_a + n_a\), with true acceleration \(a\), a bias \(b_a\) and white noise \(n_a\sim\mathcal N(0,\sigma_a^2)\). Treat the measured acceleration as a known input. With state \(\mathbf x = (p, v, b_a)\):</p>
+    <div class="math-block">\[ \begin{bmatrix}p\\v\\b_a\end{bmatrix}_k = \underbrace{\begin{bmatrix}1 & \Delta t & -\tfrac12\Delta t^2\\ 0 & 1 & -\Delta t\\ 0&0&1\end{bmatrix}}_{F}\begin{bmatrix}p\\v\\b_a\end{bmatrix}_{k-1} + \underbrace{\begin{bmatrix}\tfrac12\Delta t^2\\ \Delta t\\ 0\end{bmatrix}}_{B} a_m + \mathbf w_k, \qquad z_k = \underbrace{\begin{bmatrix}1&0&0\end{bmatrix}}_{H}\mathbf x_k + v_k . \]</div>
+    <p>The bias enters with a minus sign because the filter subtracts its current bias estimate from every IMU reading. The accelerometer noise enters exactly like the input, so \(Q = B B^\top \sigma_a^2\), plus a tiny term on \(b_a\) to let the bias drift slowly. GNSS sees only \(p\). Nothing measures \(v\) or \(b_a\) directly, but both are <strong>observable</strong>: a wrong bias makes position errors curve away in a characteristic \(t^2\) shape, and the filter attributes that curvature to the bias.</p>
+  </div>
+
+  <div class="lab" id="roadlab">
+    <div class="lab-head"><h3>Try it: a Kalman filter for a car on a straight road</h3><span class="tag">runs locally</span></div>
+    <div class="lab-grid">
+      <div><p class="panel-title">position error \(\hat p - p\) and the filter's ±3σ</p><svg class="plot" id="roadErr" viewBox="0 0 460 250" role="img" aria-label="Position error over time with the filter's 3-sigma band"></svg></div>
+      <div><p class="panel-title">bias estimate \(\hat b_a\) vs truth (m/s²)</p><svg class="plot" id="roadBias" viewBox="0 0 460 250" role="img" aria-label="Accelerometer bias estimate and its 3-sigma band against the true bias"></svg></div>
+    </div>
+    <div class="legend-row"><span><i style="background:var(--accent)"></i>error</span><span><i style="background:var(--epi)"></i>±3σ from \(P\)</span><span><i style="background:var(--accent-2)"></i>GNSS fix residual</span><span><i style="background:var(--violet)"></i>bias estimate</span><span><i style="background:var(--muted)"></i>true bias</span></div>
+    <div class="controls">
+      <div class="ctl"><label for="rQ">filter's σₐ (true 0.30) <output id="orQ"></output></label><input type="range" id="rQ" min="-1.5" max="1" step="0.01" value="-0.52"></div>
+      <div class="ctl"><label for="rR">filter's σ_GNSS (true 3.0 m) <output id="orR"></output></label><input type="range" id="rR" min="-0.5" max="1.5" step="0.01" value="0.48"></div>
+      <div class="ctl"><label for="rRate">GNSS rate</label><select id="rRate"><option value="10">1 Hz</option><option value="50">0.2 Hz</option><option value="2">5 Hz</option></select></div>
+      <div class="ctl"><label for="rBias">true accel bias</label><select id="rBias"><option value="0.1">0.10 m/s²</option><option value="0">none</option><option value="0.3">0.30 m/s²</option></select></div>
+    </div>
+    <div class="controls" style="margin-top:0">
+      <label class="check"><input type="checkbox" id="rTunnel" checked> tunnel: no GNSS from 30 s to 45 s</label>
+      <label class="check"><input type="checkbox" id="rEst" checked> estimate the bias (3-state filter)</label>
+      <div><button class="btn" id="rSeed" type="button">New noise</button></div>
+    </div>
+    <div class="stats" id="roadStats" aria-live="polite"></div>
+    <p style="font-size:14px;color:var(--muted);margin:10px 0 0">Untick "estimate the bias": the error drifts out of the band in the tunnel and the NEES verdict turns red. Shrink the filter's \(\sigma_a\) to 0.03: the band becomes tight and the error wanders outside it. NEES calls it overconfident, but NIS barely moves: a filter can look fine from its innovations alone. Raise \(\sigma_{\text{GNSS}}\) to 30 m: safe but sluggish (underconfident). Statistics are averaged over 25 noise realisations; the ± bands are approximate because samples within a run are correlated.</p>
+  </div>
+</section>
+
+<section id="tuning">
+  <div class="col">
+    <h2><span class="num">06</span>Tuning and checking consistency</h2>
+    <div class="plain"><b>In plain words.</b> A filter reports two things: an estimate and how unsure it is. Both matter. A filter that says "±1 m" when it is really out by 10 m is worse than useless, because everything downstream will trust it. You check honesty by asking whether the surprises it sees are the size it predicted.</div>
+    <p>\(R\) usually comes from the sensor: the receiver's reported accuracy, or the spread of readings while parked. \(Q\) is harder, because it describes everything the model gets wrong. For IMU-driven prediction it starts from the sensor datasheet (noise density and bias stability, usually read off an Allan variance plot) and is then adjusted. The ratio \(Q/R\) sets the behaviour:</p>
+    <ul>
+      <li><strong>\(Q\) too small:</strong> the filter trusts its model too much, \(P\) shrinks, the gain falls, and it ignores measurements. It is <em>overconfident</em> and slow to notice real changes, and can drift away entirely (divergence).</li>
+      <li><strong>\(Q\) too large:</strong> it trusts the model too little and follows every noisy measurement. Safe but jittery: the output is barely smoother than raw GNSS.</li>
+    </ul>
+
+    <h3>Two consistency tests</h3>
+    <p>If the model is right, the innovation \(\mathbf y_k\) is zero-mean with covariance \(S_k\), and the true error \(\mathbf e_k = \mathbf x_k - \hat{\mathbf x}_k\) is zero-mean with covariance \(P_k\). Normalising by the covariance gives statistics with known distributions:</p>
+    <div class="math-block">\[ \text{NIS}_k = \mathbf y_k^\top S_k^{-1}\mathbf y_k \sim \chi^2_m, \qquad \text{NEES}_k = \mathbf e_k^\top P_k^{-1}\mathbf e_k \sim \chi^2_n , \]</div>
+    <p>where \(m\) is the measurement size and \(n\) the state size. A \(\chi^2_m\) variable has mean \(m\), so on average NIS should be about 2 for a 2D GNSS fix and NEES about \(n\).</p>
+    <ul>
+      <li><strong>NIS</strong> (normalised innovation squared) needs no ground truth, so you can run it on the car in real time. Mean NIS well above \(m\): the filter is overconfident or the model is wrong. Well below: \(R\) or \(Q\) is too large.</li>
+      <li><strong>NEES</strong> (normalised estimation error squared) needs the truth, so it is for simulation, or for test drives with a high-grade reference system. It is the stronger test, because it checks the states you never measure.</li>
+    </ul>
+    <div class="callout">
+      <p><strong>Gating outliers with the same statistic.</strong> GNSS multipath occasionally produces a fix 30 m off. A linear filter would swallow it. Instead, compute NIS before updating and reject the fix if it exceeds a \(\chi^2\) threshold: for a 2D fix, 5.99 rejects 5 % of good fixes and 13.8 rejects 0.1 %. This is called a <strong>Mahalanobis gate</strong>, and it is in the code in section 10. Gate too tightly, though, and after a long outage the filter rejects the very fixes it needs to recover.</p>
+    </div>
+    <h3>The steady state</h3>
+    <p>Fact ② from section 02 carries over. The covariance recursion doesn't depend on the data, so for constant \(F, Q, H, R\) it converges to a fixed \(P_\infty\) (the solution of a discrete algebraic Riccati equation), and the gain to a fixed \(K_\infty\). Video 3 shows this: after a few cycles the ellipse stops changing. A <strong>steady-state Kalman filter</strong> uses \(K_\infty\) from the start. It is just a fixed linear filter, the kind you could implement as a few multiply-adds on a microcontroller, and for a scalar state it is identical to an exponential moving average.</p>
+    <details class="deeper"><summary>Going deeper: the complementary filter is a steady-state Kalman filter</summary><div class="deeper-body"><p>A popular way to fuse a gyro with an accelerometer's tilt estimate is the complementary filter: \(\hat\theta_k = \alpha(\hat\theta_{k-1} + \omega_k\Delta t) + (1-\alpha)\theta^{\text{acc}}_k\). It high-passes the gyro and low-passes the accelerometer. Rewrite it as \(\hat\theta_k = \hat\theta^-_k + (1-\alpha)(\theta^{\text{acc}}_k - \hat\theta^-_k)\) and it is a one-state Kalman filter with fixed gain \(K = 1-\alpha\). The Kalman filter tells you what \(\alpha\) to choose from the noise levels, and adapts it when measurements drop out.</p></div></details>
+  </div>
+</section>
+
+<div class="part"><div class="col"><span>Part III</span>When the world isn't linear</div></div>
+<section id="ekf">
+  <div class="col">
+    <h2><span class="num">07</span>The extended Kalman filter</h2>
+    <div class="plain"><b>In plain words.</b> A real car turns, so how its position changes depends on the sine and cosine of its heading. That isn't linear, and the Kalman filter needs linear. The EKF's trick: move the best guess through the true nonlinear equations, but move the uncertainty through a straight-line approximation of them, taken at the best guess.</div>
+    <p>Back to the full car, with state \(\mathbf x = (p_x, p_y, \psi, v, b_g)\) and IMU inputs \(\mathbf u = (\omega_m, a_m)\): measured yaw rate and forward acceleration. Over one IMU step:</p>
+    <div class="math-block">\[ \mathbf f(\mathbf x, \mathbf u) = \begin{bmatrix} p_x + v\cos\psi\,\Delta t\\ p_y + v\sin\psi\,\Delta t\\ \psi + (\omega_m - b_g)\,\Delta t\\ v + a_m\,\Delta t\\ b_g\end{bmatrix}, \qquad \mathbf h(\mathbf x) = \begin{bmatrix}p_x\\p_y\end{bmatrix}. \]</div>
+    <p>The GNSS model \(\mathbf h\) is still linear, but \(\mathbf f\) contains \(v\cos\psi\) and \(v\sin\psi\). A Gaussian pushed through it is no longer Gaussian (section 08 shows the banana shape it becomes), so the Kalman equations don't apply directly.</p>
+    <p>The EKF replaces \(\mathbf f\) near the current estimate by its first-order Taylor expansion, \(\mathbf f(\mathbf x) \approx \mathbf f(\hat{\mathbf x}) + F(\mathbf x - \hat{\mathbf x})\), where \(F = \partial\mathbf f/\partial\mathbf x\) is the <strong>Jacobian</strong>: the matrix of partial derivatives, evaluated at \(\hat{\mathbf x}\). Then:</p>
+    <div class="math-block">\[ \hat{\mathbf x}^-_k = \mathbf f(\hat{\mathbf x}^+_{k-1}, \mathbf u_k), \qquad P^-_k = F_k P^+_{k-1}F_k^\top + G_k\,Q_u\,G_k^\top + Q_b, \qquad F_k = \left.\frac{\partial\mathbf f}{\partial\mathbf x}\right|_{\hat{\mathbf x}^+_{k-1},\,\mathbf u_k} \]</div>
+    <p>The mean uses the full nonlinear model; only the covariance uses the linearisation. The update is the ordinary Kalman update with \(H = \partial\mathbf h/\partial\mathbf x\) (here a constant that picks out position) and innovation \(\mathbf y = \mathbf z - \mathbf h(\hat{\mathbf x}^-)\).</p>
+    <h3>The Jacobians for the car</h3>
+    <p>Differentiate each row of \(\mathbf f\) with respect to each state:</p>
+    <div class="math-block">\[ F = \begin{bmatrix} 1 & 0 & -v\sin\psi\,\Delta t & \cos\psi\,\Delta t & 0\\ 0 & 1 & \phantom{-}v\cos\psi\,\Delta t & \sin\psi\,\Delta t & 0\\ 0&0&1&0&-\Delta t\\ 0&0&0&1&0\\ 0&0&0&0&1\end{bmatrix}, \qquad G = \frac{\partial\mathbf f}{\partial\mathbf u} = \begin{bmatrix}0&0\\0&0\\ \Delta t&0\\ 0&\Delta t\\ 0&0\end{bmatrix}. \]</div>
+    <p>\(G\) maps IMU noise into the state, so \(Q_u = \operatorname{diag}(\sigma_\omega^2, \sigma_a^2)\) describes the gyro and accelerometer noise and \(GQ_uG^\top\) is its effect, the same pattern as \(Q = BB^\top\sigma_a^2\) in section 05. \(Q_b\) is a small random walk on the bias.</p>
+    <dl class="terms">
+      <dt><span class="sym">−v sinψ Δt, v cosψ Δt</span></dt>
+      <dd>How a <strong>heading error</strong> becomes a <strong>position error</strong>. At speed \(v\), a small heading error \(\delta\psi\) moves the car sideways at \(v\,\delta\psi\). This is the term that makes the uncertainty ellipse grow sideways in the tunnel.</dd>
+      <dt><span class="sym">cosψ Δt, sinψ Δt</span></dt>
+      <dd>How a <strong>speed error</strong> becomes a position error, along the direction of travel.</dd>
+      <dt><span class="sym">−Δt</span> in row 3</dt>
+      <dd>How a <strong>gyro-bias error</strong> becomes a heading error. Chained with the row above, bias → heading → sideways position. Running it backwards is how GNSS position fixes estimate the gyro bias.</dd>
+    </dl>
+    <div class="callout">
+      <p><strong>Worked example.</strong> At \(v = 15\) m/s, \(\psi = 30°\), \(\Delta t = 0.01\) s: \(F_{0,2} = -15\sin30°\times0.01 = -0.075\) and \(F_{1,2} = 15\cos30°\times0.01 = 0.130\) metres per radian. So per IMU step, a 1° (0.0175 rad) heading error shifts the predicted position by only \(0.0175\times(0.075, 0.130)\) m, about 2.6 mm across the direction of travel. But it does so every step: 100 steps per second gives 0.26 m/s of sideways drift, or 6.5 m across a 25 s tunnel. That is the right order for the 7 m sideways σ seen in Video 4.</p>
+    </div>
+  </div>
+  <figure class="wide">
+    <video src="v5_tunnel.mp4" controls muted loop playsinline preload="metadata" aria-label="Animation: a view following the car shows the EKF estimate with its 3-sigma ellipse, the true car and GNSS fixes. In the tunnel the ellipse grows, mostly sideways, then collapses at the first fix after the exit. Right-hand plots show the x error staying inside its 3-sigma band, and the gyro-bias estimate converging to the true value with a shrinking band."></video>
+    <figcaption><b>Video 4.</b> The 5-state EKF on the drive from Video 1, in a 90 m window that follows the car. Before the tunnel the gyro-bias estimate converges to within 0.03 °/s of the truth, and that is what keeps the tunnel drift to about 10 m. Run the same data through a filter without the bias state and the error at the tunnel exit is 47 m. Outside the tunnel the RMS error is 1.4 m, against 4.2 m for raw GNSS fixes.</figcaption>
+  </figure>
+  <div class="col">
+    <h3>When linearisation fails</h3>
+    <p>The EKF is only as good as its straight-line approximation, and that approximation is evaluated at an estimate that may be wrong. Trouble comes when the uncertainty is large compared with the scale on which the function curves. For the car, that means a large heading uncertainty: right after start-up before the car has moved, or after a long outage. The linearised covariance then has the wrong shape, the mean is biased, and the filter can be confidently wrong, which it cannot detect by itself. Two standard remedies: the <strong>iterated EKF</strong>, which re-linearises the update around the updated estimate, and the <strong>unscented</strong> approach in the next section, which avoids Jacobians altogether.</p>
+  </div>
+</section>
+
+<section id="ukf">
+  <div class="col">
+    <h2><span class="num">08</span>The unscented Kalman filter</h2>
+    <div class="plain"><b>In plain words.</b> Instead of approximating the <em>function</em> with a straight line, approximate the <em>distribution</em> with a handful of carefully chosen sample points. Push each point through the real nonlinear function, then measure the mean and spread of where they land. No derivatives needed, and it captures curvature the EKF misses.</div>
+    <p>The <strong>unscented transform</strong> (Julier and Uhlmann, 1997) picks \(2n+1\) <strong>sigma points</strong> that have exactly the mean \(\hat{\mathbf x}\) and covariance \(P\) of the Gaussian: one at the mean, and a symmetric pair along each column of a matrix square root of \(P\). With \(\lambda = \alpha^2(n+\kappa) - n\):</p>
+    <div class="math-block">\[ \boldsymbol\chi_0 = \hat{\mathbf x}, \qquad \boldsymbol\chi_{i} = \hat{\mathbf x} + \Big(\sqrt{(n+\lambda)P}\Big)_i, \qquad \boldsymbol\chi_{i+n} = \hat{\mathbf x} - \Big(\sqrt{(n+\lambda)P}\Big)_i, \quad i = 1,\dots,n \]</div>
+    <div class="math-block">\[ W^m_0 = \frac{\lambda}{n+\lambda},\qquad W^c_0 = W^m_0 + (1-\alpha^2+\beta),\qquad W^m_i = W^c_i = \frac{1}{2(n+\lambda)} . \]</div>
+    <p>Here \((\cdot)_i\) is the \(i\)-th column, and the square root is usually a Cholesky factor \(L\) with \(LL^\top = (n+\lambda)P\). Push every point through the nonlinear function, \(\mathcal Y_i = \mathbf g(\boldsymbol\chi_i)\), and read off the result:</p>
+    <div class="math-block">\[ \bar{\mathbf y} = \sum_i W^m_i\,\mathcal Y_i, \qquad P_y = \sum_i W^c_i\,(\mathcal Y_i - \bar{\mathbf y})(\mathcal Y_i - \bar{\mathbf y})^\top . \]</div>
+    <p>The parameters are dials on the spread. \(\alpha\) scales how far the points sit from the mean, \(\beta = 2\) is optimal for Gaussians, and \(\kappa\) is a secondary spread parameter, often \(3-n\). With \(\alpha = 1\), \(\kappa = 3-n\) you get Julier's original choice, which places the points so that the fourth moment of a Gaussian is also matched as closely as possible.</p>
+  </div>
+  <figure class="wide">
+    <video src="v4_unscented.mp4" controls muted loop playsinline preload="metadata" aria-label="Animation: a Gaussian over heading and speed is mapped through x = vT cos psi, y = vT sin psi. Monte Carlo samples form a banana-shaped arc. As heading uncertainty grows to 30 degrees, the EKF ellipse stays centred at 60 m and becomes much too tall, while the UKF ellipse, built from five sigma points, tracks the true mean and covariance closely."></video>
+    <figcaption><b>Video 5.</b> Where is the car after 4 s, if its heading and speed are uncertain? The true distribution (grey samples) bends into an arc. The EKF linearises at the mean, so its estimate stays at 60 m however uncertain the heading. The five sigma points see the curvature, and the UKF mean matches the true mean to within a few centimetres all the way to \(\sigma_\psi = 30°\).</figcaption>
+  </figure>
+  <div class="col">
+    <div class="callout">
+      <p><strong>Worked example: the mean of a curved path.</strong> Drive \(vT = 60\) m in a heading \(\psi\sim\mathcal N(0, \sigma^2)\) with \(\sigma = 20° = 0.349\) rad. How far forward do you expect to end up?</p>
+      <ul>
+        <li><strong>Exact.</strong> For a Gaussian, \(\mathbb E[\cos\psi] = e^{-\sigma^2/2}\), so \(\mathbb E[x] = 60\,e^{-0.061} = 56.45\) m. Any heading error shortens the forward distance, so the mean is pulled back.</li>
+        <li><strong>EKF.</strong> Linearise at \(\psi = 0\): \(\cos\psi \approx 1\), slope zero, so \(\mathbb E[x] = 60\) m. That is 3.5 m too far, and since the slope is zero the EKF also reports no forward uncertainty from heading at all.</li>
+        <li><strong>Unscented</strong> (\(n = 1\), \(\alpha = 1\), \(\kappa = 2\), so \(\lambda = 2\)). Points at \(0\) and \(\pm\sqrt3\,\sigma = \pm0.605\) rad, with weights \(\tfrac23, \tfrac16, \tfrac16\). Then \(\mathbb E[x] \approx 60\big(\tfrac23\cdot1 + \tfrac13\cos0.605\big) = 60(0.6667 + 0.2742) = 56.45\) m.</li>
+      </ul>
+      <p>Three function evaluations match the exact answer to the centimetre. A 10<sup>6</sup>-sample Monte Carlo run gives 56.45 m too.</p>
+    </div>
+  </div>
+
+  <div class="lab" id="utlab">
+    <div class="lab-head"><h3>Try it: EKF vs unscented transform</h3><span class="tag">interactive</span></div>
+    <div class="lab-grid3">
+      <div><p class="panel-title">output space · after T seconds (2σ ellipses)</p><svg class="plot" id="utOut" viewBox="0 0 440 440" role="img" aria-label="Monte Carlo samples, EKF ellipse, UKF ellipse and sigma points for the car position after T seconds"></svg>
+        <div class="legend-row"><span><i style="background:var(--muted)"></i>samples (truth)</span><span><i style="background:var(--accent)"></i>EKF</span><span><i style="background:var(--epi)"></i>UKF</span><span><i style="background:var(--violet)"></i>sigma points</span></div></div>
+      <div>
+        <div class="controls" style="grid-template-columns:1fr;margin-top:0">
+          <div class="ctl"><label for="uPsi">heading σψ (deg) <output id="ouPsi"></output></label><input type="range" id="uPsi" min="1" max="45" step="1" value="20"></div>
+          <div class="ctl"><label for="uV">speed σv (m/s) <output id="ouV"></output></label><input type="range" id="uV" min="0.1" max="4" step="0.1" value="1"></div>
+          <div class="ctl"><label for="uT">horizon T (s) <output id="ouT"></output></label><input type="range" id="uT" min="0.5" max="6" step="0.5" value="4"></div>
+          <div class="ctl"><label for="uK">κ (UKF spread) <output id="ouK"></output></label><input type="range" id="uK" min="0" max="4" step="0.5" value="1"></div>
+        </div>
+        <table class="res" id="utTable" aria-live="polite"></table>
+        <p style="font-size:14px;color:var(--muted);margin:10px 0 0">Speed is 15 m/s. Push \(\sigma_\psi\) past 30°: the EKF mean stays put and its ellipse balloons sideways, while the UKF follows the arc. Set \(\sigma_\psi\) to 1–2° and the two agree: when the uncertainty is small compared with the curvature, linearisation is fine.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <h3>The UKF algorithm</h3>
+    <p>The UKF is the Kalman filter with every "push a Gaussian through a function" replaced by an unscented transform.</p>
+    <ol class="steps">
+      <li><strong>Predict.</strong> Draw sigma points from \((\hat{\mathbf x}^+_{k-1}, P^+_{k-1})\), push each through \(\mathbf f(\cdot, \mathbf u_k)\), and take their weighted mean and covariance, plus \(Q\), as \((\hat{\mathbf x}^-_k, P^-_k)\).</li>
+      <li><strong>Predict the measurement.</strong> Push sigma points through \(\mathbf h\): \(\mathcal Z_i = \mathbf h(\boldsymbol\chi_i)\). Their weighted mean is \(\hat{\mathbf z}\), and their weighted covariance plus \(R\) is \(S\).</li>
+      <li><strong>Cross-covariance.</strong> \(P_{xz} = \sum_i W^c_i(\boldsymbol\chi_i - \hat{\mathbf x}^-)(\mathcal Z_i - \hat{\mathbf z})^\top\), which plays the role of \(P^-H^\top\).</li>
+      <li><strong>Update.</strong> \(K = P_{xz}S^{-1}\), \(\ \hat{\mathbf x}^+ = \hat{\mathbf x}^- + K(\mathbf z - \hat{\mathbf z})\), \(\ P^+ = P^- - KSK^\top\).</li>
+    </ol>
+    <p>For a linear \(\mathbf h\) the unscented transform is exact, \(P_{xz} = P^-H^\top\), and the update is identical to the Kalman update. So for our car, whose GNSS model is linear, the UKF differs from the EKF only in the predict step.</p>
+  </div>
+  <div class="facts">
+    <div class="fact"><h4>EKF</h4><p>Needs Jacobians, derived by hand or by automatic differentiation. Cost per step is one model evaluation plus matrix products. Accurate to first order. The standard choice in automotive and aerospace navigation when uncertainties stay small, which a GNSS-aided IMU usually ensures.</p></div>
+    <div class="fact"><h4>UKF</h4><p>No derivatives: the model is a black box. Costs \(2n+1\) model evaluations and a Cholesky factorisation per step. Captures the mean to second order and handles stronger curvature. Worth it for large uncertainties, awkward models or poor initialisation.</p></div>
+    <div class="fact"><h4>Particle filter</h4><p>Hundreds to thousands of random samples, no Gaussian assumption. Handles multi-modal beliefs ("I'm on one of these two roads") that no Kalman variant can represent. Much more expensive, and it struggles in high dimensions.</p></div>
+  </div>
+</section>
+
+<div class="part"><div class="col"><span>Part IV</span>Practice</div></div>
+<section id="pipeline">
+  <div class="col">
+    <h2><span class="num">09</span>A GNSS/IMU fusion pipeline</h2>
+    <p>The equations are the easy part. A filter on a real car spends most of its code on timing, frames and bad data.</p>
+  </div>
+  <figure class="wide">
+    <div class="svgbox">
+      <svg viewBox="0 0 1040 250" width="1040" role="img" aria-label="Fusion pipeline. IMU samples at 100 Hz drive the predict step. GNSS fixes at 1 Hz are time-aligned, lever-arm corrected and gated by NIS before the update step. The filter outputs pose, velocity and covariance and feeds bias estimates back into IMU compensation.">
+        <defs><marker id="ahp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+        <g font-size="13" fill="currentColor" text-anchor="middle">
+          <rect x="10" y="20" width="150" height="70" rx="6" fill="none" stroke="#2f5cd6" stroke-width="2"/>
+          <text x="85" y="46" font-weight="600" fill="#2f5cd6">IMU 100 Hz</text><text x="85" y="66" opacity=".75">yaw rate, accel</text>
+          <rect x="200" y="20" width="170" height="70" rx="6" fill="none" stroke="currentColor"/>
+          <text x="285" y="46" font-weight="600">Compensate</text><text x="285" y="66" opacity=".75">subtract bias estimates</text>
+          <rect x="410" y="20" width="190" height="70" rx="6" fill="none" stroke="currentColor"/>
+          <text x="505" y="46" font-weight="600">Predict (§07)</text><text x="505" y="66" opacity=".75">x̂ = f(x̂, u), P = FPFᵀ + Q</text>
+          <rect x="10" y="150" width="150" height="70" rx="6" fill="none" stroke="#d75a22" stroke-width="2"/>
+          <text x="85" y="176" font-weight="600" fill="#d75a22">GNSS 1–10 Hz</text><text x="85" y="196" opacity=".75">position, (velocity)</text>
+          <rect x="200" y="150" width="170" height="70" rx="6" fill="none" stroke="currentColor"/>
+          <text x="285" y="176" font-weight="600">Time-align</text><text x="285" y="196" opacity=".75">latency, lever arm, frame</text>
+          <rect x="410" y="150" width="190" height="70" rx="6" fill="none" stroke="currentColor"/>
+          <text x="505" y="176" font-weight="600">Gate (§06)</text><text x="505" y="196" opacity=".75">NIS &gt; χ² threshold → reject</text>
+          <rect x="640" y="150" width="170" height="70" rx="6" fill="none" stroke="currentColor"/>
+          <text x="725" y="176" font-weight="600">Update (§04)</text><text x="725" y="196" opacity=".75">K, Joseph form</text>
+          <rect x="860" y="80" width="170" height="80" rx="6" fill="none" stroke="#1f8a61" stroke-width="2"/>
+          <text x="945" y="108" font-weight="600" fill="#1f8a61">State + covariance</text><text x="945" y="128" opacity=".75">pose, speed, biases</text><text x="945" y="146" opacity=".75">to planning, mapping</text>
+          <line x1="160" y1="55" x2="198" y2="55" stroke="currentColor" marker-end="url(#ahp)"/>
+          <line x1="370" y1="55" x2="408" y2="55" stroke="currentColor" marker-end="url(#ahp)"/>
+          <line x1="600" y1="55" x2="858" y2="100" stroke="currentColor" marker-end="url(#ahp)"/>
+          <line x1="160" y1="185" x2="198" y2="185" stroke="currentColor" marker-end="url(#ahp)"/>
+          <line x1="370" y1="185" x2="408" y2="185" stroke="currentColor" marker-end="url(#ahp)"/>
+          <line x1="600" y1="185" x2="638" y2="185" stroke="currentColor" marker-end="url(#ahp)"/>
+          <line x1="810" y1="185" x2="858" y2="145" stroke="currentColor" marker-end="url(#ahp)"/>
+          <line x1="505" y1="90" x2="505" y2="148" stroke="currentColor" stroke-dasharray="4 3" marker-end="url(#ahp)"/>
+          <text x="540" y="124" font-size="12" opacity=".75" text-anchor="start">x̂⁻, P⁻</text>
+          <path d="M 945 80 C 945 4, 285 4, 285 18" fill="none" stroke="#7445c0" stroke-width="1.6" stroke-dasharray="4 3" marker-end="url(#ahp)"/>
+          <text x="640" y="14" font-size="12" fill="#7445c0">bias estimates fed back</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Figure 3.</b> A loosely coupled GNSS/IMU filter. The IMU drives predict at its own rate; each GNSS fix is aligned in time and space, checked, then used to update. Bias estimates are applied to the next IMU samples.</figcaption>
+  </figure>
+  <div class="col">
+    <h3>The parts that the equations leave out</h3>
+    <ul>
+      <li><strong>Multi-rate, asynchronous sensors.</strong> Predict at each IMU sample, update whenever a fix arrives. If a fix lands between IMU samples, predict up to its timestamp first. Each sensor gets its own \(H\) and \(R\); adding wheel speed or a camera is just another update.</li>
+      <li><strong>Latency.</strong> A GNSS fix may arrive 50–200 ms after the instant it describes. Applying it "now" puts a moving car in the wrong place. Keep a short buffer of past states and IMU samples, apply the fix at its true timestamp, then re-run the predictions forward.</li>
+      <li><strong>Lever arm and frames.</strong> The antenna is not at the IMU. Its position is \(\mathbf p + R(\psi)\,\boldsymbol\ell\) for the mounting offset \(\boldsymbol\ell\), which makes \(\mathbf h\) depend on heading. GNSS reports latitude and longitude; convert to a local east-north frame first.</li>
+      <li><strong>Initialisation.</strong> GNSS position says nothing about heading while the car is stationary. Start with a large heading variance, or initialise heading from the GNSS velocity once the car is moving. A huge initial \(P\) is also where the UKF's robustness pays off.</li>
+      <li><strong>Pseudo-measurements.</strong> A car doesn't slide sideways or leave the road surface. Feeding "lateral velocity ≈ 0, vertical velocity ≈ 0" as measurements with a modest \(R\) (the <em>non-holonomic constraint</em>) noticeably slows drift in tunnels.</li>
+      <li><strong>Loose vs tight coupling.</strong> Here GNSS supplies finished position fixes (<em>loosely coupled</em>). <em>Tightly coupled</em> systems update with each satellite's pseudorange instead, so they still get useful information with fewer than four satellites in view, at the cost of a nonlinear \(\mathbf h\) and more states (receiver clock bias and drift).</li>
+    </ul>
+    <details class="deeper"><summary>Going deeper: the error-state (indirect) Kalman filter</summary><div class="deeper-body"><p>Production INS filters rarely estimate the full state directly. They integrate the IMU with the full nonlinear strapdown equations (3D attitude as a quaternion or rotation matrix) to get a <em>nominal</em> state, and run a Kalman filter on the small <em>error</em> \(\delta\mathbf x\) between nominal and truth. After each update the estimated error is injected into the nominal state and reset to zero. Three advantages: the error stays small, so linearisation is accurate; 3D attitude error can be a minimal 3-vector instead of a constrained 4-element quaternion; and the filter can run slower than the IMU integration. Solà's notes (in the reading list) derive it in full. VIO systems such as MSCKF and OpenVINS are error-state filters with camera features as the measurements.</p></div></details>
+  </div>
+</section>
+
+<section id="code">
+  <div class="col">
+    <h2><span class="num">10</span>Code</h2>
+    <p>The filters on this page in about 90 lines of NumPy. The <code>CarEKF</code> class run on the simulated drive reproduces Video 4 exactly (RMS error 3.1 m including the tunnel, mean NIS 1.96 against an expected 2).</p>
+  </div>
+  <div class="codewrap">
+<button class="copy" type="button" data-target="pyfilters">Copy</button>
+<pre id="pyfilters"><code>import numpy as np
+
+
+class KalmanFilter:
+    """Linear KF:  x_k = F x_{k-1} + B u_k + w,  w ~ N(0, Q);   z_k = H x_k + v,  v ~ N(0, R)."""
+
+    def __init__(self, x0, P0):
+        self.x = np.asarray(x0, float)
+        self.P = np.asarray(P0, float)
+
+    def predict(self, F, Q, B=None, u=None):
+        self.x = F @ self.x + (B @ u if B is not None else 0.0)
+        self.P = F @ self.P @ F.T + Q
+
+    def update(self, z, H, R):
+        y = z - H @ self.x                          <span class="cm"># innovation</span>
+        S = H @ self.P @ H.T + R                    <span class="cm"># innovation covariance</span>
+        K = np.linalg.solve(S, H @ self.P).T        <span class="cm"># K = P H^T S^-1  (S, P symmetric)</span>
+        self.x = self.x + K @ y
+        I_KH = np.eye(len(self.x)) - K @ H
+        self.P = I_KH @ self.P @ I_KH.T + K @ R @ K.T   <span class="cm"># Joseph form: stays symmetric and PSD</span>
+        return float(y @ np.linalg.solve(S, y))     <span class="cm"># NIS, for consistency checks</span>
+
+
+<span class="cm"># ---- EKF for the car: x = [px, py, psi, v, b_g], inputs u = [gyro yaw rate, forward accel] ----</span>
+def f_car(x, u, dt):
+    px, py, psi, v, bg = x
+    w, a = u
+    return np.array([px + v*np.cos(psi)*dt, py + v*np.sin(psi)*dt, psi + (w - bg)*dt, v + a*dt, bg])
+
+
+def F_car(x, u, dt):                                <span class="cm"># Jacobian of f_car w.r.t. x</span>
+    _, _, psi, v, _ = x
+    F = np.eye(5)
+    F[0, 2], F[0, 3] = -v*np.sin(psi)*dt, np.cos(psi)*dt
+    F[1, 2], F[1, 3] = v*np.cos(psi)*dt, np.sin(psi)*dt
+    F[2, 4] = -dt
+    return F
+
+
+def Q_car(dt, sig_gyro, sig_acc, sig_bias_walk):
+    G = np.zeros((5, 2)); G[2, 0] = dt; G[3, 1] = dt     <span class="cm"># how IMU noise enters the state</span>
+    Q = G @ np.diag([sig_gyro**2, sig_acc**2]) @ G.T
+    Q[4, 4] = sig_bias_walk**2*dt                        <span class="cm"># slow random walk on the gyro bias</span>
+    return Q
+
+
+class CarEKF(KalmanFilter):
+    H_gnss = np.array([[1., 0, 0, 0, 0], [0, 1., 0, 0, 0]])
+
+    def predict_imu(self, u, dt, Q):
+        F = F_car(self.x, u, dt)                         <span class="cm"># linearise at the current estimate...</span>
+        self.x = f_car(self.x, u, dt)                    <span class="cm"># ...but propagate the mean nonlinearly</span>
+        self.P = F @ self.P @ F.T + Q
+
+    def update_gnss(self, z, R, gate=13.8):              <span class="cm"># 13.8 = chi-square(2 dof) at 99.9 %</span>
+        y = z - self.H_gnss @ self.x
+        S = self.H_gnss @ self.P @ self.H_gnss.T + R
+        nis = float(y @ np.linalg.solve(S, y))
+        if nis &gt; gate:                                    <span class="cm"># reject multipath / outliers</span>
+            return nis, False
+        self.update(z, self.H_gnss, R)
+        return nis, True
+
+
+<span class="cm"># ---- Unscented transform (the core of the UKF) ----</span>
+def sigma_points(mu, P, alpha=1.0, beta=0.0, kappa=None):
+    """alpha=1, beta=0, kappa=3-n is Julier's original choice; Merwe's scaled form uses small alpha, beta=2."""
+    n = len(mu)
+    kappa = 3.0 - n if kappa is None else kappa
+    lam = alpha**2*(n + kappa) - n
+    L = np.linalg.cholesky((n + lam)*P)                  <span class="cm"># a matrix square root of (n+lam) P</span>
+    X = np.vstack([mu, mu + L.T, mu - L.T])             <span class="cm"># 2n+1 points, one per row</span>
+    wm = np.full(2*n + 1, 0.5/(n + lam)); wc = wm.copy()
+    wm[0] = lam/(n + lam); wc[0] = wm[0] + (1 - alpha**2 + beta)
+    return X, wm, wc
+
+
+def unscented_transform(g, mu, P, noise_cov=None, **kw):
+    X, wm, wc = sigma_points(mu, P, **kw)
+    Y = np.array([g(x) for x in X])                      <span class="cm"># push every point through g, no Jacobians</span>
+    m = wm @ Y
+    d = Y - m
+    C = (wc[:, None]*d).T @ d
+    if noise_cov is not None:
+        C = C + noise_cov
+    return m, C, X, Y, wm, wc</code></pre>
+  </div>
+  <div class="col">
+    <h3>Running it</h3>
+    <p>The main loop: predict on every IMU sample, update whenever a fix arrives, and log NIS so you can check consistency.</p>
+  </div>
+  <div class="codewrap">
+<button class="copy" type="button" data-target="pyloop">Copy</button>
+<pre id="pyloop"><code>import numpy as np
+from filters import CarEKF, Q_car
+
+dt = 0.01                                    <span class="cm"># 100 Hz IMU</span>
+kf = CarEKF(x0=[0, 0, 0, 0, 0],              <span class="cm"># px, py, psi, v, b_g  (car starts at rest, heading east)</span>
+            P0=np.diag([1, 1, np.deg2rad(2)**2, 0.5**2, 0.01**2]))
+Q = Q_car(dt, sig_gyro=0.02, sig_acc=0.2, sig_bias_walk=1e-5)
+R = np.eye(2) * 3.0**2                       <span class="cm"># GNSS: 3 m per axis</span>
+
+est, cov, nis_log = [], [], []
+for k, (gyro, acc) in enumerate(imu):        <span class="cm"># imu: (N, 2) array of (yaw rate, forward accel)</span>
+    if k &gt; 0:
+        kf.predict_imu(imu[k - 1], dt, Q)    <span class="cm"># integrate the previous sample over [k-1, k]</span>
+    if k in gnss_at:                         <span class="cm"># gnss_at: {IMU index: (east, north) fix}</span>
+        nis, accepted = kf.update_gnss(gnss_at[k], R)
+        nis_log.append(nis)
+    est.append(kf.x.copy()); cov.append(kf.P.copy())
+
+print("mean NIS:", np.mean(nis_log), "(expect 2 for a consistent filter)")</code></pre>
+  </div>
+</section>
+
+<section id="practice">
+  <div class="col">
+    <h2><span class="num">11</span>Failure modes and practical notes</h2>
+    <h3>Where the model breaks</h3>
+    <ul>
+      <li><strong>Overconfidence and divergence.</strong> If \(Q\) is too small or a bias isn't modelled, \(P\) shrinks below the real error, the gain falls, and measurements stop correcting the estimate. Watch NIS: a running mean well above \(m\) is the early warning. The section 05 lab with the bias state switched off shows this.</li>
+      <li><strong>Unmodelled biases and correlated noise.</strong> The filter assumes white noise. GNSS errors in fact wander slowly (atmosphere, multipath), so successive fixes are correlated and the filter over-trusts their average. Inflate \(R\), or model the slow error as an extra state.</li>
+      <li><strong>Unobservable states.</strong> Gyro bias and heading only become observable when the car moves and turns. Parked, they are pure guesses, and \(P\) for them should stay large. If a state never becomes observable, its variance never shrinks: check the diagonal of \(P\) over a drive.</li>
+      <li><strong>Linearisation error.</strong> Large heading uncertainty, after a cold start or a long outage, breaks the EKF's first-order approximation (section 08). Use the UKF or an iterated EKF, or keep the uncertainty small by initialising carefully.</li>
+    </ul>
+    <h3>Where the implementation breaks</h3>
+    <ul>
+      <li><strong>Numerical loss of symmetry.</strong> Rounding makes \(P\) slowly asymmetric or slightly indefinite, and then the Cholesky in a UKF fails. Use the Joseph form, symmetrise with \(P \leftarrow \tfrac12(P + P^\top)\), or carry a square-root factor of \(P\) instead (square-root filters).</li>
+      <li><strong>Don't invert \(S\).</strong> Solve linear systems with it (<code>np.linalg.solve</code>, Cholesky) instead of forming \(S^{-1}\).</li>
+      <li><strong>Angle wrapping.</strong> A heading innovation of 359° is really −1°. Wrap any angle difference into \((-\pi, \pi]\) before using it, including inside UKF means: average angles through their sines and cosines.</li>
+      <li><strong>Timestamps.</strong> Most "the filter is bad" bugs are timing bugs: mixed clocks, IMU \(\Delta t\) computed from jittery arrival times, or GNSS latency ignored. Plot the innovations against time; a lag shows up as innovations correlated with acceleration.</li>
+      <li><strong>Outliers.</strong> A single 30 m multipath jump, accepted, takes several seconds to wash out. Gate on NIS (section 06), but loosen the gate after an outage, when \(P\) is large and big innovations are expected.</li>
+    </ul>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap"><div class="col">
+    <strong style="color:var(--ink)">Further reading</strong>
+    <ul>
+      <li>R. E. Kalman, "A new approach to linear filtering and prediction problems," <em>Trans. ASME, Journal of Basic Engineering</em> 82(1), 1960.</li>
+      <li>L. A. McGee, S. F. Schmidt, "Discovery of the Kalman filter as a practical tool for aerospace and industry," NASA TM-86847, 1985.</li>
+      <li>S. Thrun, W. Burgard, D. Fox, <em>Probabilistic Robotics</em>, MIT Press, 2005. Ch. 2–3.</li>
+      <li>Y. Bar-Shalom, X. R. Li, T. Kirubarajan, <em>Estimation with Applications to Tracking and Navigation</em>, Wiley, 2001. Ch. 5 (consistency tests).</li>
+      <li>D. Simon, <em>Optimal State Estimation: Kalman, H∞, and Nonlinear Approaches</em>, Wiley, 2006.</li>
+      <li>P. D. Groves, <em>Principles of GNSS, Inertial, and Multisensor Integrated Navigation Systems</em>, 2nd ed., Artech House, 2013.</li>
+      <li>S. J. Julier, J. K. Uhlmann, "A new extension of the Kalman filter to nonlinear systems," <em>Proc. SPIE</em> 3068, 1997.</li>
+      <li>E. A. Wan, R. van der Merwe, "The unscented Kalman filter for nonlinear estimation," <em>IEEE AS-SPCC Symposium</em>, 2000.</li>
+      <li>S. J. Julier, J. K. Uhlmann, "Unscented filtering and nonlinear estimation," <em>Proceedings of the IEEE</em> 92(3), 2004.</li>
+      <li>J. Solà, "Quaternion kinematics for the error-state Kalman filter," arXiv:1711.02508, 2017.</li>
+    </ul>
+  </div></div>
+</footer>
+
+<script>
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const NS = "http://www.w3.org/2000/svg";
+function el(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function clear(svg) { while (svg.firstChild) svg.removeChild(svg.firstChild); }
+const fmt = (x, d = 2) => (Math.abs(x) < 1e-12 ? 0 : x).toFixed(d);
+// seeded RNG + Gaussian
+function makeRng(seed) {
+  let s = seed >>> 0 || 1;
+  const u = () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; };
+  return { u, n: () => Math.sqrt(-2 * Math.log(u() + 1e-12)) * Math.cos(2 * Math.PI * u()) };
+}
+function axes(svg, X0, X1, Y0, Y1, box, opts = {}) {
+  // box = [left, top, right, bottom] in svg units; returns mappers
+  const [l, t, r, b] = box;
+  const sx = x => l + (x - X0) / (X1 - X0) * (r - l);
+  const sy = y => b - (y - Y0) / (Y1 - Y0) * (b - t);
+  const g = el("g", { "font-size": 11, fill: css("--muted"), "font-family": "IBM Plex Mono, monospace" }, svg);
+  el("line", { x1: l, y1: b, x2: r, y2: b, stroke: css("--rule") }, g);
+  el("line", { x1: l, y1: t, x2: l, y2: b, stroke: css("--rule") }, g);
+  (opts.xt || []).forEach(v => { const x = sx(v); el("line", { x1: x, y1: b, x2: x, y2: b + 4, stroke: css("--rule") }, g); const tx = el("text", { x, y: b + 16, "text-anchor": "middle" }, g); tx.textContent = v; });
+  (opts.yt || []).forEach(v => { const y = sy(v); el("line", { x1: l - 4, y1: y, x2: l, y2: y, stroke: css("--rule") }, g); const tx = el("text", { x: l - 7, y: y + 4, "text-anchor": "end" }, g); tx.textContent = v; });
+  if (opts.xl) { const tx = el("text", { x: (l + r) / 2, y: b + 32, "text-anchor": "middle" }, g); tx.textContent = opts.xl; }
+  if (opts.zero) el("line", { x1: l, y1: sy(0), x2: r, y2: sy(0), stroke: css("--rule"), "stroke-dasharray": "3 3" }, g);
+  return { sx, sy };
+}
+const path = pts => pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + "," + p[1].toFixed(1)).join("");
+function ellipsePts(m, C, k, n = 90) {
+  // eigen-decomposition of a symmetric 2x2
+  const a = C[0][0], b = C[0][1], d = C[1][1];
+  const tr = (a + d) / 2, det = Math.sqrt(Math.max(0, ((a - d) / 2) ** 2 + b * b));
+  const l1 = tr + det, l2 = Math.max(0, tr - det);
+  const th = Math.abs(b) < 1e-15 ? (a >= d ? 0 : Math.PI / 2) : Math.atan2(l1 - a, b);
+  const c = Math.cos(th), s = Math.sin(th), r1 = k * Math.sqrt(l1), r2 = k * Math.sqrt(l2);
+  const out = [];
+  for (let i = 0; i <= n; i++) { const t = 2 * Math.PI * i / n, u = r1 * Math.cos(t), v = r2 * Math.sin(t); out.push([m[0] + c * u - s * v, m[1] + s * u + c * v]); }
+  return out;
+}
+
+/* ---------- Lab A: fuse two Gaussians ---------- */
+(function fuseLab() {
+  const svg = document.getElementById("fusePlot"), st = document.getElementById("fuseStats");
+  const ids = ["fx1", "fs1", "fx2", "fs2"], $ = id => document.getElementById(id);
+  function draw() {
+    const x1 = +$("fx1").value, s1 = +$("fs1").value, x2 = +$("fx2").value, s2 = +$("fs2").value;
+    ids.forEach(id => $("o" + id).textContent = (+$(id).value).toFixed(1));
+    const K = s1 * s1 / (s1 * s1 + s2 * s2), xf = x1 + K * (x2 - x1), sf = Math.sqrt((1 - K) * s1 * s1);
+    clear(svg);
+    const g = (x, m, s) => Math.exp(-0.5 * ((x - m) / s) ** 2) / (s * Math.sqrt(2 * Math.PI));
+    const ymax = Math.max(g(xf, xf, sf), 0.05) * 1.1;
+    const A = axes(svg, 70, 130, 0, ymax, [30, 14, 745, 222], { xt: [70, 80, 90, 100, 110, 120, 130], xl: "position (m)" });
+    const curve = (m, s, col, w, fill) => {
+      const pts = []; for (let x = 70; x <= 130; x += 0.15) pts.push([A.sx(x), A.sy(g(x, m, s))]);
+      if (fill) el("path", { d: path(pts) + `L${A.sx(130)},${A.sy(0)}L${A.sx(70)},${A.sy(0)}Z`, fill: col, "fill-opacity": .12, stroke: "none" }, svg);
+      el("path", { d: path(pts), fill: "none", stroke: col, "stroke-width": w }, svg);
+    };
+    curve(x1, s1, css("--accent"), 2.2); curve(x2, s2, css("--accent-2"), 2.2); curve(xf, sf, css("--epi"), 3, true);
+    [[x1, css("--accent")], [x2, css("--accent-2")], [xf, css("--epi")]].forEach(([x, c]) => el("line", { x1: A.sx(x), y1: A.sy(0), x2: A.sx(x), y2: A.sy(0) + 8, stroke: c, "stroke-width": 3 }, svg));
+    st.innerHTML = [["gain K", fmt(K, 3)], ["fused mean", fmt(xf, 2) + " m"], ["fused σ", fmt(sf, 2) + " m"], ["vs best input", (100 * (1 - sf / Math.min(s1, s2))).toFixed(0) + " % smaller"]]
+      .map(([k, v]) => `<div class="stat"><div class="k">${k}</div><div class="v">${v}</div></div>`).join("");
+  }
+  ids.forEach(id => $(id).addEventListener("input", draw));
+  window.__fuseDraw = draw; draw();
+})();
+
+/* ---------- Lab B: 1D car KF with optional bias state ---------- */
+(function roadLab() {
+  const $ = id => document.getElementById(id);
+  const DT = 0.1, TEND = 60, N = Math.round(TEND / DT) + 1, SIG_IMU = 0.3, SIG_G = 3.0, RUNS = 25;
+  let seed = 7;
+  function simulate(rng, bias, every, tunnel) {
+    const tr = [], imu = [], z = [];
+    let p = 0, v = 10;
+    for (let k = 0; k < N; k++) {
+      const t = k * DT, a = 0.8 * Math.sin(0.25 * t) + 0.5 * Math.sin(0.07 * t + 1);
+      tr.push([p, v]); imu.push(a + bias + SIG_IMU * rng.n());
+      const inT = tunnel && t >= 30 && t <= 45;
+      z.push(k > 0 && k % every === 0 && !inT ? p + SIG_G * rng.n() : null);
+      p += v * DT + 0.5 * a * DT * DT; v += a * DT;
+    }
+    return { tr, imu, z, e0: [2 * rng.n(), rng.n()] };
+  }
+  // tiny matrix helpers
+  const mm = (A, B) => A.map(r => B[0].map((_, j) => r.reduce((s, a, k) => s + a * B[k][j], 0)));
+  const T = A => A[0].map((_, j) => A.map(r => r[j]));
+  const add = (A, B) => A.map((r, i) => r.map((a, j) => a + B[i][j]));
+  function inv2(M) { const d = M[0][0] * M[1][1] - M[0][1] * M[1][0]; return [[M[1][1] / d, -M[0][1] / d], [-M[1][0] / d, M[0][0] / d]]; }
+  function run(sim, sa, sr, est) {
+    const n = est ? 3 : 2;
+    // initial estimate = truth + an error drawn from P0, so the start is consistent too
+    let x = est ? [sim.e0[0], 10 + sim.e0[1], 0] : [sim.e0[0], 10 + sim.e0[1]];
+    let P = est ? [[4, 0, 0], [0, 1, 0], [0, 0, 0.0225]] : [[4, 0], [0, 1]];
+    const F = est ? [[1, DT, -0.5 * DT * DT], [0, 1, -DT], [0, 0, 1]] : [[1, DT], [0, 1]];
+    const Bv = est ? [0.5 * DT * DT, DT, 0] : [0.5 * DT * DT, DT];
+    const Q = Bv.map(a => Bv.map(b => a * b * sa * sa)); if (est) Q[2][2] += 1e-6 * DT;
+    const out = { e: [], s3: [], b: [], bs3: [], nis: [], nees: [], res: [] };
+    for (let k = 0; k < N; k++) {
+      if (k > 0) {
+        const u = sim.imu[k - 1];
+        x = F.map(r => r.reduce((s, a, j) => s + a * x[j], 0)).map((v, i) => v + Bv[i] * u);
+        P = add(mm(mm(F, P), T(F)), Q);
+      }
+      const z = sim.z[k];
+      if (z !== null) {
+        const S = P[0][0] + sr * sr, y = z - x[0];
+        const K = P.map(r => r[0] / S);
+        x = x.map((v, i) => v + K[i] * y);
+        const IKH = P.map((_, i) => P.map((_, j) => (i === j ? 1 : 0) - (j === 0 ? K[i] : 0)));
+        P = add(mm(mm(IKH, P), T(IKH)), K.map(a => K.map(b => a * b * sr * sr)));
+        out.nis.push(y * y / S);
+        out.res.push([k * DT, z - sim.tr[k][0]]);
+      }
+      const ep = x[0] - sim.tr[k][0], ev = x[1] - sim.tr[k][1];
+      out.e.push(ep); out.s3.push(3 * Math.sqrt(P[0][0]));
+      out.b.push(est ? x[2] : 0); out.bs3.push(est ? 3 * Math.sqrt(P[2][2]) : 0);
+      if (k % 50 === 25) { const Pi = inv2([[P[0][0], P[0][1]], [P[1][0], P[1][1]]]); out.nees.push(ep * (Pi[0][0] * ep + Pi[0][1] * ev) + ev * (Pi[1][0] * ep + Pi[1][1] * ev)); }
+    }
+    return out;
+  }
+  function draw() {
+    const sa = Math.pow(10, +$("rQ").value), sr = Math.pow(10, +$("rR").value);
+    $("orQ").textContent = sa.toFixed(2) + " m/s²"; $("orR").textContent = sr.toFixed(1) + " m";
+    const every = +$("rRate").value, bias = +$("rBias").value, tunnel = $("rTunnel").checked, est = $("rEst").checked;
+    let first = null, nisAll = [], neesAll = [], sq = 0, cnt = 0;
+    for (let r = 0; r < RUNS; r++) {
+      const sim = simulate(makeRng(seed * 1000 + r * 7919 + 1), bias, every, tunnel);
+      const o = run(sim, sa, sr, est);
+      if (!r) first = { o, sim };
+      nisAll = nisAll.concat(o.nis); neesAll = neesAll.concat(o.nees);
+      o.e.forEach(e => { sq += e * e; cnt++; });
+    }
+    const o = first.o, t = o.e.map((_, k) => k * DT);
+    // error panel
+    const s1 = $("roadErr"); clear(s1);
+    let ym = Math.max(5, ...o.e.map(Math.abs), ...o.s3.map(v => Math.min(v, 60)));
+    ym = Math.min(ym * 1.1, 60);
+    const tick = ym > 30 ? 20 : ym > 12 ? 10 : 5, yt = []; for (let v = -Math.floor(ym / tick) * tick; v <= ym; v += tick) yt.push(v);
+    const A = axes(s1, 0, TEND, -ym, ym, [40, 10, 450, 218], { xt: [0, 10, 20, 30, 40, 50, 60], yt, xl: "time (s)", zero: true });
+    if (tunnel) { el("rect", { x: A.sx(30), y: 10, width: A.sx(45) - A.sx(30), height: 208, fill: css("--rule"), opacity: .45 }, s1); }
+    const clip = v => Math.max(-ym, Math.min(ym, v));
+    const up = t.map((tt, k) => [A.sx(tt), A.sy(clip(o.s3[k]))]), lo = t.map((tt, k) => [A.sx(tt), A.sy(clip(-o.s3[k]))]);
+    el("path", { d: path(up) + path(lo.slice().reverse()).replace("M", "L") + "Z", fill: css("--epi"), "fill-opacity": .14, stroke: "none" }, s1);
+    el("path", { d: path(up), fill: "none", stroke: css("--epi"), "stroke-width": 1.2 }, s1);
+    el("path", { d: path(lo), fill: "none", stroke: css("--epi"), "stroke-width": 1.2 }, s1);
+    o.res.forEach(([tt, r]) => { if (Math.abs(r) < ym) el("circle", { cx: A.sx(tt), cy: A.sy(r), r: 1.8, fill: css("--accent-2"), opacity: .7 }, s1); });
+    el("path", { d: path(t.map((tt, k) => [A.sx(tt), A.sy(clip(o.e[k]))])), fill: "none", stroke: css("--accent"), "stroke-width": 1.8 }, s1);
+    // bias panel
+    const s2 = $("roadBias"); clear(s2);
+    const B = axes(s2, 0, TEND, -0.2, 0.5, [40, 10, 450, 218], { xt: [0, 10, 20, 30, 40, 50, 60], yt: [-0.2, 0, 0.2, 0.4], xl: "time (s)", zero: true });
+    if (tunnel) el("rect", { x: B.sx(30), y: 10, width: B.sx(45) - B.sx(30), height: 208, fill: css("--rule"), opacity: .45 }, s2);
+    el("line", { x1: B.sx(0), x2: B.sx(TEND), y1: B.sy(bias), y2: B.sy(bias), stroke: css("--muted"), "stroke-dasharray": "5 4", "stroke-width": 1.6 }, s2);
+    if (est) {
+      const cb = v => Math.max(-0.2, Math.min(0.5, v));
+      el("path", { d: path(t.map((tt, k) => [B.sx(tt), B.sy(cb(o.b[k] + o.bs3[k]))])), fill: "none", stroke: css("--epi"), "stroke-width": 1.1 }, s2);
+      el("path", { d: path(t.map((tt, k) => [B.sx(tt), B.sy(cb(o.b[k] - o.bs3[k]))])), fill: "none", stroke: css("--epi"), "stroke-width": 1.1 }, s2);
+      el("path", { d: path(t.map((tt, k) => [B.sx(tt), B.sy(cb(o.b[k]))])), fill: "none", stroke: css("--violet"), "stroke-width": 2 }, s2);
+    } else {
+      const tx = el("text", { x: 245, y: 60, "text-anchor": "middle", fill: css("--muted"), "font-size": 13 }, s2); tx.textContent = "bias not in the state: the filter assumes it is zero";
+    }
+    // stats over RUNS Monte Carlo runs
+    const mean = a => a.reduce((s, v) => s + v, 0) / a.length;
+    const mNIS = mean(nisAll), mNEES = mean(neesAll);
+    const bNIS = 1.96 * Math.sqrt(2 / nisAll.length), bNEES = 1.96 * Math.sqrt(4 / (neesAll.length / 3));   // samples 5 s apart are still correlated: count ~1 in 3 as independent
+    const verdict = (m, e, b) => m > e + b ? '<span class="pill bad">overconfident</span>' : m < e - b ? '<span class="pill meh">underconfident</span>' : '<span class="pill">consistent</span>';
+    $("roadStats").innerHTML =
+      `<div class="stat"><div class="k">RMS position error</div><div class="v">${Math.sqrt(sq / cnt).toFixed(2)} m</div></div>` +
+      `<div class="stat"><div class="k">mean NIS (expect 1 ± ${bNIS.toFixed(2)})</div><div class="v">${mNIS.toFixed(2)} ${verdict(mNIS, 1, bNIS)}</div></div>` +
+      `<div class="stat"><div class="k">mean NEES on p, v (expect 2 ± ${bNEES.toFixed(2)})</div><div class="v">${mNEES.toFixed(2)} ${verdict(mNEES, 2, bNEES)}</div></div>` +
+      `<div class="stat"><div class="k">runs averaged</div><div class="v">${RUNS}</div></div>`;
+  }
+  ["rQ", "rR"].forEach(id => $(id).addEventListener("input", draw));
+  ["rRate", "rBias", "rTunnel", "rEst"].forEach(id => $(id).addEventListener("change", draw));
+  $("rSeed").addEventListener("click", () => { seed = (seed * 31 + 11) % 100000; draw(); });
+  window.__roadDraw = draw; draw();
+})();
+
+/* ---------- Lab C: EKF linearisation vs unscented transform ---------- */
+(function utLab() {
+  const $ = id => document.getElementById(id), V0 = 15, M = 1500;
+  const rng = makeRng(42), Z = Array.from({ length: M }, () => [rng.n(), rng.n()]);
+  const f = (psi, v, T) => [v * T * Math.cos(psi), v * T * Math.sin(psi)];
+  function stats(P) {
+    const m = [0, 0]; P.forEach(p => { m[0] += p[0] / P.length; m[1] += p[1] / P.length; });
+    const C = [[0, 0], [0, 0]]; P.forEach(p => { const a = p[0] - m[0], b = p[1] - m[1]; C[0][0] += a * a; C[0][1] += a * b; C[1][1] += b * b; });
+    const d = P.length - 1; C[0][0] /= d; C[0][1] /= d; C[1][1] /= d; C[1][0] = C[0][1];
+    return { m, C };
+  }
+  function draw() {
+    const sp = +$("uPsi").value * Math.PI / 180, sv = +$("uV").value, T = +$("uT").value, kap = +$("uK").value;
+    $("ouPsi").textContent = $("uPsi").value + "°"; $("ouV").textContent = sv.toFixed(1); $("ouT").textContent = T.toFixed(1); $("ouK").textContent = kap.toFixed(1);
+    const samp = Z.map(([a, b]) => f(sp * a, V0 + sv * b, T)), mc = stats(samp);
+    // EKF: linearise at the mean (psi=0, v=V0)
+    const J = [[T, 0], [0, V0 * T]];   // d(x,y)/d(psi,v) at psi=0: [[-v T sin, T cos],[v T cos, T sin]] reordered to (x,y) x (psi,v)
+    const em = f(0, V0, T), ec = [[(T * sv) ** 2, 0], [0, (V0 * T * sp) ** 2]];
+    // UT, n = 2, alpha = 1, beta = 0
+    const n = 2, lam = kap, c = Math.sqrt(n + lam);
+    const sig = [[0, V0], [c * sp, V0], [0, V0 + c * sv], [-c * sp, V0], [0, V0 - c * sv]];
+    const w = [lam / (n + lam), 0.5 / (n + lam), 0.5 / (n + lam), 0.5 / (n + lam), 0.5 / (n + lam)];
+    const Y = sig.map(([p, v]) => f(p, v, T));
+    const um = [0, 0]; Y.forEach((y, i) => { um[0] += w[i] * y[0]; um[1] += w[i] * y[1]; });
+    const uc = [[0, 0], [0, 0]]; Y.forEach((y, i) => { const a = y[0] - um[0], b = y[1] - um[1]; uc[0][0] += w[i] * a * a; uc[0][1] += w[i] * a * b; uc[1][1] += w[i] * b * b; }); uc[1][0] = uc[0][1];
+    // plot
+    const svg = $("utOut"); clear(svg);
+    const R = V0 * T * 1.25, x0 = -0.15 * R, x1 = 1.05 * R, half = (x1 - x0) / 2;
+    const A = axes(svg, x0, x1, -half, half, [44, 10, 430, 396], { xl: "x (m), y (m) same scale", zero: true,
+      xt: [0, Math.round(V0 * T / 2), Math.round(V0 * T)], yt: [-Math.round(V0 * T / 2), 0, Math.round(V0 * T / 2)] });
+    const g = el("g", {}, svg);
+    samp.forEach(([x, y]) => { if (Math.abs(y) < half && x > x0) el("circle", { cx: A.sx(x), cy: A.sy(y), r: 1.4, fill: css("--muted"), opacity: .35 }, g); });
+    const ell = (m, C, col, dash) => el("path", { d: path(ellipsePts(m, C, 2).map(([x, y]) => [A.sx(x), A.sy(y)])), fill: "none", stroke: col, "stroke-width": 2.2, "stroke-dasharray": dash || "" }, svg);
+    ell(mc.m, mc.C, css("--ink"), "2 4"); ell(em, ec, css("--accent")); ell(um, uc, css("--epi"));
+    Y.forEach(([x, y]) => el("circle", { cx: A.sx(x), cy: A.sy(y), r: 4.5, fill: css("--violet") }, svg));
+    const mk = (m, col, shape) => shape === "x"
+      ? el("path", { d: `M${A.sx(m[0]) - 6},${A.sy(m[1]) - 6}L${A.sx(m[0]) + 6},${A.sy(m[1]) + 6}M${A.sx(m[0]) - 6},${A.sy(m[1]) + 6}L${A.sx(m[0]) + 6},${A.sy(m[1]) - 6}`, stroke: col, "stroke-width": 2.5 }, svg)
+      : el("rect", { x: A.sx(m[0]) - 5, y: A.sy(m[1]) - 5, width: 10, height: 10, fill: "none", stroke: col, "stroke-width": 2 }, svg);
+    mk(em, css("--accent"), "s"); mk(um, css("--epi"), "s"); mk(mc.m, css("--ink"), "x");
+    const exact = V0 * T * Math.exp(-sp * sp / 2);
+    const row = (name, m, C, cls) => `<tr><td${cls ? ` class="${cls}"` : ""}>${name}</td><td class="num">${fmt(m[0], 1)}</td><td class="num">${fmt(Math.sqrt(C[0][0]), 1)}</td><td class="num">${fmt(Math.sqrt(C[1][1]), 1)}</td></tr>`;
+    $("utTable").innerHTML = `<thead><tr><th></th><th>mean x (m)</th><th>σx (m)</th><th>σy (m)</th></tr></thead><tbody>` +
+      row("samples (truth)", mc.m, mc.C) + row('<span class="c1">EKF</span>', em, ec) + row('<span class="ce">UKF</span>', um, uc) +
+      `<tr><td>exact mean</td><td class="num">${exact.toFixed(1)}</td><td></td><td></td></tr></tbody>`;
+  }
+  ["uPsi", "uV", "uT", "uK"].forEach(id => $(id).addEventListener("input", draw));
+  window.__utDraw = draw; draw();
+})();
+
+/* theme changes: redraw labs so SVG colours follow */
+const redrawAll = () => { window.__fuseDraw(); window.__roadDraw(); window.__utDraw(); };
+new MutationObserver(redrawAll).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", redrawAll);
+
+/* copy buttons */
+document.querySelectorAll(".copy").forEach(b => b.addEventListener("click", async () => {
+  const txt = document.getElementById(b.dataset.target).innerText;
+  try { await navigator.clipboard.writeText(txt); b.textContent = "Copied"; } catch (e) { b.textContent = "Select and copy"; }
+  setTimeout(() => (b.textContent = "Copy"), 1500);
+}));
+</script>
+</body>
+</html>
